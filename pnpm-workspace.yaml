@@ -1,4 +1,6 @@
+# sharp's postinstall downloads its prebuilt binary — approve it.
+# `allowBuilds` is the pnpm 11+ key; `onlyBuiltDependencies` kept for older pnpm.
 allowBuilds:
-  sharp: set this to true or false
+  sharp: true
 onlyBuiltDependencies:
   - sharp
