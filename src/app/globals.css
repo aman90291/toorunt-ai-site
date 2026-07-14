@@ -56,19 +56,25 @@ html {
 }
 
 body {
-  background: var(--color-ground);
+  /* Transparent so the fixed WebGL hero (z-index:-10) is never buried:
+     an opaque body background paints over negative-z fixed layers. The base
+     ground colour lives on <html>, below the canvas; the 3D scene paints its
+     own ground on top of that. */
+  background: transparent;
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-feature-settings: "cv11", "ss01";
   overflow-x: hidden;
 }
 
-/* Faint warm depth so the gallery white never reads flat. */
+/* Faint warm depth so the gallery white never reads flat. Sits BELOW the hero
+   canvas (z-index:-20 < -10) so it enriches pages without a 3D scene and never
+   washes the one that has it. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: -20;
   pointer-events: none;
   background:
     radial-gradient(1200px 700px at 50% -10%, rgba(255, 255, 255, 0.6), transparent 60%),

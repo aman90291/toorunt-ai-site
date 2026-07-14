@@ -43,15 +43,15 @@ export default function Home() {
           Software engineers <Accent>that aren&rsquo;t people.</Accent>
         </Heading>
         <p className="mt-6 text-[18px] leading-relaxed text-ink-dim">
-          One bot per teammate, each with its own Jira and GitHub identity. Every change runs the same
-          pipeline you see here — fourteen gates, on the record.
+          One bot per teammate, each with its own Jira and GitHub identity — working your real backlog
+          behind fourteen hard gates. Meet the engineer that isn&rsquo;t a person.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Button href="#demo">Book a demo</Button>
           <Button href="/product/" variant="ghost">See how it works →</Button>
         </div>
         <p className="mt-14 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
-          Scroll to travel the pipeline ↓
+          Scroll to look around ↓
         </p>
       </Panel>
 
