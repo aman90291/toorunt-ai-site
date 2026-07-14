@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   DevAgent — dark engineering-grade theme.
+   Tailwind v4: the theme IS these tokens (no tailwind.config.js).
+   Dark-only by design — no `dark:` variants anywhere.
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  --font-display: var(--font-lora), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), "SF Mono", ui-monospace, Menlo, monospace;
+
+  --color-ground: #0e0d0b;      /* page */
+  --color-ground-2: #171512;    /* raised surfaces, cards */
+  --color-ground-3: #211e19;    /* hover / deeper wells */
+  --color-line: #2a2722;        /* hairlines */
+  --color-line-2: #38342d;      /* stronger dividers */
+  --color-ink: #f2ede4;         /* warm white */
+  --color-ink-dim: #a89f92;     /* secondary text */
+  --color-ink-faint: #6f685c;   /* captions, meta */
+  --color-clay: #d97757;        /* fills, glyphs, marks */
+  --color-clay-text: #e08963;   /* accent at text sizes (contrast) */
+  --color-clay-deep: #b45c3e;   /* pressed / deep accent */
+  --color-clay-wash: rgba(217, 119, 87, 0.1);
+  --color-pass: #7fb069;        /* gate-pass green, desaturated */
+
+  --radius-card: 14px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-marquee: marquee 32s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.7; }
+  75%, 100% { transform: scale(1.9); opacity: 0; }
+}
+.animate-ping-slow { animation: ping-slow 1.6s cubic-bezier(0, 0, 0.2, 1) infinite; }
+
+@keyframes marquee-y {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.animate-marquee-y { animation: marquee-y 30s linear infinite; }
+.animate-marquee-y:hover { animation-play-state: paused; }
+
+html {
+  color-scheme: dark;
+  background: var(--color-ground);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  overflow-x: hidden;
+}
+
+/* Ambient warmth so the black never reads flat */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 600px at 78% -12%, rgba(217, 119, 87, 0.07), transparent 60%),
+    radial-gradient(900px 700px at 4% 6%, rgba(217, 119, 87, 0.03), transparent 55%);
+}
+
+::selection { background: var(--color-clay); color: #1a1512; }
+
+:focus-visible {
+  outline: 2px solid var(--color-clay);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── Primitives ──────────────────────────────────────────────── */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+.hairline { height: 1px; background: var(--color-line); }
+
+/* Section reveal — native CSS scroll-driven; visible by default, animation only enhances. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 2% cover 20%;
+    }
+  }
+}
+@keyframes reveal-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Global reduced-motion clamp */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
