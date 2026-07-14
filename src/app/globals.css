@@ -2,7 +2,7 @@
 @import "lenis/dist/lenis.css";
 
 /* ─────────────────────────────────────────────────────────────
-   DevAgent — "Gallery": warm architectural white, near-black ink, one bronze
+   Toorunt AI — "Gallery": warm architectural white, near-black ink, one bronze
    accent. Light theme adopted from the tinyvilla reference. The 3D pipeline is
    the hero; the page is the quiet gallery around it.
    ───────────────────────────────────────────────────────────── */
@@ -103,9 +103,15 @@ html {
 }
 
 /* Legibility without a background card: a soft contrasting halo hugs the text so
-   it separates from the moving constellation. The value flips day→night. */
+   it separates from the moving constellation. The value flips day→night on the
+   steep ink-side curve, so it always opposes the current ink. The tight first
+   shadow gives letterforms a crisp edge; the wide ones build the cocoon. */
 .txt-legible {
-  text-shadow: 0 0 16px var(--text-halo), 0 0 40px var(--text-halo), 0 1px 2px var(--text-halo);
+  text-shadow:
+    0 0 2px var(--text-halo),
+    0 0 8px var(--text-halo),
+    0 0 18px var(--text-halo),
+    0 0 44px var(--text-halo);
 }
 
 body {

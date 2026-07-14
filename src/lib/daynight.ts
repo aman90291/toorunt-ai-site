@@ -9,11 +9,31 @@ export function smoothstep(a: number, b: number, x: number): number {
   return t * t * (3 - 2 * t);
 }
 
-/** How "night" the scene is, from scroll progress p (0..1). Day holds at the top,
- *  the transition happens through the middle, full night near the bottom. */
+/** Fallback night curve from raw scroll progress (used only when no
+ *  [data-night-anchor] section exists). Kept NARROW: a long, gradual lerp parks
+ *  whole sections at the 50% crossover where ink and ground are both mid-grey
+ *  and text contrast collapses. Dusk must be an event, not a state. */
 export function nightAmount(p: number): number {
-  return smoothstep(0.12, 0.9, p);
+  return smoothstep(0.5, 0.64, p);
 }
+
+/** Text-side flip. The background eases through the transition (cinematic), but
+ *  ink/halo cross it on this much steeper curve, so the low-contrast crossover
+ *  is a sliver instead of a zone. */
+export function inkFlip(n: number): number {
+  return smoothstep(0.52, 0.68, n);
+}
+
+/** Tokens that sit on the TEXT side of the flip (steep curve). Everything else
+ *  is background-side and follows the eased value. */
+export const INK_SIDE_KEYS = new Set([
+  "--color-ink",
+  "--color-ink-dim",
+  "--color-ink-faint",
+  "--color-accent",
+  "--color-accent-text",
+  "--text-halo",
+]);
 
 type Tokens = Record<string, string>;
 
@@ -30,7 +50,7 @@ export const DAY_TOKENS: Tokens = {
   "--color-ink-faint": "#8f8a7d",
   "--color-accent": "#1a1b1e",
   "--color-accent-text": "#8a7856",
-  "--text-halo": "rgba(241, 239, 233, 0.72)",
+  "--text-halo": "rgba(241, 239, 233, 0.85)",
   "--haze-color": "rgba(150, 132, 96, 0.10)",
 };
 
@@ -45,7 +65,7 @@ export const NIGHT_TOKENS: Tokens = {
   "--color-ink-faint": "#7f7b73",
   "--color-accent": "#f3f1ea",
   "--color-accent-text": "#c8ae7e",
-  "--text-halo": "rgba(7, 8, 10, 0.8)",
+  "--text-halo": "rgba(7, 8, 10, 0.88)",
   "--haze-color": "rgba(205, 180, 125, 0.18)",
 };
 

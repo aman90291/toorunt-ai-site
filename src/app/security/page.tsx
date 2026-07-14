@@ -111,7 +111,7 @@ export default function SecurityPage() {
               </p>
             </div>
             <MediaReveal>
-              <BrowserFrame shot="gatechain" url="app.devagent.dev/tickets/SCRUM-307" />
+              <BrowserFrame shot="gatechain" url="app.toorunt.ai/tickets/SCRUM-307" />
             </MediaReveal>
           </div>
         </Container>

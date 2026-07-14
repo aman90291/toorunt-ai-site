@@ -2,18 +2,25 @@ import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
 import { ScrollJack } from "@/components/ScrollJack";
 import { RECEIPT, ECON } from "@/lib/stats";
 
-/** A text panel that sits over the fixed 3D scene, anchored to one side. */
+/** A text panel that sits over the fixed 3D scene, anchored to one side.
+ *  `nightAnchor` marks the section whose arrival brings nightfall. */
 function Panel({
   side = "left",
+  nightAnchor = false,
   children,
 }: {
   side?: "left" | "right" | "center";
+  nightAnchor?: boolean;
   children: React.ReactNode;
 }) {
   const align =
     side === "right" ? "lg:ml-auto lg:text-left" : side === "center" ? "mx-auto text-center" : "";
   return (
-    <section data-side={side} className="relative flex min-h-screen items-center py-24">
+    <section
+      data-side={side}
+      {...(nightAnchor ? { "data-night-anchor": "" } : {})}
+      className="relative flex min-h-screen items-center py-24"
+    >
       <Container>
         <div className={`reveal txt-legible max-w-2xl ${align}`}>{children}</div>
       </Container>
@@ -53,7 +60,7 @@ export default function Home() {
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
           AI can already write the code. The unsolved part is who planned it, who reviewed it, who approved
-          it — who&rsquo;s accountable. DevAgent is the governed team that answers that, on your real tools.
+          it — who&rsquo;s accountable. Toorunt AI is the governed team that answers that, on your real tools.
         </p>
       </Panel>
 
@@ -81,8 +88,8 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 5 · The numbers — crane overview */}
-      <Panel side="center">
+      {/* 5 · The numbers — crane overview. Night falls as this section arrives. */}
+      <Panel side="center" nightAnchor>
         <Eyebrow>On the record</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
           One evening. One product. <Accent>Three decisions.</Accent>
@@ -124,7 +131,7 @@ export default function Home() {
             <Accent>We make them accountable.</Accent>
           </Heading>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Button href="mailto:hello@devagent.dev?subject=DevAgent%20demo">Book a demo</Button>
+            <Button href="mailto:hello@toorunt.ai?subject=Toorunt%20AI%20demo">Book a demo</Button>
             <Button href="/product/" variant="ghost">See how it works →</Button>
           </div>
         </Container>

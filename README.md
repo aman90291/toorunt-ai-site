@@ -1,6 +1,6 @@
-# DevAgent — marketing site
+# Toorunt AI — marketing site
 
-The public site for DevAgent: governed AI engineering teams. Dark, engineering-grade,
+The public site for Toorunt AI: governed AI engineering teams. Dark, engineering-grade,
 built to be inspected.
 
 ## Stack
@@ -41,5 +41,5 @@ residual chrome before publishing.
 ## Notes
 - Dark-only by design — tokens are the theme; no `dark:` variants.
 - Every animation degrades to a meaningful static frame under `prefers-reduced-motion`.
-- The domain is a placeholder (`devagent.dev`) in metadata — swap in `src/app/layout.tsx`,
+- The domain is a placeholder (`toorunt.ai`) in metadata — swap in `src/app/layout.tsx`,
   `sitemap.ts`, `robots.ts`, and `scripts/images.mjs`.

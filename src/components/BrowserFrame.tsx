@@ -9,7 +9,7 @@ import { WarpImage } from "./WarpImage";
  */
 export function BrowserFrame({
   shot,
-  url = "app.devagent.dev",
+  url = "app.toorunt.ai",
   priority = false,
   className = "",
 }: {

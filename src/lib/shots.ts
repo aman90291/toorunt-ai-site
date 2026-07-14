@@ -5,42 +5,42 @@ export const SHOTS = {
     "name": "overview",
     "width": 3420,
     "height": 1868,
-    "alt": "DevAgent Mission Control overview — autonomy rate, PRs merged, value delivered, live lifecycle and fleet activity",
+    "alt": "Toorunt AI Mission Control overview — autonomy rate, PRs merged, value delivered, live lifecycle and fleet activity",
     "lqip": "data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAADQAgCdASoYAA0APu1iqU2ppaOiMAgBMB2JaQAAe/QAAP7wrDAag8JeAAA="
   },
   "approvals": {
     "name": "approvals",
     "width": 3402,
     "height": 1894,
-    "alt": "DevAgent Approvals inbox — every human decision (plans, PRs, infra, keys) in one place",
+    "alt": "Toorunt AI Approvals inbox — every human decision (plans, PRs, infra, keys) in one place",
     "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADQAgCdASoYAA0APu1iqU2ppaQiMAgBMB2JaQAAe/QAAP7wgGp4ffe4nNTps4qgAAA="
   },
   "governance": {
     "name": "governance",
     "width": 3420,
     "height": 1868,
-    "alt": "DevAgent Governance — tamper-evident hash-chained audit trail beside enforced guardrails",
+    "alt": "Toorunt AI Governance — tamper-evident hash-chained audit trail beside enforced guardrails",
     "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAAAQAwCdASoYAA0APu1mqk2ppaQiMAgBMB2JaQAAetDtFgAA/vCWjnnKuTjNmX7wgAA="
   },
   "members": {
     "name": "members",
     "width": 3420,
     "height": 1868,
-    "alt": "DevAgent Members & Bots — a dedicated bot per teammate with its own credentials and scoped access",
+    "alt": "Toorunt AI Members & Bots — a dedicated bot per teammate with its own credentials and scoped access",
     "lqip": "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAADQAgCdASoYAA0APu1iqU2ppaQiMAgBMB2JaQAAe/QAAP7wgEx5WQGZac7IxwAA"
   },
   "teamsync": {
     "name": "teamsync",
     "width": 3420,
     "height": 1868,
-    "alt": "DevAgent Team Sync — live standup and deterministic contact routing across the fleet",
+    "alt": "Toorunt AI Team Sync — live standup and deterministic contact routing across the fleet",
     "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAAAwAwCdASoYAA0APu1iqk2tJaQiMAgBoB2JaQAAetEOg0AAAP7wgS4ayKVoJa65AAA="
   },
   "gatechain": {
     "name": "gatechain",
     "width": 1400,
     "height": 1724,
-    "alt": "DevAgent gate chain — the 14 checks a change passes before it can merge, each with its evidence",
+    "alt": "Toorunt AI gate chain — the 14 checks a change passes before it can merge, each with its evidence",
     "lqip": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAABwBACdASoYAB4APu1yrVGppyQiqAqpMB2JaQABH07q+27kofYfMaLYAyjTgAD+6J5XhwewkDRaevNPIL0k6G1/eK2NWT8c4px1WWUYZKBHHAAA"
   }
 } as const satisfies Record<string, Shot>;

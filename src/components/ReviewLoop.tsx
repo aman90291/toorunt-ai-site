@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { LazyMotion, domAnimation, m, AnimatePresence } from "./motion";
 
-/** The three ways DevAgent answers a review comment — plus the safety flex. */
+/** The three ways Toorunt AI answers a review comment — plus the safety flex. */
 const CASES = [
   {
     key: "fix",
@@ -88,7 +88,7 @@ export function ReviewLoop() {
             <div className="ml-6 rounded-xl border border-accent/25 bg-accent-wash px-4 py-3">
               <div className="mb-1 flex items-center gap-1.5 font-mono text-[11px] text-accent-text">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
-                devagent-sam
+                toorunt-sam
               </div>
               <p className="text-[14px] text-ink">{c.reply}</p>
             </div>

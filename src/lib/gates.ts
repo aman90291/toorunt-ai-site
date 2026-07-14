@@ -1,5 +1,5 @@
 /**
- * The canonical 14-gate verification chain, verbatim from the DevAgent
+ * The canonical 14-gate verification chain, verbatim from the Toorunt AI
  * dashboard (`devagent/dashboard/server.py :: _verification_chain`).
  * Evidence lines are the product's own copy — not marketing invention.
  */

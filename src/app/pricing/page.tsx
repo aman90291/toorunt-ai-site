@@ -86,7 +86,7 @@ export default function PricingPage() {
                   ))}
                 </ul>
                 <div className="mt-7">
-                  <Button href="mailto:hello@devagent.dev?subject=DevAgent" variant={t.accent ? "primary" : "ghost"} className="w-full">
+                  <Button href="mailto:hello@toorunt.ai?subject=Toorunt%20AI" variant={t.accent ? "primary" : "ghost"} className="w-full">
                     {t.accent ? "Book a demo" : "Talk to us"}
                   </Button>
                 </div>

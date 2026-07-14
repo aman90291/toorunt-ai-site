@@ -15,13 +15,13 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "sw
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 
-const SITE = "https://devagent.dev";
+const SITE = "https://toorunt.ai";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "DevAgent — The accountable AI engineering team",
-    template: "%s — DevAgent",
+    default: "Toorunt AI — The accountable AI engineering team",
+    template: "%s — Toorunt AI",
   },
   description:
     "A governed AI engineering team — one bot per teammate, each with its own Jira and GitHub identity, 14 hard gates on every change, and an audit trail you can hand to your auditor. Clears your backend backlog overnight, with mandatory human approval or policy-bounded autonomy.",
@@ -29,10 +29,10 @@ export const metadata: Metadata = {
     "AI engineering team", "autonomous software engineer", "AI code review",
     "governed AI agents", "Jira GitHub AI", "AI SDLC", "agentic engineering",
   ],
-  authors: [{ name: "DevAgent" }],
+  authors: [{ name: "Toorunt AI" }],
   openGraph: {
     type: "website",
-    siteName: "DevAgent",
+    siteName: "Toorunt AI",
     url: SITE,
     images: [{ url: "/og/home.png", width: 1200, height: 630 }],
   },
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "DevAgent",
+  name: "Toorunt AI",
   applicationCategory: "DeveloperApplication",
   operatingSystem: "Web",
   description:

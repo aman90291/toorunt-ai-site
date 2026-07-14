@@ -32,7 +32,7 @@ export default function ProductPage() {
             From ticket to merged PR — <Accent>every step gated.</Accent>
           </Heading>
           <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">
-            The same five-phase pipeline runs whether you hand DevAgent a one-line product idea or a ticket off your
+            The same five-phase pipeline runs whether you hand Toorunt AI a one-line product idea or a ticket off your
             existing backlog. A human decides three things; everything else runs inside the gates.
           </p>
         </Container>
@@ -116,7 +116,7 @@ export default function ProductPage() {
               </p>
             </div>
             <MediaReveal>
-              <BrowserFrame shot="teamsync" url="app.devagent.dev/team" />
+              <BrowserFrame shot="teamsync" url="app.toorunt.ai/team" />
             </MediaReveal>
           </div>
         </Container>

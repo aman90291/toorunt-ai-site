@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
-const SITE = "https://devagent.dev";
+const SITE = "https://toorunt.ai";
 const paths = ["", "/product", "/security", "/pricing", "/manifesto"];
 
 export default function sitemap(): MetadataRoute.Sitemap {

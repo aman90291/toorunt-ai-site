@@ -7,7 +7,6 @@ import * as THREE from "three";
 import { smoothstep } from "@/lib/daynight";
 import { themeState } from "@/lib/theme";
 import { heroState } from "@/lib/heroState";
-import { scrollProgress } from "./scroll";
 
 /**
  * The "brain of bots" constellation — agent-nodes wired by bronze synapses,
@@ -132,9 +131,10 @@ export function Constellation({ layout, phase, reduced }: { layout: Layout; phas
   );
 
   useFrame((state, delta) => {
-    const prog = reduced ? 0.04 : scrollProgress();
     const n = themeState.value; // colours follow the global theme (toggle included)
-    const emerge = smoothstep(0.4, 0.66, prog); // variant swap follows the journey
+    // The galaxy variant emerges WITH nightfall (same anchored dusk event as the
+    // page theme), so model swap and theme flip read as one moment.
+    const emerge = smoothstep(0.25, 0.85, themeState.scrollN);
     const fade = reduced ? (phase === "day" ? 1 : 0) : phase === "day" ? 1 - emerge : emerge;
 
     if (group.current) group.current.visible = fade > 0.01;

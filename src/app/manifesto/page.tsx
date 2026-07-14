@@ -64,9 +64,9 @@ export default function ManifestoPage() {
           </div>
 
           <div className="mt-14 border-t border-line pt-8">
-            <p className="text-[14px] text-ink-faint">— The DevAgent team</p>
+            <p className="text-[14px] text-ink-faint">— The Toorunt AI team</p>
             <div className="mt-6">
-              <Button href="mailto:hello@devagent.dev?subject=DevAgent%20demo">Book a demo</Button>
+              <Button href="mailto:hello@toorunt.ai?subject=Toorunt%20AI%20demo">Book a demo</Button>
             </div>
           </div>
         </Container>

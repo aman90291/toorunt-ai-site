@@ -1,5 +1,5 @@
 /**
- * DevAgent site image pipeline — privacy-critical.
+ * Toorunt AI site image pipeline — privacy-critical.
  *
  * Reads the Retina dashboard screenshots from ~/Downloads (filenames contain a
  * U+202F narrow-no-break-space, so we glob and match on the time token — never
@@ -35,17 +35,17 @@ const findByTime = (tok) => {
 // bar (bottom at ~337px) with margin. The gate modal is cropped tight to the card.
 const MANIFEST = [
   { name: "overview", tok: "3.30.00", crop: { left: 0, top: 356, width: 3420, height: 1868 },
-    alt: "DevAgent Mission Control overview — autonomy rate, PRs merged, value delivered, live lifecycle and fleet activity" },
+    alt: "Toorunt AI Mission Control overview — autonomy rate, PRs merged, value delivered, live lifecycle and fleet activity" },
   { name: "approvals", tok: "1.05.38", crop: { left: 0, top: 0, width: 3402, height: 1894 },
-    alt: "DevAgent Approvals inbox — every human decision (plans, PRs, infra, keys) in one place" },
+    alt: "Toorunt AI Approvals inbox — every human decision (plans, PRs, infra, keys) in one place" },
   { name: "governance", tok: "3.06.32", crop: { left: 0, top: 356, width: 3420, height: 1868 },
-    alt: "DevAgent Governance — tamper-evident hash-chained audit trail beside enforced guardrails" },
+    alt: "Toorunt AI Governance — tamper-evident hash-chained audit trail beside enforced guardrails" },
   { name: "members", tok: "3.06.58", crop: { left: 0, top: 356, width: 3420, height: 1868 },
-    alt: "DevAgent Members & Bots — a dedicated bot per teammate with its own credentials and scoped access" },
+    alt: "Toorunt AI Members & Bots — a dedicated bot per teammate with its own credentials and scoped access" },
   { name: "teamsync", tok: "3.39.28", crop: { left: 0, top: 356, width: 3420, height: 1868 },
-    alt: "DevAgent Team Sync — live standup and deterministic contact routing across the fleet" },
+    alt: "Toorunt AI Team Sync — live standup and deterministic contact routing across the fleet" },
   { name: "gatechain", tok: "3.53.21", crop: { left: 1000, top: 300, width: 1400, height: 1724 },
-    alt: "DevAgent gate chain — the 14 checks a change passes before it can merge, each with its evidence" },
+    alt: "Toorunt AI gate chain — the 14 checks a change passes before it can merge, each with its evidence" },
 ];
 
 const WIDTHS = [2200, 1100];
@@ -104,12 +104,12 @@ function ogSvg(title, sub) {
     <circle cx="60" cy="0" r="5" fill="${ACCENT}"/>
     <line x1="76" y1="0" x2="104" y2="0" stroke="#c6bfae" stroke-width="2"/>
     <circle cx="114" cy="0" r="5" fill="${INK}"/>
-    <text x="150" y="7" font-family="Georgia, serif" font-size="34" fill="${INK}">DevAgent</text>
+    <text x="150" y="7" font-family="Georgia, serif" font-size="34" fill="${INK}">Toorunt AI</text>
   </g>
   <text x="80" y="330" font-family="Georgia, serif" font-size="66" font-weight="500" fill="${INK}">${title}</text>
   <text x="82" y="410" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#9aa0a6">${sub}</text>
   <line x1="80" y1="520" x2="1120" y2="520" stroke="#ddd8cb" stroke-width="1"/>
-  <text x="80" y="565" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#8f8a7d">Governed AI engineering teams · devagent.dev</text>
+  <text x="80" y="565" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#8f8a7d">Governed AI engineering teams · toorunt.ai</text>
 </svg>`);
 }
 

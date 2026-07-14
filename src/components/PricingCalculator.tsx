@@ -29,7 +29,7 @@ export function PricingCalculator({ compact = false }: { compact?: boolean }) {
       />
 
       <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5">
-        <Metric label="DevAgent" value={fmtUSD(r.devagentCost)} sub={`${prs} × ${fmtUSD(ECON.price)} list`} accent />
+        <Metric label="Toorunt AI" value={fmtUSD(r.tooruntCost)} sub={`${prs} × ${fmtUSD(ECON.price)} list`} accent />
         <Metric
           label="Human equivalent"
           value={`${fmtUSD(r.humanLow)}–${fmtUSD(r.humanHigh)}`}

@@ -24,7 +24,7 @@ export function LogoWordmark({
       </svg>
       {showText && (
         <span className="font-display text-[19px] font-semibold tracking-[-0.01em] text-ink">
-          DevAgent
+          Toorunt AI
         </span>
       )}
     </span>

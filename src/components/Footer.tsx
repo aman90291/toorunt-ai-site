@@ -16,7 +16,7 @@ const COLS = [
     title: "Company",
     links: [
       { href: "/manifesto/", label: "Manifesto" },
-      { href: "mailto:hello@devagent.dev", label: "hello@devagent.dev" },
+      { href: "mailto:hello@toorunt.ai", label: "hello@toorunt.ai" },
     ],
   },
 ];
@@ -50,7 +50,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-16 flex flex-col items-start justify-between gap-3 border-t border-line pt-6 text-[12px] text-ink-faint sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} DevAgent. Governed AI engineering teams.</p>
+          <p>© {new Date().getFullYear()} Toorunt AI. Governed AI engineering teams.</p>
           <p className="font-mono">Built to be inspected.</p>
         </div>
       </div>
