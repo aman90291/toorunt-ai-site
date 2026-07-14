@@ -15,12 +15,12 @@ export default function ManifestoPage() {
       <article className="pt-32 pb-24 sm:pt-40">
         <Container className="max-w-[720px]">
           <Eyebrow>Manifesto</Eyebrow>
-          <h1 className="mt-6 font-display text-[clamp(36px,5.5vw,58px)] font-medium leading-[1.08] tracking-[-0.01em] text-balance">
-            The bottleneck moved. <span className="text-clay-text">Most people haven&rsquo;t noticed.</span>
+          <h1 data-split className="mt-6 font-display text-[clamp(36px,5.5vw,58px)] font-medium leading-[1.08] tracking-[-0.01em] text-balance">
+            The bottleneck moved. <span className="text-accent-text">Most people haven&rsquo;t noticed.</span>
           </h1>
 
           <div className="mt-12 space-y-6 text-[18px] leading-[1.7] text-ink-dim [&_strong]:font-medium [&_strong]:text-ink">
-            <p className="first-letter:float-left first-letter:mr-3 first-letter:font-display first-letter:text-[68px] first-letter:leading-[0.8] first-letter:text-clay">
+            <p className="first-letter:float-left first-letter:mr-3 first-letter:font-display first-letter:text-[68px] first-letter:leading-[0.8] first-letter:text-accent">
               For most of software&rsquo;s history, the scarce thing was people who could write the code. That
               constraint is gone. AI writes most of the new code at the frontier now — three-quarters of it at Google,
               and every line still approved by an engineer.
@@ -77,7 +77,7 @@ export default function ManifestoPage() {
 
 function PullQuote({ children }: { children: React.ReactNode }) {
   return (
-    <blockquote className="my-10 border-l-2 border-clay pl-6">
+    <blockquote className="my-10 border-l-2 border-accent pl-6">
       <p className="font-display text-[clamp(24px,3.4vw,32px)] leading-[1.25] text-ink text-balance">{children}</p>
     </blockquote>
   );

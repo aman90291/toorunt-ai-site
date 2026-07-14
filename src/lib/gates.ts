@@ -32,7 +32,7 @@ export const PIPELINE_STAGES = [
   { key: "ingest", label: "Ingest", actor: "auto" as const },
   { key: "plan", label: "Plan", actor: "auto" as const },
   { key: "approve", label: "Approve", actor: "human" as const },
-  { key: "implement", label: "Implement", actor: "auto" as const },
+  { key: "implement", label: "Build", actor: "auto" as const },
   { key: "test", label: "Test", actor: "auto" as const },
   { key: "review", label: "Peer review", actor: "auto" as const },
   { key: "signoff", label: "Sign-off", actor: "human" as const },

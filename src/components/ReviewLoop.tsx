@@ -43,7 +43,7 @@ const CASES = [
     reply:
       "I can't — the secret-scan gate blocks committed credentials, and it should. I'll read it from the vault via env instead.",
     outcome: "Refused · guardrail held",
-    tone: "clay" as const,
+    tone: "accent" as const,
   },
 ];
 
@@ -61,7 +61,7 @@ export function ReviewLoop() {
               onClick={() => setI(idx)}
               className={`rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition-colors ${
                 i === idx
-                  ? "border-clay bg-clay-wash text-clay-text"
+                  ? "border-accent bg-accent-wash text-accent-text"
                   : "border-line text-ink-dim hover:border-line-2 hover:text-ink"
               }`}
             >
@@ -85,17 +85,17 @@ export function ReviewLoop() {
               <p className="text-[14px] text-ink-dim">{c.comment}</p>
             </div>
             {/* agent reply */}
-            <div className="ml-6 rounded-xl border border-clay/25 bg-clay-wash px-4 py-3">
-              <div className="mb-1 flex items-center gap-1.5 font-mono text-[11px] text-clay-text">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-clay" />
+            <div className="ml-6 rounded-xl border border-accent/25 bg-accent-wash px-4 py-3">
+              <div className="mb-1 flex items-center gap-1.5 font-mono text-[11px] text-accent-text">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
                 devagent-sam
               </div>
               <p className="text-[14px] text-ink">{c.reply}</p>
             </div>
             {/* outcome */}
             <div className="ml-6 flex items-center gap-2 font-mono text-[12px]">
-              <span className={c.tone === "human" ? "text-clay-text" : c.tone === "clay" ? "text-clay" : "text-pass"}>
-                {c.tone === "human" ? "●" : c.tone === "clay" ? "✕" : "✓"}
+              <span className={c.tone === "human" ? "text-accent-text" : c.tone === "accent" ? "text-accent" : "text-pass"}>
+                {c.tone === "human" ? "●" : c.tone === "accent" ? "✕" : "✓"}
               </span>
               <span className="text-ink-dim">{c.outcome}</span>
             </div>

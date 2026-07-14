@@ -37,13 +37,13 @@ export function AutonomyDial() {
               key={m2.key}
               onClick={() => setI(idx)}
               className={`relative rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
-                i === idx ? "text-[#1a1512]" : "text-ink-dim hover:text-ink"
+                i === idx ? "text-[#0c0d0e]" : "text-ink-dim hover:text-ink"
               }`}
             >
               {i === idx && (
                 <m.span
                   layoutId="dial-pill"
-                  className="absolute inset-0 rounded-full bg-clay"
+                  className="absolute inset-0 rounded-full bg-accent"
                   transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}

@@ -4,7 +4,7 @@ export function BentoGrid({ children }: { children: ReactNode }) {
   return <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">{children}</div>;
 }
 
-/** A bento tile. `span` controls column span at lg. Hover lifts the border to clay. */
+/** A bento tile. `span` controls column span at lg. Hover lifts the border to accent. */
 export function BentoTile({
   children,
   span = 3,
@@ -17,9 +17,9 @@ export function BentoTile({
   const cols = { 2: "lg:col-span-2", 3: "lg:col-span-3", 4: "lg:col-span-4", 6: "lg:col-span-6" }[span];
   return (
     <div
-      className={`group relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2/50 p-6 transition-colors duration-300 hover:border-clay/40 ${cols} ${className}`}
+      className={`group relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2/50 p-6 transition-colors duration-300 hover:border-accent/40 ${cols} ${className}`}
     >
-      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-clay/[0.06] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-accent/[0.06] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
       <div className="relative">{children}</div>
     </div>
   );

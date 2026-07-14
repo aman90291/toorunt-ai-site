@@ -3,6 +3,7 @@ import { Container, Heading, Accent, Eyebrow, SectionRule } from "@/components/u
 import { GATES } from "@/lib/gates";
 import { AuditTrailTicker } from "@/components/AuditTrailTicker";
 import { BrowserFrame } from "@/components/BrowserFrame";
+import { MediaReveal } from "@/components/MediaReveal";
 import { CTASection } from "@/components/CTASection";
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function SecurityPage() {
       <section className="pt-32 pb-16 sm:pt-40">
         <Container>
           <Eyebrow>Security & governance</Eyebrow>
-          <Heading as="h1" className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
+          <Heading as="h1" split className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
             Worst case is <Accent>a rejected pull request.</Accent>
           </Heading>
           <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">
@@ -58,7 +59,7 @@ export default function SecurityPage() {
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <SectionRule label="Tamper-evident audit" />
-              <Heading className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
+              <Heading split className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
                 Every action, <Accent>hash-chained.</Accent>
               </Heading>
               <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
@@ -75,7 +76,7 @@ export default function SecurityPage() {
       <section className="py-24 sm:py-28">
         <Container>
           <SectionRule label="The 14 gates" />
-          <Heading className="mt-6 max-w-2xl text-[clamp(26px,4vw,40px)] leading-[1.1]">
+          <Heading split className="mt-6 max-w-2xl text-[clamp(26px,4vw,40px)] leading-[1.1]">
             What every change passes <Accent>before it can merge.</Accent>
           </Heading>
           <div className="reveal mt-10 grid gap-x-10 gap-y-0 sm:grid-cols-2">
@@ -84,12 +85,12 @@ export default function SecurityPage() {
                 <span className="mt-0.5 font-mono text-[11px] tabular-nums text-ink-faint">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: g.actor === "human" ? "var(--color-clay)" : "var(--color-pass)" }} />
+                <span className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: g.actor === "human" ? "var(--color-accent)" : "var(--color-pass)" }} />
                 <div>
                   <p className="flex items-center gap-2 text-[15px] font-medium text-ink">
                     {g.name}
                     {g.actor === "human" && (
-                      <span className="rounded-sm bg-clay-wash px-1.5 py-px font-mono text-[9px] uppercase tracking-wider text-clay-text">
+                      <span className="rounded-sm bg-accent-wash px-1.5 py-px font-mono text-[9px] uppercase tracking-wider text-accent-text">
                         human
                       </span>
                     )}
@@ -109,7 +110,9 @@ export default function SecurityPage() {
                 read. Nothing merges around it.
               </p>
             </div>
-            <BrowserFrame shot="gatechain" url="app.devagent.dev/tickets/SCRUM-307" />
+            <MediaReveal>
+              <BrowserFrame shot="gatechain" url="app.devagent.dev/tickets/SCRUM-307" />
+            </MediaReveal>
           </div>
         </Container>
       </section>

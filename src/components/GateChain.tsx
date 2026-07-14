@@ -6,7 +6,7 @@ import { GATES } from "@/lib/gates";
 
 /**
  * The 14-gate chain. As you scroll it, the gates light in sequence — the
- * pipeline "runs" under the reader. Human-decision gates are ringed in clay.
+ * pipeline "runs" under the reader. Human-decision gates are ringed in accent.
  * Reduced-motion / no-scroll-support → fully lit static chain.
  */
 export function GateChain() {
@@ -77,8 +77,8 @@ function GateRow({
       >
         {isHuman ? (
           <>
-            <span className="absolute inset-0 rounded-full ring-2 ring-clay" />
-            <span className="h-1.5 w-1.5 rounded-full bg-clay" />
+            <span className="absolute inset-0 rounded-full ring-2 ring-accent" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           </>
         ) : (
           <m.span
@@ -91,7 +91,7 @@ function GateRow({
         <p className="flex items-center gap-2 text-[14px] font-medium text-ink">
           {gate.name}
           {isHuman && (
-            <span className="rounded-sm bg-clay-wash px-1.5 py-px font-mono text-[9px] uppercase tracking-wider text-clay-text">
+            <span className="rounded-sm bg-accent-wash px-1.5 py-px font-mono text-[9px] uppercase tracking-wider text-accent-text">
               human
             </span>
           )}

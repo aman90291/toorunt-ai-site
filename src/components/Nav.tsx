@@ -45,7 +45,7 @@ export function Nav() {
           ))}
           <Link
             href="/#demo"
-            className="rounded-full bg-clay px-4 py-2 text-[14px] font-medium text-[#1a1512] transition-all hover:bg-clay-text hover:-translate-y-px"
+            className="rounded-full bg-accent px-4 py-2 text-[14px] font-medium text-[#0c0d0e] transition-all hover:bg-accent-text hover:-translate-y-px"
           >
             Book a demo
           </Link>
@@ -81,7 +81,7 @@ export function Nav() {
             <Link
               href="/#demo"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-full bg-clay px-4 py-2.5 text-center text-[15px] font-medium text-[#1a1512]"
+              className="mt-2 rounded-full bg-accent px-4 py-2.5 text-center text-[15px] font-medium text-[#0c0d0e]"
             >
               Book a demo
             </Link>

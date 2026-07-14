@@ -21,7 +21,7 @@ function Row({ r, prev }: { r: (typeof ROWS)[number]; prev: string }) {
       <span className="text-ink-faint tabular-nums">{r.t}</span>
       <span className="min-w-0 truncate">
         <span className="text-ink-dim">{r.actor}</span>{" "}
-        <span className={r.action.includes("approve") || r.action.includes("kill") ? "text-clay-text" : "text-pass"}>
+        <span className={r.action.includes("approve") || r.action.includes("kill") ? "text-accent-text" : "text-pass"}>
           {r.action}
         </span>
       </span>

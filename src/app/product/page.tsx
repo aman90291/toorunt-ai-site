@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container, Heading, Accent, Eyebrow, SectionRule } from "@/components/ui";
 import { BrowserFrame } from "@/components/BrowserFrame";
+import { MediaReveal } from "@/components/MediaReveal";
 import { ReviewLoop } from "@/components/ReviewLoop";
 import { AutonomyDial } from "@/components/AutonomyDial";
 import { CTASection } from "@/components/CTASection";
@@ -27,7 +28,7 @@ export default function ProductPage() {
       <section className="pt-32 pb-16 sm:pt-40">
         <Container>
           <Eyebrow>How it works</Eyebrow>
-          <Heading as="h1" className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
+          <Heading as="h1" split className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
             From ticket to merged PR — <Accent>every step gated.</Accent>
           </Heading>
           <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">
@@ -44,13 +45,13 @@ export default function ProductPage() {
             {PHASES.map((p) => (
               <div key={p.n} className="reveal grid gap-4 border-b border-line py-8 sm:grid-cols-[120px_1fr] sm:gap-10">
                 <div className="flex items-baseline gap-3">
-                  <span className="font-display text-[40px] leading-none text-clay/80 tabular-nums">{p.n}</span>
+                  <span className="font-display text-[40px] leading-none text-accent/80 tabular-nums">{p.n}</span>
                 </div>
                 <div>
                   <h3 className="flex items-center gap-3 font-display text-[24px] text-ink">
                     {p.t}
                     {p.human && (
-                      <span className="rounded-sm bg-clay-wash px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-clay-text">
+                      <span className="rounded-sm bg-accent-wash px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent-text">
                         human decision
                       </span>
                     )}
@@ -69,7 +70,7 @@ export default function ProductPage() {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
             <div>
               <SectionRule label="Review" />
-              <Heading className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
+              <Heading split className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
                 It answers review like <Accent>an engineer, not a bot.</Accent>
               </Heading>
               <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
@@ -86,7 +87,7 @@ export default function ProductPage() {
       <section className="py-24 sm:py-28">
         <Container>
           <SectionRule label="Autonomy" />
-          <Heading className="mt-6 max-w-2xl text-[clamp(26px,4vw,40px)] leading-[1.1]">
+          <Heading split className="mt-6 max-w-2xl text-[clamp(26px,4vw,40px)] leading-[1.1]">
             You choose how much rope. <Accent>It&rsquo;s a config, not a rebuild.</Accent>
           </Heading>
           <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-dim">
@@ -105,7 +106,7 @@ export default function ProductPage() {
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14">
             <div>
               <SectionRule label="The fleet" />
-              <Heading className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
+              <Heading split className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
                 A team that routes itself.
               </Heading>
               <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
@@ -114,7 +115,9 @@ export default function ProductPage() {
                 on-call — with a bounded escalation ladder that always terminates.
               </p>
             </div>
-            <BrowserFrame shot="teamsync" url="app.devagent.dev/team" />
+            <MediaReveal>
+              <BrowserFrame shot="teamsync" url="app.devagent.dev/team" />
+            </MediaReveal>
           </div>
         </Container>
       </section>

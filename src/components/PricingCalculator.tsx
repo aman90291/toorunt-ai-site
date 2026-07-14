@@ -14,7 +14,7 @@ export function PricingCalculator({ compact = false }: { compact?: boolean }) {
         <label htmlFor="prs" className="text-[14px] text-ink-dim">
           Merged PRs / month
         </label>
-        <span className="font-display text-[28px] tabular-nums text-clay">{prs}</span>
+        <span className="font-display text-[28px] tabular-nums text-accent">{prs}</span>
       </div>
       <input
         id="prs"
@@ -24,7 +24,7 @@ export function PricingCalculator({ compact = false }: { compact?: boolean }) {
         step={5}
         value={prs}
         onChange={(e) => setPrs(Number(e.target.value))}
-        className="mt-3 w-full accent-[#d97757]"
+        className="mt-3 w-full accent-[#ff3b47]"
         aria-valuetext={`${prs} merged pull requests per month`}
       />
 
@@ -68,7 +68,7 @@ function Metric({
       <div className="eyebrow">{label}</div>
       <div
         className={`mt-1.5 font-display text-[clamp(22px,3vw,30px)] leading-none tabular-nums ${
-          accent ? "text-clay" : strike ? "text-ink-dim line-through decoration-line-2" : "text-ink"
+          accent ? "text-accent" : strike ? "text-ink-dim line-through decoration-line-2" : "text-ink"
         }`}
       >
         {value}

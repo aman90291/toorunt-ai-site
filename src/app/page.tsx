@@ -2,8 +2,9 @@ import { Container, Heading, Accent, Button, Eyebrow, SectionRule } from "@/comp
 import { HeroPipeline } from "@/components/HeroPipeline";
 import { StatStrip } from "@/components/StatStrip";
 import { BentoGrid, BentoTile, TileTitle, TileBody } from "@/components/Bento";
-import { GateChain } from "@/components/GateChain";
+import { PipelineTake } from "@/components/PipelineTake";
 import { BrowserFrame } from "@/components/BrowserFrame";
+import { MediaReveal } from "@/components/MediaReveal";
 import { AuditTrailTicker } from "@/components/AuditTrailTicker";
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { CTASection } from "@/components/CTASection";
@@ -26,7 +27,7 @@ export default function Home() {
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
             <div>
               <Eyebrow>Governed AI engineering teams</Eyebrow>
-              <Heading as="h1" className="mt-6 text-[clamp(40px,6vw,68px)] leading-[1.04]">
+              <Heading as="h1" split className="mt-6 text-[clamp(40px,6vw,68px)] leading-[1.04]">
                 The bottleneck isn&rsquo;t writing code anymore. <Accent>It&rsquo;s accountability.</Accent>
               </Heading>
               <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">{LINES.sub}</p>
@@ -54,7 +55,7 @@ export default function Home() {
       <section className="py-24 sm:py-28">
         <Container>
           <SectionRule label="What it is" />
-          <Heading className="mt-6 max-w-2xl text-[clamp(28px,4vw,44px)] leading-[1.1]">
+          <Heading split className="mt-6 max-w-2xl text-[clamp(28px,4vw,44px)] leading-[1.1]">
             Not a copilot. <Accent>A team you can hold accountable.</Accent>
           </Heading>
           <div className="reveal mt-12">
@@ -96,44 +97,29 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* ── Gate chain strip ─────────────────────────────────── */}
-      <section className="border-y border-line bg-ground-2/30 py-24 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
-            <div className="lg:sticky lg:top-28 lg:self-start">
-              <SectionRule label="The gate chain" />
-              <Heading className="mt-6 text-[clamp(28px,4vw,44px)] leading-[1.1]">
-                Fourteen gates. Every change. <Accent>No exceptions.</Accent>
-              </Heading>
-              <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
-                Between &ldquo;the code exists&rdquo; and &ldquo;it may merge&rdquo; sits a chain of checks — each with the
-                evidence a non-expert can read. Two of them are human decisions, ringed in clay.
-              </p>
-              <p className="mt-6 font-display text-[20px] text-ink">{LINES.worstCase}</p>
-            </div>
-            <GateChain />
-          </div>
-        </Container>
-      </section>
+      {/* ── Pinned pipeline take (the cinematic centerpiece) ──── */}
+      <PipelineTake />
 
       {/* ── Screenshot tour ──────────────────────────────────── */}
       <section className="py-24 sm:py-28">
         <Container>
           <SectionRule label="The product" />
-          <Heading className="mt-6 max-w-2xl text-[clamp(28px,4vw,44px)] leading-[1.1]">
+          <Heading split className="mt-6 max-w-2xl text-[clamp(28px,4vw,44px)] leading-[1.1]">
             Trust is a screen, <Accent>not a promise.</Accent>
           </Heading>
-          <div className="mt-14 flex flex-col gap-20">
+          <div className="mt-14 flex flex-col gap-20 sm:gap-28">
             {TOUR.map((t, i) => (
               <div
                 key={t.shot}
-                className={`reveal grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14 ${i % 2 ? "lg:[&>figure]:order-first" : ""}`}
+                className={`grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14 ${i % 2 ? "lg:[&>figure]:order-first" : ""}`}
               >
-                <div>
+                <div className="reveal">
                   <h3 className="font-display text-[26px] text-ink">{t.title}</h3>
                   <p className="mt-3 max-w-md text-[16px] leading-relaxed text-ink-dim">{t.body}</p>
                 </div>
-                <BrowserFrame shot={t.shot} url={t.url} priority={i === 0} />
+                <MediaReveal>
+                  <BrowserFrame shot={t.shot} url={t.url} priority={i === 0} />
+                </MediaReveal>
               </div>
             ))}
           </div>
@@ -146,7 +132,7 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <SectionRule label="Economics" />
-              <Heading className="mt-6 text-[clamp(28px,4vw,44px)] leading-[1.1]">
+              <Heading split className="mt-6 text-[clamp(28px,4vw,44px)] leading-[1.1]">
                 A merged PR costs us <Accent>${ECON.cogsLow}&ndash;{ECON.cogsHigh}.</Accent>
               </Heading>
               <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">

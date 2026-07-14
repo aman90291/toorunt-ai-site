@@ -23,9 +23,9 @@ export function BrowserFrame({
     >
       <div className="flex h-9 items-center gap-2 border-b border-line px-4">
         <span className="flex gap-1.5" aria-hidden="true">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#3a3630]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#3a3630]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#3a3630]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#34373b]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#34373b]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#34373b]" />
         </span>
         <span className="mx-auto flex items-center gap-1.5 rounded-md bg-ground/60 px-3 py-1 font-mono text-[11px] text-ink-faint">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" aria-hidden="true">
