@@ -1,5 +1,6 @@
 import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
 import { HeroScene } from "@/components/HeroScene";
+import { DayNight } from "@/components/DayNight";
 import { RECEIPT, ECON } from "@/lib/stats";
 
 /** A text panel that sits over the fixed 3D scene, anchored to one side. */
@@ -13,19 +14,9 @@ function Panel({
   const align =
     side === "right" ? "lg:ml-auto lg:text-left" : side === "center" ? "mx-auto text-center" : "";
   return (
-    <section className="relative flex min-h-screen items-center py-24">
+    <section data-side={side} className="relative flex min-h-screen items-center py-24">
       <Container>
-        <div
-          className={`reveal max-w-xl ${align}`}
-          style={{
-            // a soft halo so text stays legible over the bright 3D
-            background:
-              "radial-gradient(120% 130% at 30% 40%, rgba(241,239,233,0.86) 0%, rgba(241,239,233,0.55) 45%, transparent 78%)",
-            padding: "8px 4px",
-          }}
-        >
-          {children}
-        </div>
+        <div className={`reveal txt-legible max-w-2xl ${align}`}>{children}</div>
       </Container>
     </section>
   );
@@ -34,12 +25,13 @@ function Panel({
 export default function Home() {
   return (
     <>
+      <DayNight />
       <HeroScene />
 
       {/* 1 · Hero */}
       <Panel side="left">
         <Eyebrow>Governed AI engineering teams</Eyebrow>
-        <Heading as="h1" split className="mt-6 text-[clamp(40px,6vw,72px)] leading-[1.02]">
+        <Heading as="h1" split className="mt-6 text-[clamp(46px,8vw,104px)] leading-[0.95]">
           Software engineers <Accent>that aren&rsquo;t people.</Accent>
         </Heading>
         <p className="mt-6 text-[18px] leading-relaxed text-ink-dim">
@@ -58,7 +50,7 @@ export default function Home() {
       {/* 2 · What it is — travel down the line */}
       <Panel side="right">
         <Eyebrow>What it is</Eyebrow>
-        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+        <Heading split className="mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
           The bottleneck isn&rsquo;t writing code. <Accent>It&rsquo;s accountability.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -70,7 +62,7 @@ export default function Home() {
       {/* 3 · The approval gate — close on the first bronze node */}
       <Panel side="left">
         <Eyebrow>Human decision · 01</Eyebrow>
-        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+        <Heading split className="mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
           It never writes code <Accent>before you approve the plan.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -82,7 +74,7 @@ export default function Home() {
       {/* 4 · Peer review + sign-off — close on the second bronze node */}
       <Panel side="right">
         <Eyebrow>Human decision · 02</Eyebrow>
-        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+        <Heading split className="mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
           Two bots review each other. <Accent>You sign off the PR.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -94,7 +86,7 @@ export default function Home() {
       {/* 5 · The numbers — crane overview */}
       <Panel side="center">
         <Eyebrow>On the record</Eyebrow>
-        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+        <Heading split className="mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
           One evening. One product. <Accent>Three decisions.</Accent>
         </Heading>
         <div className="mx-auto mt-10 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4">
@@ -112,7 +104,7 @@ export default function Home() {
       {/* 6 · Economics / pricing — pull back */}
       <Panel side="left">
         <Eyebrow>The economics</Eyebrow>
-        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+        <Heading split className="mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
           A merged PR costs us <Accent>${ECON.cogsLow}&ndash;{ECON.cogsHigh}.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -129,7 +121,7 @@ export default function Home() {
       <section id="demo" className="relative scroll-mt-24 bg-ground pt-24 pb-32 sm:pt-32">
         <Container className="text-center">
           <Eyebrow>Get started</Eyebrow>
-          <Heading as="h2" split className="mx-auto mt-6 max-w-3xl text-[clamp(34px,5.5vw,64px)] leading-[1.04]">
+          <Heading as="h2" split className="mx-auto mt-6 max-w-4xl text-[clamp(40px,6.5vw,92px)] leading-[0.98]">
             Every company will employ engineers that aren&rsquo;t people.{" "}
             <Accent>We make them accountable.</Accent>
           </Heading>

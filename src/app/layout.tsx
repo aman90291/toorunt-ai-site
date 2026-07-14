@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { Lora, Inter, Geist_Mono } from "next/font/google";
+import { Geist, Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { CursorHaze } from "@/components/CursorHaze";
+import { GlowCursor } from "@/components/GlowCursor";
 
-const lora = Lora({
-  subsets: ["latin"],
-  variable: "--font-lora",
-  display: "swap",
-  fallback: ["Iowan Old Style", "Palatino Linotype", "Georgia", "serif"],
-});
+// Display face — a modern, flat grotesk (no serif). Body stays Inter; data stays Geist Mono.
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 
@@ -52,12 +50,14 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${lora.variable} ${inter.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geist.variable} ${inter.variable} ${geistMono.variable}`}>
       <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <CursorHaze />
+        <GlowCursor />
         <SmoothScroll>
           <Nav />
           <main>{children}</main>

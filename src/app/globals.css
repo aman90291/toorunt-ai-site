@@ -7,7 +7,7 @@
    the hero; the page is the quiet gallery around it.
    ───────────────────────────────────────────────────────────── */
 @theme {
-  --font-display: var(--font-lora), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-display: var(--font-geist), var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), "SF Mono", ui-monospace, Menlo, monospace;
 
@@ -53,6 +53,54 @@ html {
   background: var(--color-ground);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Soft halo painted behind text for legibility over the live 3D (no card).
+     Day = warm-white glow; the day→night system (DayNight.tsx) animates this. */
+  --text-halo: rgba(241, 239, 233, 0.72);
+  --haze-color: rgba(150, 132, 96, 0.1);
+}
+
+/* Bronze haze that trails the cursor — atmosphere over the 3D (CursorHaze.tsx).
+   Above the canvas (-10), below content; colour follows the day→night journey. */
+.cursor-haze {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+  background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 40%), var(--haze-color), transparent 62%);
+}
+
+/* Custom glowing cursor (GlowCursor.tsx). Bronze follows the day→night accent. */
+.has-glow-cursor, .has-glow-cursor * { cursor: none !important; }
+.glow-cursor-dot, .glow-cursor-ring {
+  position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none;
+  border-radius: 9999px; will-change: transform;
+}
+.glow-cursor-dot {
+  width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
+  background: var(--color-accent-text);
+  box-shadow: 0 0 10px 2px var(--haze-color), 0 0 5px 1px var(--color-accent-text);
+}
+.glow-cursor-ring {
+  width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border: 1.5px solid var(--color-accent-text); opacity: 0.5;
+  transition: width .22s ease, height .22s ease, margin .22s ease, opacity .22s ease, background-color .22s ease;
+}
+.glow-cursor-ring.is-hot {
+  width: 54px; height: 54px; margin: -27px 0 0 -27px; opacity: 0.9;
+  background: var(--haze-color);
+}
+.glow-cursor-ring.is-down { width: 24px; height: 24px; margin: -12px 0 0 -12px; opacity: 0.85; }
+
+/* No custom cursor under reduced-motion pointer? keep it but static is fine. */
+@media (prefers-reduced-motion: reduce) {
+  .glow-cursor-ring { transition: none; }
+}
+
+/* Legibility without a background card: a soft contrasting halo hugs the text so
+   it separates from the moving constellation. The value flips day→night. */
+.txt-legible {
+  text-shadow: 0 0 16px var(--text-halo), 0 0 40px var(--text-halo), 0 1px 2px var(--text-halo);
 }
 
 body {
@@ -91,6 +139,12 @@ body::before {
 
 @layer base {
   a { text-decoration: none; }
+}
+
+/* On narrow screens the text is full-width, so the 3D can't slide clear of it —
+   dim it to a faint backdrop so copy stays dominant and legible. */
+@media (max-width: 767px) {
+  .hero-3d { opacity: 0.4; }
 }
 
 /* ── Primitives ──────────────────────────────────────────────── */

@@ -15,7 +15,7 @@ export function Eyebrow({ children }: { children: ReactNode }) {
   );
 }
 
-/** Serif section heading. Pass `split` to enable line-by-line mask reveal. */
+/** Modern flat-sans section heading. Pass `split` to enable line-by-line mask reveal. */
 export function Heading({
   children,
   as: As = "h2",
@@ -30,15 +30,16 @@ export function Heading({
   return (
     <As
       {...(split ? { "data-split": true } : {})}
-      className={`font-display font-medium tracking-[-0.01em] text-balance text-ink ${className}`}
+      className={`font-display font-semibold tracking-[-0.035em] text-balance text-ink ${className}`}
     >
       {children}
     </As>
   );
 }
 
+/** Emphasis for the important words in a heading — bronze + a weight bump. */
 export function Accent({ children }: { children: ReactNode }) {
-  return <span className="text-accent-text">{children}</span>;
+  return <span className="font-bold text-accent-text">{children}</span>;
 }
 
 export function Button({

@@ -23,7 +23,12 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return; // native scroll; Lenis stays inert (options below also soften it)
 
-    const update = (time: number) => lenisRef.current?.lenis?.raf(time * 1000);
+    const update = (time: number) => {
+      const l = lenisRef.current?.lenis;
+      l?.raf(time * 1000);
+      // expose for programmatic scroll (e.g. verification harness); harmless in prod
+      (window as unknown as { __lenis?: unknown }).__lenis = l;
+    };
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
     const onScroll = () => ScrollTrigger.update();
