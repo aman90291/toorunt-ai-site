@@ -56,7 +56,7 @@ export function Button({
     "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2";
   const styles =
     variant === "primary"
-      ? "bg-accent text-[#0c0d0e] hover:bg-accent-text hover:-translate-y-px shadow-[0_1px_0_rgba(255,255,255,0.15)_inset]"
+      ? "bg-accent text-ground hover:bg-accent-text hover:-translate-y-px shadow-[0_1px_0_rgba(255,255,255,0.15)_inset]"
       : "border border-line-2 text-ink hover:border-accent hover:bg-accent-wash";
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>

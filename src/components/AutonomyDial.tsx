@@ -37,7 +37,7 @@ export function AutonomyDial() {
               key={m2.key}
               onClick={() => setI(idx)}
               className={`relative rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
-                i === idx ? "text-[#0c0d0e]" : "text-ink-dim hover:text-ink"
+                i === idx ? "text-ground" : "text-ink-dim hover:text-ink"
               }`}
             >
               {i === idx && (

@@ -85,9 +85,9 @@ writeFileSync(join(ROOT, "src", "lib", "shots.ts"), ts);
 console.log("✓ src/lib/shots.ts");
 
 // ── OG images + icons (static; no runtime ImageResponse) ──────────────────────
-const GROUND = "#0c0d0e";
-const INK = "#f4f5f6";
-const ACCENT = "#ff3b47";
+const GROUND = "#f1efe9";
+const INK = "#1a1b1e";
+const ACCENT = "#8a7856";
 
 function ogSvg(title, sub) {
   return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
@@ -99,17 +99,17 @@ function ogSvg(title, sub) {
   <rect width="1200" height="630" fill="url(#g)"/>
   <g transform="translate(80,120)">
     <circle cx="6" cy="0" r="5" fill="${INK}"/>
-    <line x1="16" y1="0" x2="44" y2="0" stroke="#34373b" stroke-width="2"/>
+    <line x1="16" y1="0" x2="44" y2="0" stroke="#c6bfae" stroke-width="2"/>
     <circle cx="60" cy="0" r="13" fill="none" stroke="${ACCENT}" stroke-width="3"/>
     <circle cx="60" cy="0" r="5" fill="${ACCENT}"/>
-    <line x1="76" y1="0" x2="104" y2="0" stroke="#34373b" stroke-width="2"/>
+    <line x1="76" y1="0" x2="104" y2="0" stroke="#c6bfae" stroke-width="2"/>
     <circle cx="114" cy="0" r="5" fill="${INK}"/>
     <text x="150" y="7" font-family="Georgia, serif" font-size="34" fill="${INK}">DevAgent</text>
   </g>
   <text x="80" y="330" font-family="Georgia, serif" font-size="66" font-weight="500" fill="${INK}">${title}</text>
-  <text x="82" y="410" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#8a8e94">${sub}</text>
-  <line x1="80" y1="520" x2="1120" y2="520" stroke="#26282b" stroke-width="1"/>
-  <text x="80" y="565" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#5c6066">Governed AI engineering teams · devagent.dev</text>
+  <text x="82" y="410" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#9aa0a6">${sub}</text>
+  <line x1="80" y1="520" x2="1120" y2="520" stroke="#ddd8cb" stroke-width="1"/>
+  <text x="80" y="565" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#8f8a7d">Governed AI engineering teams · devagent.dev</text>
 </svg>`);
 }
 

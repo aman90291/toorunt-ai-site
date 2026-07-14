@@ -24,7 +24,7 @@ export function PricingCalculator({ compact = false }: { compact?: boolean }) {
         step={5}
         value={prs}
         onChange={(e) => setPrs(Number(e.target.value))}
-        className="mt-3 w-full accent-[#ff3b47]"
+        className="mt-3 w-full accent-[#1a1b1e]"
         aria-valuetext={`${prs} merged pull requests per month`}
       />
 

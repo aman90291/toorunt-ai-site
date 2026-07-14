@@ -2,27 +2,27 @@
 @import "lenis/dist/lenis.css";
 
 /* ─────────────────────────────────────────────────────────────
-   DevAgent — "Monolith": stark graphite ground, one signal-scarlet accent.
-   Tailwind v4: the theme IS these tokens (no tailwind.config.js).
-   Dark-only by design — no `dark:` variants anywhere.
+   DevAgent — "Gallery": warm architectural white, near-black ink, one bronze
+   accent. Light theme adopted from the tinyvilla reference. The 3D pipeline is
+   the hero; the page is the quiet gallery around it.
    ───────────────────────────────────────────────────────────── */
 @theme {
   --font-display: var(--font-lora), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), "SF Mono", ui-monospace, Menlo, monospace;
 
-  --color-ground: #0c0d0e;       /* page — neutral graphite, zero warmth */
-  --color-ground-2: #161719;     /* raised surfaces, cards */
-  --color-ground-3: #1e2023;     /* hover / deeper wells */
-  --color-line: #26282b;         /* hairlines */
-  --color-line-2: #34373b;       /* stronger dividers */
-  --color-ink: #f4f5f6;          /* near-white */
-  --color-ink-dim: #8a8e94;      /* secondary text */
-  --color-ink-faint: #5c6066;    /* captions, meta */
-  --color-accent: #ff3b47;       /* signal scarlet — fills, glyphs, active states */
-  --color-accent-text: #ff6a73;  /* accent at text sizes (better contrast on graphite) */
-  --color-accent-wash: rgba(255, 59, 71, 0.1);
-  --color-pass: #35c46b;         /* gate-pass green, distinct from the accent */
+  --color-ground: #f1efe9;       /* page — warm gallery white */
+  --color-ground-2: #fbfaf6;     /* raised surfaces, cards */
+  --color-ground-3: #e7e3d9;     /* wells / deeper panels */
+  --color-line: #ddd8cb;         /* warm hairlines */
+  --color-line-2: #c6bfae;       /* stronger dividers */
+  --color-ink: #1a1b1e;          /* primary text — near-black */
+  --color-ink-dim: #52575d;      /* secondary text — slate grey */
+  --color-ink-faint: #8f8a7d;    /* captions, meta — warm grey */
+  --color-accent: #1a1b1e;       /* solid marks / buttons = near-black (gallery style) */
+  --color-accent-text: #8a7856;  /* bronze — headline highlights, small accent labels */
+  --color-accent-wash: rgba(138, 120, 86, 0.12);
+  --color-pass: #6e7b5e;         /* passed marks — muted sage-green */
 
   --radius-card: 14px;
 
@@ -49,7 +49,7 @@
 .animate-marquee-y:hover { animation-play-state: paused; }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
   background: var(--color-ground);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -63,7 +63,7 @@ body {
   overflow-x: hidden;
 }
 
-/* A single cold vignette so the graphite never reads flat (no warm glow now). */
+/* Faint warm depth so the gallery white never reads flat. */
 body::before {
   content: "";
   position: fixed;
@@ -71,11 +71,11 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(1200px 620px at 82% -14%, rgba(255, 59, 71, 0.05), transparent 60%),
-    radial-gradient(900px 700px at 2% 4%, rgba(255, 255, 255, 0.02), transparent 55%);
+    radial-gradient(1200px 700px at 50% -10%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(900px 800px at 100% 100%, rgba(138, 120, 86, 0.05), transparent 55%);
 }
 
-::selection { background: var(--color-accent); color: #0c0d0e; }
+::selection { background: var(--color-accent); color: #f1efe9; }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
@@ -83,7 +83,9 @@ body::before {
   border-radius: 2px;
 }
 
-a { color: inherit; text-decoration: none; }
+@layer base {
+  a { text-decoration: none; }
+}
 
 /* ── Primitives ──────────────────────────────────────────────── */
 .eyebrow {

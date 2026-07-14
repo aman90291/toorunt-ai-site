@@ -1,165 +1,144 @@
-import { Container, Heading, Accent, Button, Eyebrow, SectionRule } from "@/components/ui";
-import { HeroPipeline } from "@/components/HeroPipeline";
-import { StatStrip } from "@/components/StatStrip";
-import { BentoGrid, BentoTile, TileTitle, TileBody } from "@/components/Bento";
-import { PipelineTake } from "@/components/PipelineTake";
-import { BrowserFrame } from "@/components/BrowserFrame";
-import { MediaReveal } from "@/components/MediaReveal";
-import { AuditTrailTicker } from "@/components/AuditTrailTicker";
-import { PricingCalculator } from "@/components/PricingCalculator";
-import { CTASection } from "@/components/CTASection";
-import { LINES, ECON } from "@/lib/stats";
-import type { ShotName } from "@/lib/shots";
+import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
+import { HeroScene } from "@/components/HeroScene";
+import { RECEIPT, ECON } from "@/lib/stats";
 
-const TOUR: { shot: ShotName; url: string; title: string; body: string }[] = [
-  { shot: "overview", url: "app.devagent.dev/overview", title: "Mission Control", body: "Every ticket, every stage, right now — value delivered, live lifecycle, and the whole fleet in one glance." },
-  { shot: "approvals", url: "app.devagent.dev/approvals", title: "One inbox for every decision", body: "Plans, PRs, infra changes, credential requests — everything a human must decide lands here. Act, and the fleet moves instantly." },
-  { shot: "members", url: "app.devagent.dev/members", title: "A bot per teammate", body: "Add a member and DevAgent provisions a dedicated bot — its own credentials, its own integrations, scoped access. Zero shared secrets." },
-  { shot: "teamsync", url: "app.devagent.dev/team", title: "Coordinates like a team", body: "Live standup, ticket ownership, failover. Who to contact is deterministic — CODEOWNERS, git blame, Jira roles, on-call — never guessed." },
-];
+/** A text panel that sits over the fixed 3D scene, anchored to one side. */
+function Panel({
+  side = "left",
+  children,
+}: {
+  side?: "left" | "right" | "center";
+  children: React.ReactNode;
+}) {
+  const align =
+    side === "right" ? "lg:ml-auto lg:text-left" : side === "center" ? "mx-auto text-center" : "";
+  return (
+    <section className="relative flex min-h-screen items-center py-24">
+      <Container>
+        <div
+          className={`reveal max-w-xl ${align}`}
+          style={{
+            // a soft halo so text stays legible over the bright 3D
+            background:
+              "radial-gradient(120% 130% at 30% 40%, rgba(241,239,233,0.86) 0%, rgba(241,239,233,0.55) 45%, transparent 78%)",
+            padding: "8px 4px",
+          }}
+        >
+          {children}
+        </div>
+      </Container>
+    </section>
+  );
+}
 
 export default function Home() {
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative pt-32 pb-20 sm:pt-40">
-        <Container>
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
-            <div>
-              <Eyebrow>Governed AI engineering teams</Eyebrow>
-              <Heading as="h1" split className="mt-6 text-[clamp(40px,6vw,68px)] leading-[1.04]">
-                The bottleneck isn&rsquo;t writing code anymore. <Accent>It&rsquo;s accountability.</Accent>
-              </Heading>
-              <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">{LINES.sub}</p>
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                <Button href="#demo">Book a demo</Button>
-                <Button href="/product/" variant="ghost">See how it ships →</Button>
+      <HeroScene />
+
+      {/* 1 · Hero */}
+      <Panel side="left">
+        <Eyebrow>Governed AI engineering teams</Eyebrow>
+        <Heading as="h1" split className="mt-6 text-[clamp(40px,6vw,72px)] leading-[1.02]">
+          Software engineers <Accent>that aren&rsquo;t people.</Accent>
+        </Heading>
+        <p className="mt-6 text-[18px] leading-relaxed text-ink-dim">
+          One bot per teammate, each with its own Jira and GitHub identity. Every change runs the same
+          pipeline you see here — fourteen gates, on the record.
+        </p>
+        <div className="mt-9 flex flex-wrap items-center gap-3">
+          <Button href="#demo">Book a demo</Button>
+          <Button href="/product/" variant="ghost">See how it works →</Button>
+        </div>
+        <p className="mt-14 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
+          Scroll to travel the pipeline ↓
+        </p>
+      </Panel>
+
+      {/* 2 · What it is — travel down the line */}
+      <Panel side="right">
+        <Eyebrow>What it is</Eyebrow>
+        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+          The bottleneck isn&rsquo;t writing code. <Accent>It&rsquo;s accountability.</Accent>
+        </Heading>
+        <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
+          AI can already write the code. The unsolved part is who planned it, who reviewed it, who approved
+          it — who&rsquo;s accountable. DevAgent is the governed team that answers that, on your real tools.
+        </p>
+      </Panel>
+
+      {/* 3 · The approval gate — close on the first bronze node */}
+      <Panel side="left">
+        <Eyebrow>Human decision · 01</Eyebrow>
+        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+          It never writes code <Accent>before you approve the plan.</Accent>
+        </Heading>
+        <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
+          The bot posts an implementation plan to Jira — files, approach, risks, acceptance criteria — and
+          stops at the first human gate. One of two decisions you actually make.
+        </p>
+      </Panel>
+
+      {/* 4 · Peer review + sign-off — close on the second bronze node */}
+      <Panel side="right">
+        <Eyebrow>Human decision · 02</Eyebrow>
+        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+          Two bots review each other. <Accent>You sign off the PR.</Accent>
+        </Heading>
+        <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
+          A peer bot with its own GitHub identity reviews the change — a real, adversarial pass — then it
+          waits for your approval before the second gate opens.
+        </p>
+      </Panel>
+
+      {/* 5 · The numbers — crane overview */}
+      <Panel side="center">
+        <Eyebrow>On the record</Eyebrow>
+        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+          One evening. One product. <Accent>Three decisions.</Accent>
+        </Heading>
+        <div className="mx-auto mt-10 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4">
+          {RECEIPT.map((r) => (
+            <div key={r.label}>
+              <div className="font-display text-[clamp(28px,3.4vw,40px)] leading-none tabular-nums text-ink">
+                {r.value}
               </div>
+              <div className="mt-2 text-[13px] text-ink-dim">{r.label}</div>
             </div>
-            <HeroPipeline />
-          </div>
-        </Container>
-      </section>
+          ))}
+        </div>
+      </Panel>
 
-      {/* ── Receipt band ─────────────────────────────────────── */}
-      <section className="border-t border-line py-6">
-        <Container>
-          <StatStrip />
-          <p className="mt-6 text-center font-mono text-[12px] text-ink-faint">
-            A one-line idea became a deployed product. Every step on the record.
-          </p>
-        </Container>
-      </section>
+      {/* 6 · Economics / pricing — pull back */}
+      <Panel side="left">
+        <Eyebrow>The economics</Eyebrow>
+        <Heading split className="mt-6 text-[clamp(30px,4.4vw,52px)] leading-[1.08]">
+          A merged PR costs us <Accent>${ECON.cogsLow}&ndash;{ECON.cogsHigh}.</Accent>
+        </Heading>
+        <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
+          Only three layers of the pipeline call a model — the rest is deterministic code. We price at
+          ${ECON.price} per merged PR against the ${ECON.humanLow}&ndash;${ECON.humanHigh} a human PR costs,
+          with every dollar on a visible ledger.
+        </p>
+        <div className="mt-8">
+          <Button href="/pricing/" variant="ghost">See the pricing →</Button>
+        </div>
+      </Panel>
 
-      {/* ── Bento features ───────────────────────────────────── */}
-      <section className="py-24 sm:py-28">
-        <Container>
-          <SectionRule label="What it is" />
-          <Heading split className="mt-6 max-w-2xl text-[clamp(28px,4vw,44px)] leading-[1.1]">
-            Not a copilot. <Accent>A team you can hold accountable.</Accent>
+      {/* 7 · CTA — solid, ends the 3D */}
+      <section id="demo" className="relative scroll-mt-24 bg-ground pt-24 pb-32 sm:pt-32">
+        <Container className="text-center">
+          <Eyebrow>Get started</Eyebrow>
+          <Heading as="h2" split className="mx-auto mt-6 max-w-3xl text-[clamp(34px,5.5vw,64px)] leading-[1.04]">
+            Every company will employ engineers that aren&rsquo;t people.{" "}
+            <Accent>We make them accountable.</Accent>
           </Heading>
-          <div className="reveal mt-12">
-            <BentoGrid>
-              <BentoTile span={4}>
-                <TileTitle>One bot per human teammate</TileTitle>
-                <TileBody>
-                  Each bot works your real Jira and GitHub under its own identity, with its own vaulted
-                  credentials and scoped access. Your PRs show a real author and a real, different reviewer.
-                </TileBody>
-                <div className="mt-6 flex items-center gap-2 font-mono text-[12px] text-ink-faint">
-                  <span className="rounded bg-ground px-2 py-1">devagent-sam</span>
-                  <span>→ reviews →</span>
-                  <span className="rounded bg-ground px-2 py-1">devagent-tyler</span>
-                </div>
-              </BentoTile>
-              <BentoTile span={2}>
-                <TileTitle>Two modes</TileTitle>
-                <TileBody>
-                  A one-line idea to a shipped product, or your existing backlog worked ticket by ticket —
-                  same governed pipeline.
-                </TileBody>
-              </BentoTile>
-
-              <BentoTile span={2}>
-                <TileTitle>14 hard gates</TileTitle>
-                <TileBody>Every change passes the same chain before it can merge. No exceptions, no back doors.</TileBody>
-              </BentoTile>
-              <BentoTile span={2}>
-                <TileTitle>Tamper-evident audit</TileTitle>
-                <TileBody>Every action hash-chained. Alter one record and every hash after it breaks. SOC 2-exportable.</TileBody>
-              </BentoTile>
-              <BentoTile span={2}>
-                <TileTitle>Compounding memory</TileTitle>
-                <TileBody>Every review correction becomes a lesson and a guardrail — per company, and it doesn&rsquo;t port to a competitor.</TileBody>
-              </BentoTile>
-            </BentoGrid>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <Button href="mailto:hello@devagent.dev?subject=DevAgent%20demo">Book a demo</Button>
+            <Button href="/product/" variant="ghost">See how it works →</Button>
           </div>
         </Container>
       </section>
-
-      {/* ── Pinned pipeline take (the cinematic centerpiece) ──── */}
-      <PipelineTake />
-
-      {/* ── Screenshot tour ──────────────────────────────────── */}
-      <section className="py-24 sm:py-28">
-        <Container>
-          <SectionRule label="The product" />
-          <Heading split className="mt-6 max-w-2xl text-[clamp(28px,4vw,44px)] leading-[1.1]">
-            Trust is a screen, <Accent>not a promise.</Accent>
-          </Heading>
-          <div className="mt-14 flex flex-col gap-20 sm:gap-28">
-            {TOUR.map((t, i) => (
-              <div
-                key={t.shot}
-                className={`grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14 ${i % 2 ? "lg:[&>figure]:order-first" : ""}`}
-              >
-                <div className="reveal">
-                  <h3 className="font-display text-[26px] text-ink">{t.title}</h3>
-                  <p className="mt-3 max-w-md text-[16px] leading-relaxed text-ink-dim">{t.body}</p>
-                </div>
-                <MediaReveal>
-                  <BrowserFrame shot={t.shot} url={t.url} priority={i === 0} />
-                </MediaReveal>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* ── Economics ────────────────────────────────────────── */}
-      <section className="border-t border-line py-24 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <SectionRule label="Economics" />
-              <Heading split className="mt-6 text-[clamp(28px,4vw,44px)] leading-[1.1]">
-                A merged PR costs us <Accent>${ECON.cogsLow}&ndash;{ECON.cogsHigh}.</Accent>
-              </Heading>
-              <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
-                Only three layers of the pipeline call a model. The other nine — gates, routing, merge arithmetic,
-                secret scans, audit, billing — are deterministic code, at zero tokens. So we know our cost per PR to
-                the dollar, and price it at a fraction of the ${ECON.humanLow}&ndash;${ECON.humanHigh} a human PR costs.
-              </p>
-              <div className="mt-8">
-                <Button href="/pricing/" variant="ghost">See the pricing →</Button>
-              </div>
-            </div>
-            <div className="grid gap-4">
-              <PricingCalculator compact />
-              <AuditTrailTicker />
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ── CTA ──────────────────────────────────────────────── */}
-      <CTASection
-        id="demo"
-        eyebrow="Get started"
-        title="Clear your backlog"
-        accent="overnight."
-        sub="See DevAgent ship a real change end-to-end — on a repo you choose."
-      />
     </>
   );
 }

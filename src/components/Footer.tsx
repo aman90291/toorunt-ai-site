@@ -23,7 +23,7 @@ const COLS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-line">
+    <footer className="relative border-t border-line bg-ground">
       <div className="mx-auto max-w-[1200px] px-6 py-16 sm:px-8">
         <div className="flex flex-col gap-12 md:flex-row md:justify-between">
           <div className="max-w-xs">
