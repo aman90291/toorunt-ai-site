@@ -2,8 +2,8 @@
  * Shared target for where the 3D constellation should sit so it clears the
  * active text panel. Values are in the camera's screen space (world units):
  * +offsetX = shift toward screen-right, +offsetY = shift toward screen-up.
- * DayNight.tsx writes the target from the active [data-side] panel; Pipeline3D
- * lerps the constellation toward it each frame.
+ * ThemeDriver.tsx writes the target from the active [data-side] panel; the
+ * constellation's FocusGroup lerps toward it each frame.
  */
 export const heroState = { offsetX: 0, offsetY: 0 };
 

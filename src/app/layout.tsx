@@ -4,8 +4,11 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { CursorHaze } from "@/components/CursorHaze";
+import { BackgroundFX } from "@/components/BackgroundFX";
+import { ThemeDriver } from "@/components/ThemeDriver";
 import { GlowCursor } from "@/components/GlowCursor";
+import { Magnetic } from "@/components/Magnetic";
+import { PerspectiveTilt } from "@/components/PerspectiveTilt";
 
 // Display face — a modern, flat grotesk (no serif). Body stays Inter; data stays Geist Mono.
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -56,7 +59,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <CursorHaze />
+        <BackgroundFX />
+        <ThemeDriver />
+        <Magnetic />
+        <PerspectiveTilt />
         <GlowCursor />
         <SmoothScroll>
           <Nav />

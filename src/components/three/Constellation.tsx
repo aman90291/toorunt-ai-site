@@ -1,34 +1,28 @@
 "use client";
 
-import { useMemo, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Billboard, Environment, Lightformer } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
+import { useEffect, useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { Billboard } from "@react-three/drei";
 import * as THREE from "three";
-import { nightAmount, smoothstep } from "@/lib/daynight";
+import { smoothstep } from "@/lib/daynight";
+import { themeState } from "@/lib/theme";
 import { heroState } from "@/lib/heroState";
+import { scrollProgress } from "./scroll";
 
 /**
- * The 3D hero: DevAgent's team as a living constellation of agent-nodes wired by
- * bronze synapses, with signals travelling the edges and two bronze gate-nodes as
- * the humans-in-the-loop. As you scroll:
- *   • the camera orbits (the tinyvilla move),
- *   • the scene journeys day→night in lockstep with the page (daynight.ts),
- *   • the constellation slides off the active text side (heroState.ts), and
- *   • a second, denser "galaxy" variant crossfades in for the night half.
+ * The "brain of bots" constellation — agent-nodes wired by bronze synapses,
+ * signal motes travelling the edges, two glowing gate-node humans. Two variants
+ * (day brain / night galaxy) crossfade along the scroll journey; node colours
+ * follow the global theme value so the day/night toggle recolours them too.
  */
 
 const BRONZE = "#8a7856";
-const C_BG_DAY = new THREE.Color("#f1efe9");
-const C_BG_NIGHT = new THREE.Color("#0d0e10");
 const C_NODE_DAY = new THREE.Color("#1a1b1e");
 const C_NODE_NIGHT = new THREE.Color("#a9a599");
-const _bg = new THREE.Color();
 const _right = new THREE.Vector3();
 const _up = new THREE.Vector3();
 const _focus = new THREE.Vector3();
 
-// ── Deterministic layouts ────────────────────────────────────────────
 function mulberry32(seed: number) {
   let a = seed;
   return () => {
@@ -79,48 +73,9 @@ function buildConstellation(o: ShapeOpts): Layout {
   return { nodes, edges };
 }
 
-// Day: a compact, organic "brain". Night: a bigger, rounder, denser "galaxy".
-const LAYOUT_DAY = buildConstellation({ seed: 20260714, N: 30, rx: 2.75, ry: 1.9, rz: 2.3, shellMin: 0.7, jitter: 0.28, rMin: 0.06, rVar: 0.07, humanR: 0.17, edgeDist: 1.55, edgeProb: 0.62, maxEdges: 52 });
-const LAYOUT_NIGHT = buildConstellation({ seed: 99137, N: 46, rx: 2.7, ry: 2.55, rz: 2.7, shellMin: 0.84, jitter: 0.18, rMin: 0.05, rVar: 0.055, humanR: 0.16, edgeDist: 1.55, edgeProb: 0.8, maxEdges: 96 });
-
-// ── Camera choreography ──────────────────────────────────────────────
-const CENTER: [number, number, number] = [0, 0, 0];
-const KEYS: { p: [number, number, number]; t: [number, number, number] }[] = [
-  { p: [1.6, 1.1, 7.2], t: CENTER },
-  { p: [6.4, 0.6, 2.6], t: CENTER },
-  { p: [4.4, 3.6, -4.6], t: CENTER },
-  { p: [-3.2, 1.0, -6.2], t: CENTER },
-  { p: [-6.6, 2.2, 2.0], t: CENTER },
-  { p: [-1.4, 0.8, 7.4], t: CENTER },
-];
-
-function scrollProgress() {
-  if (typeof document === "undefined") return 0;
-  const el = document.documentElement;
-  const max = el.scrollHeight - window.innerHeight;
-  return max > 0 ? Math.min(1, Math.max(0, el.scrollTop / max)) : 0;
-}
-
-function Rig({ reduced }: { reduced: boolean }) {
-  const { camera } = useThree();
-  const pos = useRef(new THREE.Vector3(...KEYS[0].p));
-  const tgt = useRef(new THREE.Vector3(...KEYS[0].t));
-  const dp = useRef(new THREE.Vector3());
-  const dt = useRef(new THREE.Vector3());
-  useFrame(() => {
-    const prog = reduced ? 0.04 : scrollProgress();
-    const f = prog * (KEYS.length - 1);
-    const i = Math.min(KEYS.length - 2, Math.floor(f));
-    const t = f - i;
-    dp.current.set(...KEYS[i].p).lerp(new THREE.Vector3(...KEYS[i + 1].p), t);
-    dt.current.set(...KEYS[i].t).lerp(new THREE.Vector3(...KEYS[i + 1].t), t);
-    pos.current.lerp(dp.current, reduced ? 1 : 0.06);
-    tgt.current.lerp(dt.current, reduced ? 1 : 0.06);
-    camera.position.copy(pos.current);
-    camera.lookAt(tgt.current);
-  });
-  return null;
-}
+// Day: compact organic "brain". Night: denser, rounder "galaxy".
+export const LAYOUT_DAY = buildConstellation({ seed: 20260714, N: 30, rx: 2.75, ry: 1.9, rz: 2.3, shellMin: 0.7, jitter: 0.28, rMin: 0.06, rVar: 0.07, humanR: 0.17, edgeDist: 1.55, edgeProb: 0.62, maxEdges: 52 });
+export const LAYOUT_NIGHT = buildConstellation({ seed: 99137, N: 46, rx: 2.7, ry: 2.55, rz: 2.7, shellMin: 0.84, jitter: 0.18, rMin: 0.05, rVar: 0.055, humanR: 0.16, edgeDist: 1.55, edgeProb: 0.8, maxEdges: 96 });
 
 function makeGlowTexture() {
   const s = 128;
@@ -138,9 +93,7 @@ function makeGlowTexture() {
   return tex;
 }
 
-/** One constellation variant. `phase` picks its crossfade curve; the whole thing
- *  fades via a single opacity applied to every material. */
-function Constellation({ layout, phase, reduced }: { layout: Layout; phase: "day" | "night"; reduced: boolean }) {
+export function Constellation({ layout, phase, reduced }: { layout: Layout; phase: "day" | "night"; reduced: boolean }) {
   const { nodes, edges } = layout;
   const group = useRef<THREE.Group>(null);
   const signalGroup = useRef<THREE.Group>(null);
@@ -156,7 +109,6 @@ function Constellation({ layout, phase, reduced }: { layout: Layout; phase: "day
     return { agent, synapse, signal, core, ring, sprite };
   }, [glow]);
 
-  // synapse line segments (one geometry for the whole variant)
   const lineGeo = useMemo(() => {
     const pts: number[] = [];
     for (const [i, j] of edges) pts.push(...nodes[i].pos.toArray(), ...nodes[j].pos.toArray());
@@ -165,6 +117,15 @@ function Constellation({ layout, phase, reduced }: { layout: Layout; phase: "day
     return g;
   }, [nodes, edges]);
 
+  // GC: dispose everything this variant owns when it unmounts
+  useEffect(() => {
+    return () => {
+      lineGeo.dispose();
+      glow.dispose();
+      Object.values(mats).forEach((m) => m.dispose());
+    };
+  }, [lineGeo, glow, mats]);
+
   const SIGNALS = phase === "night" ? 20 : 16;
   const signals = useRef(
     Array.from({ length: SIGNALS }, (_, k) => ({ edge: edges.length ? k % edges.length : 0, t: k / SIGNALS, speed: 0.12 + (k % 5) * 0.05 }))
@@ -172,14 +133,13 @@ function Constellation({ layout, phase, reduced }: { layout: Layout; phase: "day
 
   useFrame((state, delta) => {
     const prog = reduced ? 0.04 : scrollProgress();
-    const n = nightAmount(prog);
-    const emerge = smoothstep(0.4, 0.66, prog);
+    const n = themeState.value; // colours follow the global theme (toggle included)
+    const emerge = smoothstep(0.4, 0.66, prog); // variant swap follows the journey
     const fade = reduced ? (phase === "day" ? 1 : 0) : phase === "day" ? 1 - emerge : emerge;
 
     if (group.current) group.current.visible = fade > 0.01;
     if (fade <= 0.01) return;
 
-    // day→night colour + crossfade opacity, applied once for the whole variant
     mats.agent.color.copy(C_NODE_DAY).lerp(C_NODE_NIGHT, n);
     mats.agent.opacity = fade;
     mats.synapse.opacity = (0.24 + n * 0.2) * fade;
@@ -237,8 +197,8 @@ function Constellation({ layout, phase, reduced }: { layout: Layout; phase: "day
   );
 }
 
-/** Wraps both variants and slides them off the active text side (screen space). */
-function FocusGroup({ reduced, children }: { reduced: boolean; children: React.ReactNode }) {
+/** Slides the constellation off the active text side (screen space). */
+export function FocusGroup({ reduced, children }: { reduced: boolean; children: React.ReactNode }) {
   const group = useRef<THREE.Group>(null);
   const { camera } = useThree();
   useFrame(() => {
@@ -249,82 +209,4 @@ function FocusGroup({ reduced, children }: { reduced: boolean; children: React.R
     group.current.position.lerp(_focus, reduced ? 1 : 0.045);
   });
   return <group ref={group}>{children}</group>;
-}
-
-/** Lerps scene background/fog + lights + bloom day→night. */
-function Atmosphere({ reduced, keyRef, fillRef, ambRef, bloomRef }: {
-  reduced: boolean;
-  keyRef: React.RefObject<THREE.DirectionalLight | null>;
-  fillRef: React.RefObject<THREE.DirectionalLight | null>;
-  ambRef: React.RefObject<THREE.AmbientLight | null>;
-  bloomRef: React.RefObject<{ intensity: number; luminanceMaterial?: { threshold: number } } | null>;
-}) {
-  const { scene } = useThree();
-  useFrame(() => {
-    const n = nightAmount(reduced ? 0.04 : scrollProgress());
-    _bg.copy(C_BG_DAY).lerp(C_BG_NIGHT, n);
-    if (scene.background instanceof THREE.Color) scene.background.copy(_bg);
-    if (scene.fog) (scene.fog as THREE.Fog).color.copy(_bg);
-    if (keyRef.current) keyRef.current.intensity = 1.6 - n * 0.9;
-    if (fillRef.current) fillRef.current.intensity = 0.5 - n * 0.18;
-    if (ambRef.current) ambRef.current.intensity = 0.7 - n * 0.18;
-    if (bloomRef.current) {
-      bloomRef.current.intensity = 0.5 + n * 0.7;
-      if (bloomRef.current.luminanceMaterial) bloomRef.current.luminanceMaterial.threshold = 0.98 - n * 0.26;
-    }
-  });
-  return null;
-}
-
-function Scene({ reduced }: { reduced: boolean }) {
-  const keyRef = useRef<THREE.DirectionalLight>(null);
-  const fillRef = useRef<THREE.DirectionalLight>(null);
-  const ambRef = useRef<THREE.AmbientLight>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const bloomRef = useRef<any>(null);
-
-  return (
-    <>
-      <color attach="background" args={["#f1efe9"]} />
-      <fog attach="fog" args={["#f1efe9", 7, 20]} />
-      <ambientLight ref={ambRef} intensity={0.7} />
-      <directionalLight ref={keyRef} position={[5, 8, 6]} intensity={1.6} />
-      <directionalLight ref={fillRef} position={[-6, 3, -4]} intensity={0.5} color="#f3ead6" />
-
-      <FocusGroup reduced={reduced}>
-        <Constellation layout={LAYOUT_DAY} phase="day" reduced={reduced} />
-        <Constellation layout={LAYOUT_NIGHT} phase="night" reduced={reduced} />
-      </FocusGroup>
-
-      <Environment resolution={256}>
-        <Lightformer intensity={2.0} position={[0, 5, -5]} scale={[10, 6, 1]} color="#ffffff" />
-        <Lightformer intensity={1.2} position={[-5, 2, 4]} scale={[6, 6, 1]} color="#f3ead6" />
-        <Lightformer intensity={0.9} position={[5, 3, 4]} scale={[6, 6, 1]} color="#ffffff" />
-      </Environment>
-
-      {!reduced && (
-        <EffectComposer>
-          <Bloom ref={bloomRef} intensity={0.5} luminanceThreshold={0.98} luminanceSmoothing={0.15} mipmapBlur />
-          <Vignette eskil={false} offset={0.2} darkness={0.42} />
-        </EffectComposer>
-      )}
-
-      <Atmosphere reduced={reduced} keyRef={keyRef} fillRef={fillRef} ambRef={ambRef} bloomRef={bloomRef} />
-    </>
-  );
-}
-
-export function Pipeline3D({ reduced = false }: { reduced?: boolean }) {
-  return (
-    <div className="hero-3d fixed inset-0 -z-10" aria-hidden="true">
-      <Canvas
-        dpr={[1, 1.6]}
-        gl={{ antialias: true, powerPreference: "high-performance" }}
-        camera={{ position: KEYS[0].p, fov: 42, near: 0.1, far: 100 }}
-      >
-        <Rig reduced={reduced} />
-        <Scene reduced={reduced} />
-      </Canvas>
-    </div>
-  );
 }

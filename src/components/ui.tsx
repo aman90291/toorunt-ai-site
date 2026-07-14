@@ -60,7 +60,7 @@ export function Button({
       ? "bg-accent text-ground hover:bg-accent-text hover:-translate-y-px shadow-[0_1px_0_rgba(255,255,255,0.15)_inset]"
       : "border border-line-2 text-ink hover:border-accent hover:bg-accent-wash";
   return (
-    <Link href={href} className={`${base} ${styles} ${className}`}>
+    <Link href={href} data-magnetic className={`${base} ${styles} ${className}`}>
       {children}
     </Link>
   );

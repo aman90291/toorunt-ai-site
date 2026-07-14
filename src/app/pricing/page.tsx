@@ -67,7 +67,7 @@ export default function PricingPage() {
             {TIERS.map((t) => (
               <div
                 key={t.name}
-                className={`flex flex-col rounded-[var(--radius-card)] border p-7 ${
+                className={`perspective-3d flex flex-col rounded-[var(--radius-card)] border p-7 ${
                   t.accent ? "border-accent/40 bg-accent-wash/40" : "border-line bg-ground-2/50"
                 }`}
               >

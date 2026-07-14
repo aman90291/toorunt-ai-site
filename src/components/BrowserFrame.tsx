@@ -1,9 +1,11 @@
 import { SHOTS, type ShotName } from "@/lib/shots";
+import { WarpImage } from "./WarpImage";
 
 /**
  * A clean browser-chrome frame (our own traffic lights + fake URL) around a
  * real dashboard screenshot served as <picture> AVIF/WebP at two sizes with an
- * LQIP background. Server component — no JS. Explicit dims → zero CLS.
+ * LQIP background. Server component — the only client part is the WarpImage
+ * ripple layer that overlays the picture on capable devices. Zero CLS.
  */
 export function BrowserFrame({
   shot,
@@ -35,20 +37,24 @@ export function BrowserFrame({
           {url}
         </span>
       </div>
-      <picture>
-        <source type="image/avif" srcSet={`/shots/${shot}-1100.avif 1100w, /shots/${shot}-2200.avif 2200w`} sizes="(max-width: 1100px) 100vw, 1100px" />
-        <source type="image/webp" srcSet={`/shots/${shot}-1100.webp 1100w, /shots/${shot}-2200.webp 2200w`} sizes="(max-width: 1100px) 100vw, 1100px" />
-        <img
-          src={`/shots/${shot}-1100.webp`}
-          alt={s.alt}
-          width={s.width}
-          height={s.height}
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-          className="block w-full"
-          style={{ backgroundImage: `url(${s.lqip})`, backgroundSize: "cover" }}
-        />
-      </picture>
+      <div className="relative">
+        <picture>
+          <source type="image/avif" srcSet={`/shots/${shot}-1100.avif 1100w, /shots/${shot}-2200.avif 2200w`} sizes="(max-width: 1100px) 100vw, 1100px" />
+          <source type="image/webp" srcSet={`/shots/${shot}-1100.webp 1100w, /shots/${shot}-2200.webp 2200w`} sizes="(max-width: 1100px) 100vw, 1100px" />
+          <img
+            src={`/shots/${shot}-1100.webp`}
+            alt={s.alt}
+            width={s.width}
+            height={s.height}
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+            className="block w-full"
+            style={{ backgroundImage: `url(${s.lqip})`, backgroundSize: "cover" }}
+          />
+        </picture>
+        {/* liquid-ripple layer (client; skips itself on touch/reduced-motion/no-GL) */}
+        <WarpImage src={`/shots/${shot}-1100.webp`} />
+      </div>
     </figure>
   );
 }

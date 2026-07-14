@@ -1,11 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import { Component, useEffect, useState, type ReactNode } from "react";
 
-const Pipeline3D = dynamic(() => import("./Pipeline3D").then((m) => m.Pipeline3D), { ssr: false });
+const Scene3D = dynamic(() => import("./three/Scene3D"), { ssr: false });
 
-/** If WebGL throws at runtime, fall back to the static pipeline instead of a blank page. */
+/** If WebGL throws at runtime, fall back instead of a blank page. */
 class GLBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() {
@@ -25,12 +26,12 @@ function hasWebGL() {
   }
 }
 
-/** Static CSS pipeline — the no-WebGL / SSR / reduced-motion floor. Never blank. */
+/** Static CSS pipeline — the home page's no-WebGL floor. Never blank. */
 function StaticPipeline() {
   const stages = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   const human = new Set([2, 6]);
   return (
-    <div className="fixed inset-0 -z-10 flex items-center justify-center" aria-hidden="true">
+    <div className="flex h-full w-full items-center justify-center" aria-hidden="true">
       <div className="flex items-center gap-0" style={{ transform: "perspective(1100px) rotateX(52deg) rotateZ(-38deg)" }}>
         {stages.map((i) => (
           <div key={i} className="flex items-center">
@@ -50,8 +51,18 @@ function StaticPipeline() {
   );
 }
 
-export function HeroScene() {
+/**
+ * The global background: one persistent WebGL canvas behind every page —
+ * fluid haze + particle dust everywhere, the constellation + orbit camera on
+ * the home page. Mounted once in the layout, so route changes never rebuild
+ * the GL context. Falls back gracefully (static pipeline on home, quiet ground
+ * elsewhere) when WebGL is unavailable.
+ */
+export function BackgroundFX() {
+  const pathname = usePathname();
+  const home = pathname === "/";
   const [mode, setMode] = useState<"static" | "reduced" | "full">("static");
+
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!hasWebGL()) setMode("static");
@@ -59,10 +70,15 @@ export function HeroScene() {
     else setMode("full");
   }, []);
 
-  if (mode === "static") return <StaticPipeline />;
   return (
-    <GLBoundary fallback={<StaticPipeline />}>
-      <Pipeline3D reduced={mode === "reduced"} />
-    </GLBoundary>
+    <div className="hero-3d fixed inset-0 -z-10" aria-hidden="true">
+      {mode === "static" ? (
+        home ? <StaticPipeline /> : null
+      ) : (
+        <GLBoundary fallback={home ? <StaticPipeline /> : null}>
+          <Scene3D home={home} reduced={mode === "reduced"} />
+        </GLBoundary>
+      )}
+    </div>
   );
 }

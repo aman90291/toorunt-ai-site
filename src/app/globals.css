@@ -59,17 +59,6 @@ html {
   --haze-color: rgba(150, 132, 96, 0.1);
 }
 
-/* Bronze haze that trails the cursor — atmosphere over the 3D (CursorHaze.tsx).
-   Above the canvas (-10), below content; colour follows the day→night journey. */
-.cursor-haze {
-  position: fixed;
-  inset: 0;
-  z-index: -5;
-  pointer-events: none;
-  transition: opacity 0.6s ease;
-  background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 40%), var(--haze-color), transparent 62%);
-}
-
 /* Custom glowing cursor (GlowCursor.tsx). Bronze follows the day→night accent. */
 .has-glow-cursor, .has-glow-cursor * { cursor: none !important; }
 .glow-cursor-dot, .glow-cursor-ring {
@@ -78,9 +67,25 @@ html {
 }
 .glow-cursor-dot {
   width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
-  background: var(--color-accent-text);
+  /* exclusion inverts against whatever it crosses — dark ink on day, light on night */
+  background: #cfc4ae;
+  mix-blend-mode: exclusion;
   box-shadow: 0 0 10px 2px var(--haze-color), 0 0 5px 1px var(--color-accent-text);
+  transition: width .2s ease, height .2s ease, margin .2s ease;
 }
+.glow-cursor-dot.is-hot { width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; }
+
+/* Mouse-tilt targets (PerspectiveTilt.tsx). Transform is driven inline by JS. */
+.perspective-3d { will-change: transform; transform-style: preserve-3d; }
+
+/* WebGL ripple layer over screenshots (WarpImage.tsx) — fades in when ready. */
+.warp-canvas {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.warp-canvas.is-ready { opacity: 1; }
 .glow-cursor-ring {
   width: 34px; height: 34px; margin: -17px 0 0 -17px;
   border: 1.5px solid var(--color-accent-text); opacity: 0.5;

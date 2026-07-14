@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LogoWordmark } from "./LogoWordmark";
+import { ThemeToggle } from "./ThemeToggle";
 
 const LINKS = [
   { href: "/product/", label: "Product" },
@@ -43,16 +44,20 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
+          <ThemeToggle />
           <Link
             href="/#demo"
+            data-magnetic
             className="rounded-full bg-accent px-4 py-2 text-[14px] font-medium text-ground transition-all hover:bg-accent-text hover:-translate-y-px"
           >
             Book a demo
           </Link>
         </div>
 
+        <div className="flex items-center gap-2 md:hidden">
+        <ThemeToggle />
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
@@ -63,6 +68,7 @@ export function Nav() {
             <span className={`absolute left-0 bottom-0 h-[1.5px] w-4 bg-current transition-transform ${open ? "-translate-y-[5px] -rotate-45" : ""}`} />
           </span>
         </button>
+        </div>
       </nav>
 
       {open && (

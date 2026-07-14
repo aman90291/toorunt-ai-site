@@ -28,7 +28,10 @@ export function GlowCursor() {
       if (!shown) { shown = true; dot.style.opacity = "1"; ring.style.opacity = ""; }
     };
     const hot = (e: PointerEvent, on: boolean) => {
-      if ((e.target as Element)?.closest?.(INTERACTIVE)) ring.classList.toggle("is-hot", on);
+      if ((e.target as Element)?.closest?.(INTERACTIVE)) {
+        ring.classList.toggle("is-hot", on);
+        dot.classList.toggle("is-hot", on);
+      }
     };
     const onOver = (e: PointerEvent) => hot(e, true);
     const onOut = (e: PointerEvent) => hot(e, false);

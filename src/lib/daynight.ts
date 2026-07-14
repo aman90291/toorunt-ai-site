@@ -1,6 +1,6 @@
 /**
  * Day → night journey, shared by the page theme (DayNight.tsx) and the 3D scene
- * (Pipeline3D.tsx) so they darken in lockstep as you scroll. 0 = full day,
+ * (three/Scene3D.tsx) so they darken in lockstep as you scroll. 0 = full day,
  * 1 = full night. Bronze accent stays warm on both ends.
  */
 
