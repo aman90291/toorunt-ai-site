@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { setThemeMode, type ThemeMode } from "@/lib/theme";
+import { setThemeMode, DEFAULT_MODE, type ThemeMode } from "@/lib/theme";
 
 const NEXT: Record<ThemeMode, ThemeMode> = { auto: "night", night: "day", day: "auto" };
 const LABEL: Record<ThemeMode, string> = {
@@ -45,7 +45,7 @@ function Icon({ mode }: { mode: ThemeMode }) {
  * properties AND the WebGL uniforms on the same frames — one state, two worlds.
  */
 export function ThemeToggle({ className = "" }: { className?: string }) {
-  const [mode, setMode] = useState<ThemeMode>("auto");
+  const [mode, setMode] = useState<ThemeMode>(DEFAULT_MODE);
   const cycle = () => {
     const next = NEXT[mode];
     setMode(next);

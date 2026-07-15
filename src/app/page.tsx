@@ -1,6 +1,7 @@
 import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
 import { ScrollJack } from "@/components/ScrollJack";
 import { RECEIPT, ECON } from "@/lib/stats";
+import { DEMO_MAILTO } from "@/lib/contact";
 
 /** A text panel that sits over the fixed 3D scene, anchored to one side.
  *  `nightAnchor` marks the section whose arrival brings nightfall. */
@@ -131,7 +132,7 @@ export default function Home() {
             <Accent>We make them accountable.</Accent>
           </Heading>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Button href="mailto:hello@toorunt.ai?subject=Toorunt%20AI%20demo">Book a demo</Button>
+            <Button href={DEMO_MAILTO}>Book a demo</Button>
             <Button href="/product/" variant="ghost">See how it works →</Button>
           </div>
         </Container>

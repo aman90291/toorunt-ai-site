@@ -3,6 +3,7 @@ import { Container, Heading, Accent, Eyebrow, SectionRule, Button } from "@/comp
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { CTASection } from "@/components/CTASection";
 import { ECON } from "@/lib/stats";
+import { DEMO_MAILTO, CONTACT_MAILTO } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -86,7 +87,7 @@ export default function PricingPage() {
                   ))}
                 </ul>
                 <div className="mt-7">
-                  <Button href="mailto:hello@toorunt.ai?subject=Toorunt%20AI" variant={t.accent ? "primary" : "ghost"} className="w-full">
+                  <Button href={t.accent ? DEMO_MAILTO : CONTACT_MAILTO} variant={t.accent ? "primary" : "ghost"} className="w-full">
                     {t.accent ? "Book a demo" : "Talk to us"}
                   </Button>
                 </div>

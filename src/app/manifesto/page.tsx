@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container, Eyebrow, Button } from "@/components/ui";
 import { LINES } from "@/lib/stats";
+import { DEMO_MAILTO } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Manifesto",
@@ -66,7 +67,7 @@ export default function ManifestoPage() {
           <div className="mt-14 border-t border-line pt-8">
             <p className="text-[14px] text-ink-faint">— The Toorunt AI team</p>
             <div className="mt-6">
-              <Button href="mailto:hello@toorunt.ai?subject=Toorunt%20AI%20demo">Book a demo</Button>
+              <Button href={DEMO_MAILTO}>Book a demo</Button>
             </div>
           </div>
         </Container>

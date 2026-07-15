@@ -1,4 +1,5 @@
 import { Container, Heading, Accent, Button } from "./ui";
+import { DEMO_MAILTO } from "@/lib/contact";
 
 export function CTASection({
   eyebrow = "Get started",
@@ -22,7 +23,7 @@ export function CTASection({
         </Heading>
         {sub && <p className="mx-auto mt-5 max-w-xl text-[17px] text-ink-dim">{sub}</p>}
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <Button href="mailto:hello@toorunt.ai?subject=Toorunt%20AI%20demo">Book a demo</Button>
+          <Button href={DEMO_MAILTO}>Book a demo</Button>
           <Button href="/product/" variant="ghost">
             See how it ships →
           </Button>

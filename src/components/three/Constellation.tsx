@@ -132,9 +132,10 @@ export function Constellation({ layout, phase, reduced }: { layout: Layout; phas
 
   useFrame((state, delta) => {
     const n = themeState.value; // colours follow the global theme (toggle included)
-    // The galaxy variant emerges WITH nightfall (same anchored dusk event as the
-    // page theme), so model swap and theme flip read as one moment.
-    const emerge = smoothstep(0.25, 0.85, themeState.scrollN);
+    // The galaxy variant emerges WITH nightfall — driven by the effective theme
+    // value, so it tracks both the scroll journey (auto) and the day/night toggle
+    // (a pinned night shows the galaxy, pinned day the brain).
+    const emerge = smoothstep(0.25, 0.85, n);
     const fade = reduced ? (phase === "day" ? 1 : 0) : phase === "day" ? 1 - emerge : emerge;
 
     if (group.current) group.current.visible = fade > 0.01;

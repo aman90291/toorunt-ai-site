@@ -4,6 +4,10 @@
  * 1 = full night. Bronze accent stays warm on both ends.
  */
 
+export type ThemeMode = "auto" | "day" | "night";
+/** Theme the site loads in. `night` = black by default (boot-painted, no flash). */
+export const DEFAULT_MODE: ThemeMode = "night";
+
 export function smoothstep(a: number, b: number, x: number): number {
   const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
   return t * t * (3 - 2 * t);

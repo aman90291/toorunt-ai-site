@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LogoWordmark } from "./LogoWordmark";
 import { LINES } from "@/lib/stats";
+import { CONTACTS, DEMO_MAILTO } from "@/lib/contact";
 
 const COLS = [
   {
@@ -9,15 +10,16 @@ const COLS = [
       { href: "/product/", label: "How it works" },
       { href: "/security/", label: "Security & governance" },
       { href: "/pricing/", label: "Pricing" },
-      { href: "/#demo", label: "Book a demo" },
+      { href: DEMO_MAILTO, label: "Book a demo" },
     ],
   },
   {
     title: "Company",
-    links: [
-      { href: "/manifesto/", label: "Manifesto" },
-      { href: "mailto:hello@toorunt.ai", label: "hello@toorunt.ai" },
-    ],
+    links: [{ href: "/manifesto/", label: "Manifesto" }],
+  },
+  {
+    title: "Contact",
+    links: CONTACTS.map((c) => ({ href: `mailto:${c.email}`, label: c.email })),
   },
 ];
 
@@ -32,7 +34,7 @@ export function Footer() {
               {LINES.worstCase}
             </p>
           </div>
-          <div className="flex gap-16">
+          <div className="flex flex-wrap gap-10 sm:gap-16">
             {COLS.map((c) => (
               <div key={c.title}>
                 <p className="eyebrow">{c.title}</p>

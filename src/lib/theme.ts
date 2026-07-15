@@ -1,6 +1,10 @@
 "use client";
 
 import { gsap } from "gsap";
+import { DEFAULT_MODE, type ThemeMode } from "@/lib/daynight";
+
+export { DEFAULT_MODE };
+export type { ThemeMode };
 
 /**
  * Global theme state — the single source of truth for how "night" the site is.
@@ -19,11 +23,11 @@ import { gsap } from "gsap";
  * Module singleton (not React context) so it crosses the R3F reconciler boundary.
  */
 
-export type ThemeMode = "auto" | "day" | "night";
-
+// Default is NIGHT (black) — the boot script in layout.tsx paints it before first
+// paint so there's no flash. Toggle → day → auto (the scroll journey) → night.
 export const themeState = {
-  mode: "auto" as ThemeMode,
-  value: 0,        // effective night amount, 0..1 — THE number everything reads
+  mode: DEFAULT_MODE,
+  value: DEFAULT_MODE === "night" ? 1 : 0, // effective night amount, 0..1 — THE number everything reads
   scrollN: 0,      // latest scroll-driven night amount (home journey)
   tweening: false, // a manual tween owns `value` right now
 };
