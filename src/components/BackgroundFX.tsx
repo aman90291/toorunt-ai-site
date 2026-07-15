@@ -62,12 +62,20 @@ export function BackgroundFX() {
   const pathname = usePathname();
   const home = pathname === "/";
   const [mode, setMode] = useState<"static" | "reduced" | "full">("static");
+  const [lite, setLite] = useState(false);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!hasWebGL()) setMode("static");
     else if (reduce) setMode("reduced");
     else setMode("full");
+    // "lite" tier: strip the heaviest 3D (haze shader, bloom, most dust, high DPR)
+    // on phones/tablets and low-power machines — the #1 cause of scroll lag/crashes.
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const small = window.innerWidth < 820;
+    const weak = (nav.hardwareConcurrency || 8) <= 4 || (nav.deviceMemory || 8) <= 4;
+    setLite(coarse || small || weak);
   }, []);
 
   return (
@@ -76,7 +84,7 @@ export function BackgroundFX() {
         home ? <StaticPipeline /> : null
       ) : (
         <GLBoundary fallback={home ? <StaticPipeline /> : null}>
-          <Scene3D home={home} reduced={mode === "reduced"} />
+          <Scene3D home={home} reduced={mode === "reduced"} lite={lite} />
         </GLBoundary>
       )}
     </div>

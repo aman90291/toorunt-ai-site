@@ -21,7 +21,7 @@ import { themeState } from "@/lib/theme";
  * (cheap ALU, no textures); one draw call, no post targets.
  */
 
-const TRAIL = 12;
+const TRAIL = 8; // mouse-vortex ring buffer + shader loop count (fewer = cheaper)
 
 const VERT = /* glsl */ `
   varying vec2 vUv;
@@ -53,7 +53,7 @@ const FRAG = /* glsl */ `
   }
   float fbm(vec2 p) {
     float v = 0.0, a = 0.5;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
       v += a * vnoise(p);
       p = p * 2.03 + vec2(17.3, 9.1);
       a *= 0.5;

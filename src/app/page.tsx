@@ -1,7 +1,8 @@
 import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
 import { ScrollJack } from "@/components/ScrollJack";
 import { DemoButton } from "@/components/DemoButton";
-import { RECEIPT, ECON } from "@/lib/stats";
+import { ProblemBeat, CostErasBeat, ProvenFixesBeat, TrustScreenBeat, WhyUsBeat } from "@/components/story";
+import { RECEIPT } from "@/lib/stats";
 
 /** A text panel that sits over the fixed 3D scene, anchored to one side.
  *  `nightAnchor` marks the section whose arrival brings nightfall. */
@@ -54,7 +55,10 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 2 · What it is — the thesis */}
+      {/* 2 · The problem — 75% / 95% */}
+      <ProblemBeat />
+
+      {/* 3 · What it is — the thesis */}
       <Panel side="right">
         <Eyebrow>What it is</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[clamp(32px,5vw,64px)] leading-[1.04]">
@@ -66,7 +70,10 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 3 · The approval gate — close on the first bronze node */}
+      {/* 4 · Three eras of cost */}
+      <CostErasBeat />
+
+      {/* 5 · The approval gate — close on the first bronze node */}
       <Panel side="left">
         <Eyebrow>Human decision · 01</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
@@ -90,7 +97,12 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 5 · The numbers — crane overview. Night falls as this section arrives. */}
+      {/* 8 · Proven fixes — 9 · Trust is a screen — 10 · Why us */}
+      <ProvenFixesBeat />
+      <TrustScreenBeat />
+      <WhyUsBeat />
+
+      {/* 11 · The numbers — crane overview. Night falls as this section arrives. */}
       <Panel side="center" nightAnchor>
         <Eyebrow>On the record</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
@@ -108,23 +120,7 @@ export default function Home() {
         </div>
       </Panel>
 
-      {/* 6 · Economics / pricing — pull back */}
-      <Panel side="left">
-        <Eyebrow>The economics</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
-          A merged PR costs us <Accent>${ECON.cogsLow}&ndash;{ECON.cogsHigh}.</Accent>
-        </Heading>
-        <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
-          Only three layers of the pipeline call a model — the rest is deterministic code. We price at
-          ${ECON.price} per merged PR against the ${ECON.humanLow}&ndash;${ECON.humanHigh} a human PR costs,
-          with every dollar on a visible ledger.
-        </p>
-        <div className="mt-8">
-          <Button href="/pricing/" variant="ghost">See the pricing →</Button>
-        </div>
-      </Panel>
-
-      {/* 7 · CTA — solid, ends the 3D */}
+      {/* 12 · CTA — solid, ends the 3D */}
       <section id="demo" className="relative scroll-mt-24 bg-ground pt-24 pb-32 sm:pt-32">
         <Container className="text-center">
           <Eyebrow>Get started</Eyebrow>

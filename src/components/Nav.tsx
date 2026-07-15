@@ -27,7 +27,7 @@ export function Nav() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? "border-b border-line bg-ground/80 backdrop-blur-xl" : "border-b border-transparent"
+        scrolled ? "border-b border-line bg-ground/95" : "border-b border-transparent"
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 sm:px-8">
@@ -74,7 +74,7 @@ export function Nav() {
       </nav>
 
       {open && (
-        <div className="border-t border-line bg-ground/95 backdrop-blur-xl md:hidden">
+        <div className="border-t border-line bg-ground md:hidden">
           <div className="flex flex-col gap-1 px-6 py-4">
             {LINKS.map((l) => (
               <Link

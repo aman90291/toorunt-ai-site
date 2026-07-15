@@ -89,7 +89,7 @@ function Atmosphere({ reduced, keyRef, fillRef, ambRef, bloomRef }: {
   return null;
 }
 
-function SceneContents({ home, reduced }: { home: boolean; reduced: boolean }) {
+function SceneContents({ home, reduced, lite }: { home: boolean; reduced: boolean; lite: boolean }) {
   const keyRef = useRef<THREE.DirectionalLight>(null);
   const fillRef = useRef<THREE.DirectionalLight>(null);
   const ambRef = useRef<THREE.AmbientLight>(null);
@@ -106,8 +106,9 @@ function SceneContents({ home, reduced }: { home: boolean; reduced: boolean }) {
 
       {home ? <Rig reduced={reduced} /> : <StaticCam />}
 
-      <HazeLayer reduced={reduced} />
-      <DustField reduced={reduced} />
+      {/* Haze = heaviest fragment work — desktop only. Dust thinned on low-power. */}
+      {!lite && <HazeLayer reduced={reduced} />}
+      <DustField reduced={reduced} count={lite ? 650 : 1600} />
 
       {home && (
         <FocusGroup reduced={reduced}>
@@ -122,7 +123,7 @@ function SceneContents({ home, reduced }: { home: boolean; reduced: boolean }) {
         <Lightformer intensity={0.9} position={[5, 3, 4]} scale={[6, 6, 1]} color="#ffffff" />
       </Environment>
 
-      {!reduced && (
+      {!reduced && !lite && (
         <EffectComposer>
           <Bloom ref={bloomRef} intensity={0.5} luminanceThreshold={0.98} luminanceSmoothing={0.15} mipmapBlur />
           <Vignette eskil={false} offset={0.2} darkness={0.42} />
@@ -134,14 +135,14 @@ function SceneContents({ home, reduced }: { home: boolean; reduced: boolean }) {
   );
 }
 
-export default function Scene3D({ home, reduced }: { home: boolean; reduced: boolean }) {
+export default function Scene3D({ home, reduced, lite = false }: { home: boolean; reduced: boolean; lite?: boolean }) {
   return (
     <Canvas
-      dpr={[1, 1.6]}
-      gl={{ antialias: true, powerPreference: "high-performance" }}
+      dpr={lite ? [1, 1.25] : [1, 1.5]}
+      gl={{ antialias: !lite, powerPreference: lite ? "low-power" : "high-performance" }}
       camera={{ position: KEYS[0].p, fov: 42, near: 0.1, far: 100 }}
     >
-      <SceneContents home={home} reduced={reduced} />
+      <SceneContents home={home} reduced={reduced} lite={lite} />
     </Canvas>
   );
 }

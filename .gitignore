@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local deploy artifact
 toorunt-ai-site.zip
+
+# MCP config may contain API keys — never commit
+.mcp.json

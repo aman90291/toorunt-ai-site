@@ -17,7 +17,6 @@ import { themeState } from "@/lib/theme";
  * alpha, graded day→night on the shared theme value.
  */
 
-const COUNT = 2400;
 const BOX_XZ = 34; // world extent (camera orbit stays well inside)
 const BOX_Y = 22;  // must match H in the vertex shader wrap
 
@@ -67,11 +66,12 @@ const FRAG = /* glsl */ `
   }
 `;
 
-export function DustField({ reduced }: { reduced: boolean }) {
+export function DustField({ reduced, count = 1600 }: { reduced: boolean; count?: number }) {
   const points = useRef<THREE.Points>(null);
   const drift = useRef({ t: 0, lastY: 0, vel: 0 });
 
   const { geometry, material } = useMemo(() => {
+    const COUNT = count;
     const pos = new Float32Array(COUNT * 3);
     const seed = new Float32Array(COUNT);
     const size = new Float32Array(COUNT);
@@ -102,7 +102,7 @@ export function DustField({ reduced }: { reduced: boolean }) {
       depthWrite: false,
     });
     return { geometry, material };
-  }, []);
+  }, [count]);
 
   // GC
   useEffect(() => () => { geometry.dispose(); material.dispose(); }, [geometry, material]);
