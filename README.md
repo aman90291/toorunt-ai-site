@@ -1,6 +1,6 @@
-# Toorunt AI — marketing site
+# tOOrunt AI — marketing site
 
-The public site for Toorunt AI: governed AI engineering teams. Dark, engineering-grade,
+The public site for tOOrunt AI: governed AI engineering teams. Dark, engineering-grade,
 built to be inspected.
 
 ## Stack

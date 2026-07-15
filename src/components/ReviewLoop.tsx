@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { LazyMotion, domAnimation, m, AnimatePresence } from "./motion";
 
-/** The three ways Toorunt AI answers a review comment — plus the safety flex. */
+/** The three ways tOOrunt AI answers a review comment — plus the safety flex. */
 const CASES = [
   {
     key: "fix",

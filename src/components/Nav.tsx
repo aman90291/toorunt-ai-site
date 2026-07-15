@@ -31,7 +31,7 @@ export function Nav() {
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 sm:px-8">
-        <Link href="/" aria-label="Toorunt AI home" className="-my-2 py-2">
+        <Link href="/" aria-label="tOOrunt AI home" className="-my-2 py-2">
           <LogoWordmark />
         </Link>
 

@@ -65,7 +65,7 @@ export default function ManifestoPage() {
           </div>
 
           <div className="mt-14 border-t border-line pt-8">
-            <p className="text-[14px] text-ink-faint">— The Toorunt AI team</p>
+            <p className="text-[14px] text-ink-faint">— The tOOrunt AI team</p>
             <div className="mt-6">
               <DemoButton>Book a demo</DemoButton>
             </div>

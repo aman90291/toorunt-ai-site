@@ -31,8 +31,8 @@ const SITE = "https://toorunt.ai";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "Toorunt AI — The accountable AI engineering team",
-    template: "%s — Toorunt AI",
+    default: "tOOrunt AI — The accountable AI engineering team",
+    template: "%s — tOOrunt AI",
   },
   description:
     "A governed AI engineering team — one bot per teammate, each with its own Jira and GitHub identity, 14 hard gates on every change, and an audit trail you can hand to your auditor. Clears your backend backlog overnight, with mandatory human approval or policy-bounded autonomy.",
@@ -40,10 +40,10 @@ export const metadata: Metadata = {
     "AI engineering team", "autonomous software engineer", "AI code review",
     "governed AI agents", "Jira GitHub AI", "AI SDLC", "agentic engineering",
   ],
-  authors: [{ name: "Toorunt AI" }],
+  authors: [{ name: "tOOrunt AI" }],
   openGraph: {
     type: "website",
-    siteName: "Toorunt AI",
+    siteName: "tOOrunt AI",
     url: SITE,
     images: [{ url: "/og/home.png", width: 1200, height: 630 }],
   },
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "Toorunt AI",
+  name: "tOOrunt AI",
   applicationCategory: "DeveloperApplication",
   operatingSystem: "Web",
   description:

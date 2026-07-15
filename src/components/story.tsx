@@ -60,7 +60,7 @@ export function ProblemBeat() {
 const ERAS = [
   { label: "Manual SDLC", people: "4–6 people", time: "1–2 weeks", cost: "$500–1,000", bar: "100%", accent: false },
   { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", accent: false },
-  { label: "Toorunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$10–50", bar: "6%", accent: true },
+  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$10–50", bar: "6%", accent: true },
 ];
 export function CostErasBeat() {
   return (
@@ -103,7 +103,7 @@ export function CostErasBeat() {
 
 /* ── Act III · Why us (competitive) ─────────────────────────────────── */
 const COMPARE = {
-  cols: ["Claude Cowork", "Devin", "Toorunt AI"],
+  cols: ["Claude Cowork", "Devin", "tOOrunt AI"],
   rows: [
     ["Unit of value", "One person’s session", "One task → one PR", "An accountable team"],
     ["Identity", "The user’s own", "One shared org agent", "Per-bot Jira + GitHub identities"],

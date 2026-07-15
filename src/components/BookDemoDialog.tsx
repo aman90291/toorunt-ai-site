@@ -72,7 +72,7 @@ export function BookDemoDialog() {
           organisation: form.organisation,
           location: form.location,
           phone: form.phone,
-          _subject: "Toorunt AI — new demo request",
+          _subject: "tOOrunt AI — new demo request",
           _cc: FORMSUBMIT_CC,
           _template: "table",
           _captcha: "false",

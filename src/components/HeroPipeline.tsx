@@ -10,7 +10,7 @@ const LOG: { text: string; kind: "auto" | "human" | "merge" }[] = [
 ];
 
 /**
- * A static snapshot of one completed Toorunt AI run — ticket to merged PR.
+ * A static snapshot of one completed tOOrunt AI run — ticket to merged PR.
  * No animation: default values, always rendered whole. Server component,
  * zero client JS.
  */
@@ -18,7 +18,7 @@ export function HeroPipeline() {
   return (
     <div
       className="relative w-full min-w-0 overflow-hidden rounded-[var(--radius-card)] border border-line-2 bg-ground-2/80 p-5 backdrop-blur-sm shadow-[0_40px_120px_-50px_rgba(0,0,0,0.9)] sm:p-6"
-      aria-label="A completed Toorunt AI run, ticket to merged pull request"
+      aria-label="A completed tOOrunt AI run, ticket to merged pull request"
     >
       {/* header */}
       <div className="mb-5 flex items-center justify-between">
