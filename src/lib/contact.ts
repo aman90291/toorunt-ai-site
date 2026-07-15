@@ -1,7 +1,7 @@
 /** Where people reach the team. One source of truth for every CTA + the footer. */
 export const CONTACTS = [
-  { name: "Subhash", email: "subhash@tooruntai.com" },
-  { name: "AK", email: "ak@tooruntai.com" },
+  { name: "Subhash", email: "subhash@toorunt.ai" },
+  { name: "AK", email: "ak@toorunt.ai" },
 ];
 
 const TO = CONTACTS.map((c) => c.email).join(",");

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Container, Heading, Accent, Eyebrow, SectionRule, Button } from "@/components/ui";
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { CTASection } from "@/components/CTASection";
+import { DemoButton } from "@/components/DemoButton";
 import { ECON } from "@/lib/stats";
-import { DEMO_MAILTO, CONTACT_MAILTO } from "@/lib/contact";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -87,9 +88,11 @@ export default function PricingPage() {
                   ))}
                 </ul>
                 <div className="mt-7">
-                  <Button href={t.accent ? DEMO_MAILTO : CONTACT_MAILTO} variant={t.accent ? "primary" : "ghost"} className="w-full">
-                    {t.accent ? "Book a demo" : "Talk to us"}
-                  </Button>
+                  {t.accent ? (
+                    <DemoButton className="w-full">Book a demo</DemoButton>
+                  ) : (
+                    <Button href={CONTACT_MAILTO} variant="ghost" className="w-full">Talk to us</Button>
+                  )}
                 </div>
               </div>
             ))}

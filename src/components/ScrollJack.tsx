@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { Observer } from "gsap/Observer";
+import { OPEN_DEMO_EVENT, CLOSE_DEMO_EVENT } from "@/lib/demo";
 
 type LenisLike = {
   scrollTo: (
@@ -105,9 +106,18 @@ export function ScrollJack() {
     };
     window.addEventListener("keydown", onKey);
 
+    // pause section-snapping (and its wheel preventDefault) while the demo modal
+    // is open, so the dialog can scroll internally on short screens
+    const pause = () => obs.disable();
+    const resume = () => obs.enable();
+    window.addEventListener(OPEN_DEMO_EVENT, pause);
+    window.addEventListener(CLOSE_DEMO_EVENT, resume);
+
     return () => {
       obs.kill();
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener(OPEN_DEMO_EVENT, pause);
+      window.removeEventListener(CLOSE_DEMO_EVENT, resume);
     };
   }, []);
 

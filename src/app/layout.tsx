@@ -9,6 +9,7 @@ import { ThemeDriver } from "@/components/ThemeDriver";
 import { GlowCursor } from "@/components/GlowCursor";
 import { Magnetic } from "@/components/Magnetic";
 import { PerspectiveTilt } from "@/components/PerspectiveTilt";
+import { BookDemoDialog } from "@/components/BookDemoDialog";
 import { DEFAULT_MODE, NIGHT_TOKENS } from "@/lib/daynight";
 
 // No-flash boot: when the site defaults to night, paint the night theme tokens on
@@ -85,6 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main>{children}</main>
           <Footer />
         </SmoothScroll>
+        <BookDemoDialog />
       </body>
     </html>
   );

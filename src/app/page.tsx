@@ -1,7 +1,7 @@
 import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
 import { ScrollJack } from "@/components/ScrollJack";
+import { DemoButton } from "@/components/DemoButton";
 import { RECEIPT, ECON } from "@/lib/stats";
-import { DEMO_MAILTO } from "@/lib/contact";
 
 /** A text panel that sits over the fixed 3D scene, anchored to one side.
  *  `nightAnchor` marks the section whose arrival brings nightfall. */
@@ -37,15 +37,16 @@ export default function Home() {
       {/* 1 · Hero */}
       <Panel side="left">
         <Eyebrow>Governed AI engineering teams</Eyebrow>
-        <Heading as="h1" split className="perspective-3d mt-6 text-[clamp(46px,8vw,104px)] leading-[0.95]">
-          Software engineers <Accent>that aren&rsquo;t people.</Accent>
+        <Heading as="h1" split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.0]">
+          Software Development Lifecycle <Accent>automation, end&nbsp;to&nbsp;end.</Accent>
         </Heading>
         <p className="mt-6 text-[18px] leading-relaxed text-ink-dim">
-          One bot per teammate, each with its own Jira and GitHub identity — working your real backlog
-          behind fourteen hard gates. Meet the engineer that isn&rsquo;t a person.
+          A governed team of AI engineers that carries every ticket from your Jira board to a reviewed,
+          tested, merged pull request — behind fourteen hard gates, with a human on every decision that
+          counts.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-3">
-          <Button href="#demo">Book a demo</Button>
+          <DemoButton>Book a demo</DemoButton>
           <Button href="/product/" variant="ghost">See how it works →</Button>
         </div>
         <p className="mt-14 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
@@ -53,15 +54,15 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 2 · What it is — travel down the line */}
+      {/* 2 · What it is — the thesis */}
       <Panel side="right">
         <Eyebrow>What it is</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
-          The bottleneck isn&rsquo;t writing code. <Accent>It&rsquo;s accountability.</Accent>
+        <Heading split className="perspective-3d mt-6 text-[clamp(32px,5vw,64px)] leading-[1.04]">
+          We don&rsquo;t sell the brain. <Accent>We sell the organization that brain works inside.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
-          AI can already write the code. The unsolved part is who planned it, who reviewed it, who approved
-          it — who&rsquo;s accountable. Toorunt AI is the governed team that answers that, on your real tools.
+          The Jira board. The reviewers. The QA gates. The on-call rotation. The audit trail. The
+          accountability structure a real engineering team runs on.
         </p>
       </Panel>
 
@@ -132,7 +133,7 @@ export default function Home() {
             <Accent>We make them accountable.</Accent>
           </Heading>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Button href={DEMO_MAILTO}>Book a demo</Button>
+            <DemoButton>Book a demo</DemoButton>
             <Button href="/product/" variant="ghost">See how it works →</Button>
           </div>
         </Container>

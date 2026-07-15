@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LogoWordmark } from "./LogoWordmark";
 import { ThemeToggle } from "./ThemeToggle";
+import { openDemo } from "@/lib/demo";
 
 const LINKS = [
   { href: "/product/", label: "Product" },
@@ -45,13 +46,14 @@ export function Nav() {
             </Link>
           ))}
           <ThemeToggle />
-          <Link
-            href="/#demo"
+          <button
+            type="button"
             data-magnetic
+            onClick={openDemo}
             className="rounded-full bg-accent px-4 py-2 text-[14px] font-medium text-ground transition-all hover:bg-accent-text hover:-translate-y-px"
           >
             Book a demo
-          </Link>
+          </button>
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
@@ -84,13 +86,13 @@ export function Nav() {
                 {l.label}
               </Link>
             ))}
-            <Link
-              href="/#demo"
-              onClick={() => setOpen(false)}
+            <button
+              type="button"
+              onClick={() => { setOpen(false); openDemo(); }}
               className="mt-2 rounded-full bg-accent px-4 py-2.5 text-center text-[15px] font-medium text-ground"
             >
               Book a demo
-            </Link>
+            </button>
           </div>
         </div>
       )}

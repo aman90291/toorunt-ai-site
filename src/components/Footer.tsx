@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { LogoWordmark } from "./LogoWordmark";
+import { DemoButton } from "./DemoButton";
 import { LINES } from "@/lib/stats";
-import { CONTACTS, DEMO_MAILTO } from "@/lib/contact";
+import { CONTACTS } from "@/lib/contact";
 
 const COLS = [
   {
@@ -10,7 +11,7 @@ const COLS = [
       { href: "/product/", label: "How it works" },
       { href: "/security/", label: "Security & governance" },
       { href: "/pricing/", label: "Pricing" },
-      { href: DEMO_MAILTO, label: "Book a demo" },
+      { href: "#book-demo", label: "Book a demo" }, // opens the dialog (see render)
     ],
   },
   {
@@ -41,9 +42,13 @@ export function Footer() {
                 <ul className="mt-4 flex flex-col gap-2.5">
                   {c.links.map((l) => (
                     <li key={l.label}>
-                      <Link href={l.href} className="text-[14px] text-ink-dim transition-colors hover:text-ink">
-                        {l.label}
-                      </Link>
+                      {l.href === "#book-demo" ? (
+                        <DemoButton variant="link">{l.label}</DemoButton>
+                      ) : (
+                        <Link href={l.href} className="text-[14px] text-ink-dim transition-colors hover:text-ink">
+                          {l.label}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>
