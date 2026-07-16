@@ -11,6 +11,7 @@ import { Magnetic } from "@/components/Magnetic";
 import { PerspectiveTilt } from "@/components/PerspectiveTilt";
 import { BookDemoDialog } from "@/components/BookDemoDialog";
 import { DEFAULT_MODE, NIGHT_TOKENS } from "@/lib/daynight";
+import Script from "next/script";
 
 // No-flash boot: when the site defaults to night, paint the night theme tokens on
 // <html> synchronously, before first paint, so there's no flash of the light base.
@@ -26,6 +27,7 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "sw
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 
+const GA_ID = "G-C59E24WX8G"; // Google Analytics 4 — public client-side measurement id
 const SITE = "https://toorunt.ai";
 
 export const metadata: Metadata = {
@@ -76,6 +78,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Google tag (gtag.js) — every page, after hydration so it never blocks the 3D */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`}
+        </Script>
+
         <BackgroundFX />
         <ThemeDriver />
         <Magnetic />
