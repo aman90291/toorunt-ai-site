@@ -10,6 +10,7 @@ import {
   lerpToken,
   nightAmount,
   inkFlip,
+  groundFlip,
   smoothstep,
 } from "@/lib/daynight";
 import { themeState } from "@/lib/theme";
@@ -75,11 +76,22 @@ export function ThemeDriver() {
       const v = themeState.value;
       if (Math.abs(v - painted) >= 0.001) {
         painted = v;
+        // Two curves, deliberately: the ground eases through dusk while ink and
+        // its halo cross as a near-step. See the note above inkFlip in
+        // daynight.ts — using one curve for both bottoms out at 1.5:1.
         const vInk = inkFlip(v);
+        const vGround = groundFlip(v);
         for (const key of THEME_VAR_KEYS) {
-          const t = INK_SIDE_KEYS.has(key) ? vInk : v;
+          const t = INK_SIDE_KEYS.has(key) ? vInk : vGround;
           root.style.setProperty(key, lerpToken(DAY_TOKENS[key], NIGHT_TOKENS[key], t));
         }
+        // Publish the raw scalar too, so CSS can lean on the progress directly
+        // (a shadow that deepens, a hairline that fades up) without needing a
+        // token of its own. Rounded to 3dp — that is well under one 8-bit step,
+        // and it keeps the style recalc off the sub-pixel churn.
+        root.style.setProperty("--t", v.toFixed(3));
+        // Native form controls, scrollbars and canvas fallbacks follow this.
+        root.style.colorScheme = v > 0.5 ? "dark" : "light";
       }
 
       // 4. constellation clears the active text panel (home only; layout, not motion)

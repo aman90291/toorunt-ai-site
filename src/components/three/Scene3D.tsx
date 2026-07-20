@@ -6,6 +6,7 @@ import { Environment, Lightformer } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { themeState } from "@/lib/theme";
+import { SCENE } from "@/lib/daynight";
 import { scrollProgress } from "./scroll";
 import { Constellation, FocusGroup, LAYOUT_DAY, LAYOUT_NIGHT } from "./Constellation";
 import { HazeLayer } from "./HazeLayer";
@@ -18,8 +19,10 @@ import { DustField } from "./DustField";
  * instant toggle) — CSS and WebGL repaint on the same frames.
  */
 
-const C_BG_DAY = new THREE.Color("#f1efe9");
-const C_BG_NIGHT = new THREE.Color("#0d0e10");
+// Derived from the palette, never re-typed — the canvas sits directly behind
+// the page, so a drifted literal here shows up as a seam at the viewport edge.
+const C_BG_DAY = new THREE.Color(SCENE.bgDay);
+const C_BG_NIGHT = new THREE.Color(SCENE.bgNight);
 const _bg = new THREE.Color();
 
 const CENTER: [number, number, number] = [0, 0, 0];
@@ -98,8 +101,8 @@ function SceneContents({ home, reduced, lite }: { home: boolean; reduced: boolea
 
   return (
     <>
-      <color attach="background" args={["#f1efe9"]} />
-      <fog attach="fog" args={["#f1efe9", 7, 20]} />
+      <color attach="background" args={[SCENE.bgDay]} />
+      <fog attach="fog" args={[SCENE.bgDay, 7, 20]} />
       <ambientLight ref={ambRef} intensity={0.7} />
       <directionalLight ref={keyRef} position={[5, 8, 6]} intensity={1.6} />
       <directionalLight ref={fillRef} position={[-6, 3, -4]} intensity={0.5} color="#f3ead6" />

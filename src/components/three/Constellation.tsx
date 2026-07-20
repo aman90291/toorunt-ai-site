@@ -4,20 +4,22 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Billboard } from "@react-three/drei";
 import * as THREE from "three";
-import { smoothstep } from "@/lib/daynight";
+import { smoothstep, DAY_TOKENS, NIGHT_TOKENS } from "@/lib/daynight";
 import { themeState } from "@/lib/theme";
 import { heroState } from "@/lib/heroState";
 
 /**
- * The "brain of bots" constellation — agent-nodes wired by bronze synapses,
+ * The "brain of bots" constellation — agent-nodes wired by crimson synapses,
  * signal motes travelling the edges, two glowing gate-node humans. Two variants
  * (day brain / night galaxy) crossfade along the scroll journey; node colours
  * follow the global theme value so the day/night toggle recolours them too.
  */
 
-const BRONZE = "#8a7856";
-const C_NODE_DAY = new THREE.Color("#1a1b1e");
-const C_NODE_NIGHT = new THREE.Color("#a9a599");
+// The synapse colour is the accent: the wiring between agents is exactly where
+// the human decisions live, so it carries the 10%.
+const SYNAPSE = DAY_TOKENS["--color-accent"];
+const C_NODE_DAY = new THREE.Color(DAY_TOKENS["--color-ink"]);
+const C_NODE_NIGHT = new THREE.Color(NIGHT_TOKENS["--color-ink-faint"]);
 const _right = new THREE.Vector3();
 const _up = new THREE.Vector3();
 const _focus = new THREE.Vector3();
@@ -100,10 +102,10 @@ export function Constellation({ layout, phase, reduced }: { layout: Layout; phas
 
   const mats = useMemo(() => {
     const agent = new THREE.MeshPhysicalMaterial({ color: C_NODE_DAY.clone(), roughness: 0.35, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.25, transparent: true });
-    const synapse = new THREE.LineBasicMaterial({ color: BRONZE, transparent: true, opacity: 0.26 });
-    const signal = new THREE.MeshStandardMaterial({ color: BRONZE, emissive: BRONZE, emissiveIntensity: 1.4, roughness: 0.5, toneMapped: false, transparent: true });
-    const core = new THREE.MeshStandardMaterial({ color: BRONZE, emissive: BRONZE, emissiveIntensity: 0.5, roughness: 0.3, metalness: 0.1, transparent: true });
-    const ring = new THREE.MeshStandardMaterial({ color: BRONZE, emissive: BRONZE, emissiveIntensity: 0.6, roughness: 0.4, transparent: true });
+    const synapse = new THREE.LineBasicMaterial({ color: SYNAPSE, transparent: true, opacity: 0.26 });
+    const signal = new THREE.MeshStandardMaterial({ color: SYNAPSE, emissive: SYNAPSE, emissiveIntensity: 1.4, roughness: 0.5, toneMapped: false, transparent: true });
+    const core = new THREE.MeshStandardMaterial({ color: SYNAPSE, emissive: SYNAPSE, emissiveIntensity: 0.5, roughness: 0.3, metalness: 0.1, transparent: true });
+    const ring = new THREE.MeshStandardMaterial({ color: SYNAPSE, emissive: SYNAPSE, emissiveIntensity: 0.6, roughness: 0.4, transparent: true });
     const sprite = new THREE.SpriteMaterial({ map: glow, transparent: true, depthWrite: false, opacity: 0.9 });
     return { agent, synapse, signal, core, ring, sprite };
   }, [glow]);

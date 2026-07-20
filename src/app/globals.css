@@ -2,27 +2,36 @@
 @import "lenis/dist/lenis.css";
 
 /* ─────────────────────────────────────────────────────────────
-   tOOrunt AI — "Gallery": warm architectural white, near-black ink, one bronze
-   accent. Light theme adopted from the tinyvilla reference. The 3D pipeline is
-   the hero; the page is the quiet gallery around it.
+   tOOrunt AI — 60 / 30 / 10.
+
+     60%  #0d0e10  near-black    the page from the dusk crossing down
+     30%  #f1efe9  warm white    the hero and the opening acts
+     10%  #9b3b45  crimson       wherever a human is accountable
+
+   The values below are the DAY end of the journey. They are mirrored from
+   DAY_TOKENS in src/lib/daynight.ts, which is the source of truth — it also
+   owns the night end and the OKLab interpolation between them. Change a colour
+   there, then mirror it here. ThemeDriver overwrites these same custom
+   properties on <html> at runtime, which re-themes every Tailwind token
+   utility at once; that is why there are no `dark:` variants in the codebase.
    ───────────────────────────────────────────────────────────── */
 @theme {
   --font-display: var(--font-geist), var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), "SF Mono", ui-monospace, Menlo, monospace;
 
-  --color-ground: #f1efe9;       /* page — warm gallery white */
+  --color-ground: #f1efe9;       /* page — warm gallery white (the 30%) */
   --color-ground-2: #fbfaf6;     /* raised surfaces, cards */
   --color-ground-3: #e7e3d9;     /* wells / deeper panels */
   --color-line: #ddd8cb;         /* warm hairlines */
   --color-line-2: #c6bfae;       /* stronger dividers */
-  --color-ink: #1a1b1e;          /* primary text — near-black */
+  --color-ink: #14151a;          /* primary text — near-black */
   --color-ink-dim: #52575d;      /* secondary text — slate grey */
-  --color-ink-faint: #8f8a7d;    /* captions, meta — warm grey */
-  --color-accent: #1a1b1e;       /* solid marks / buttons = near-black (gallery style) */
-  --color-accent-text: #8a7856;  /* bronze — headline highlights, small accent labels */
-  --color-accent-wash: rgba(138, 120, 86, 0.12);
-  --color-pass: #6e7b5e;         /* passed marks — muted sage-green */
+  --color-ink-faint: #8a8578;    /* captions, meta — warm grey (3.2:1 on ground) */
+  --color-accent: #9b3b45;       /* crimson — primary CTA, human gates (the 10%) */
+  --color-accent-text: #9b3b45;  /* 5.9:1 on ground — AA body, AAA large */
+  --color-accent-wash: rgba(155, 59, 69, 0.10);
+  --color-pass: #6e7b5e;         /* autonomous gate marks — muted sage */
 
   --radius-card: 14px;
 
@@ -54,9 +63,17 @@ html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   /* Soft halo painted behind text for legibility over the live 3D (no card).
-     Day = warm-white glow; the day→night system (DayNight.tsx) animates this. */
-  --text-halo: rgba(241, 239, 233, 0.72);
-  --haze-color: rgba(150, 132, 96, 0.1);
+     Day = warm-white glow; ThemeDriver animates this across the journey.
+     Must match DAY_TOKENS["--text-halo"] — these had drifted (0.72 vs 0.85). */
+  --text-halo: rgba(241, 239, 233, 0.85);
+  --haze-color: rgba(155, 59, 69, 0.10);
+
+  /* Dusk progress, 0 = white … 1 = dark. ThemeDriver writes this every frame
+     alongside the resolved token values. Tokens are pre-resolved in JS (OKLab)
+     rather than left to CSS color-mix so the WebGL uniforms and the CSS read
+     the exact same numbers; --t is published for anything that wants to lean
+     on the raw scalar — a shadow that deepens, a hairline that fades in. */
+  --t: 0;
 }
 
 /* Custom glowing cursor (GlowCursor.tsx). Bronze follows the day→night accent. */
@@ -137,10 +154,13 @@ body::before {
   pointer-events: none;
   background:
     radial-gradient(1200px 700px at 50% -10%, rgba(255, 255, 255, 0.6), transparent 60%),
-    radial-gradient(900px 800px at 100% 100%, rgba(138, 120, 86, 0.05), transparent 55%);
+    radial-gradient(900px 800px at 100% 100%, rgba(155, 59, 69, 0.045), transparent 55%);
 }
 
-::selection { background: var(--color-accent); color: #f1efe9; }
+/* Both ends stay legible because the pair inverts with the theme: crimson on
+   warm white is 5.9:1, and the lifted night crimson on near-black is 4.8:1.
+   Hardcoding a light selection colour would have failed at the dark end. */
+::selection { background: var(--color-accent); color: var(--color-ground); }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
