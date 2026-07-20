@@ -11,17 +11,7 @@ import { Magnetic } from "@/components/Magnetic";
 import { PerspectiveTilt } from "@/components/PerspectiveTilt";
 import { PointerDriver } from "@/components/PointerDriver";
 import { BookDemoDialog } from "@/components/BookDemoDialog";
-import { DEFAULT_MODE, NIGHT_TOKENS } from "@/lib/daynight";
 import Script from "next/script";
-
-// No-flash boot: when the site defaults to night, paint the night theme tokens on
-// <html> synchronously, before first paint, so there's no flash of the light base.
-const THEME_BOOT =
-  DEFAULT_MODE === "night"
-    ? `(function(){try{var s=document.documentElement.style,n=${JSON.stringify(
-        NIGHT_TOKENS
-      )};for(var k in n)s.setProperty(k,n[k]);s.colorScheme='dark';document.documentElement.dataset.boot='night';}catch(e){}})();`
-    : "";
 
 // Display face — a modern, flat grotesk (no serif). Body stays Inter; data stays Geist Mono.
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -73,8 +63,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geist.variable} ${inter.variable} ${geistMono.variable}`}
     >
       <body>
-        {/* first thing in <body> → runs before paint, no flash of the light base */}
-        {THEME_BOOT && <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

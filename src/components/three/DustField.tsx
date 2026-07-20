@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { themeState } from "@/lib/theme";
 
 /**
  * Floating 3D particle dust (Step 5a): thousands of tiny glowing motes at
@@ -46,7 +45,6 @@ const VERT = /* glsl */ `
 
 const FRAG = /* glsl */ `
   precision highp float;
-  uniform float uNight;
   uniform float uAmb;
   varying float vSeed;
   varying float vDepth;
@@ -55,12 +53,10 @@ const FRAG = /* glsl */ `
     float d = length(c);
     float disc = smoothstep(0.5, 0.08, d);            // soft glowing dot
     float tw = 0.55 + 0.45 * sin(uAmb * (1.5 + vSeed) + vSeed * 40.0); // twinkle
-    vec3 day = vec3(0.55, 0.51, 0.42);
-    vec3 night = vec3(0.95, 0.88, 0.70);
-    vec3 col = mix(day, night, uNight);
+    vec3 col = vec3(0.95, 0.88, 0.70); // warm mote, dark theme only
     // near-fade kills the giant close-up blobs; far-fade recedes into the fog
     float nearFade = smoothstep(0.02, 0.14, vDepth);
-    float a = disc * tw * mix(0.14, 0.8, uNight) * (1.0 - vDepth * 0.6) * nearFade;
+    float a = disc * tw * 0.8 * (1.0 - vDepth * 0.6) * nearFade;
     if (a < 0.003) discard;
     gl_FragColor = vec4(col, a);
   }
@@ -95,7 +91,6 @@ export function DustField({ reduced, count = 1600 }: { reduced: boolean; count?:
       uniforms: {
         uAmb: { value: 0 },
         uDrift: { value: 0 },
-        uNight: { value: 0 },
         uPixel: { value: 1 },
       },
       transparent: true,
@@ -121,7 +116,6 @@ export function DustField({ reduced, count = 1600 }: { reduced: boolean; count?:
       material.uniforms.uAmb.value = state.clock.elapsedTime;
       material.uniforms.uDrift.value = d.t;
     }
-    material.uniforms.uNight.value = themeState.value;
     material.uniforms.uPixel.value = state.gl.getPixelRatio();
   });
 

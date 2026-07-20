@@ -84,7 +84,7 @@ export function BackgroundFX() {
         home ? <StaticPipeline /> : null
       ) : (
         <GLBoundary fallback={home ? <StaticPipeline /> : null}>
-          <Scene3D home={home} reduced={mode === "reduced"} lite={lite} />
+          <Scene3D reduced={mode === "reduced"} lite={lite} />
         </GLBoundary>
       )}
     </div>

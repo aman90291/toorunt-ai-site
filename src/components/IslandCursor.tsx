@@ -79,11 +79,14 @@ export function IslandCursor() {
 
     // quickTo redirects a running tween instead of spawning a new one, and skips
     // unit parsing and plugin resolution — the only form safe to call per frame.
-    const xTo = gsap.quickTo(root, "x", { duration: 0.24, ease: "power3" });
-    const yTo = gsap.quickTo(root, "y", { duration: 0.24, ease: "power3" });
-    const rotTo = gsap.quickTo(root, "rotation", { duration: 0.3, ease: "power3" });
-    const sxTo = gsap.quickTo(root, "scaleX", { duration: 0.3, ease: "power3" });
-    const syTo = gsap.quickTo(root, "scaleY", { duration: 0.3, ease: "power3" });
+    // 0.24s with power3 overshoots into a visible wobble on fast flicks and
+    // reads as lag on slow ones. 0.14s with power2 tracks the hand closely and
+    // still smooths the raw event jitter.
+    const xTo = gsap.quickTo(root, "x", { duration: 0.14, ease: "power2" });
+    const yTo = gsap.quickTo(root, "y", { duration: 0.14, ease: "power2" });
+    const rotTo = gsap.quickTo(root, "rotation", { duration: 0.45, ease: "power2" });
+    const sxTo = gsap.quickTo(root, "scaleX", { duration: 0.45, ease: "power2" });
+    const syTo = gsap.quickTo(root, "scaleY", { duration: 0.45, ease: "power2" });
 
     // Idle wobble lives on the inner blob so it never collides with the
     // shape-level border-radius tween.
@@ -109,10 +112,13 @@ export function IslandCursor() {
         width: s.w,
         height: s.h,
         borderRadius: s.r,
-        // Underdamped, with visible overshoot — the spring is what sells the
-        // morph as physical rather than as a resize.
-        duration: 0.55,
-        ease: next === "idle" ? "power3.out" : "elastic.out(0.85, 0.62)",
+        // elastic.out(0.85, 0.62) rang for most of its 0.55s and, because
+        // pointerover fires again on every child element crossed, a second
+        // morph kept retriggering mid-ring — the compounding wobble was the
+        // main source of the roughness. back.out gives one clean overshoot and
+        // settles, so re-entry looks deliberate rather than unstable.
+        duration: 0.42,
+        ease: next === "idle" ? "power2.out" : "back.out(1.7)",
         overwrite: "auto",
       });
       gsap.to(blob, { opacity: next === "idle" ? 1 : 0, duration: 0.18, overwrite: "auto" });
@@ -134,13 +140,19 @@ export function IslandCursor() {
       // Velocity-driven squash and stretch, aligned to the direction of travel.
       // This is the difference between "liquid" and "a div that moves".
       const sp = Math.hypot(pointer.vx, pointer.vy) * 60;
-      if (state === "idle") {
-        const stretch = Math.min(sp * 0.9, 0.42);
+      // A deadzone matters more than the magnitude here. Below this the pointer
+      // delta is mostly noise, and feeding atan2 on noise spun the blob wildly
+      // while it was essentially still — which is what read as "not smooth".
+      // Above it, the angle is meaningful and the stretch is worth showing.
+      if (state === "idle" && sp > 0.06) {
+        const stretch = Math.min(sp * 0.5, 0.24);
         rotTo((Math.atan2(pointer.vy, pointer.vx) * 180) / Math.PI);
         sxTo(1 + stretch);
-        syTo(1 - stretch * 0.6);
+        syTo(1 - stretch * 0.55);
+      } else if (state === "idle") {
+        sxTo(1);
+        syTo(1);
       } else {
-        rotTo(0);
         sxTo(1);
         syTo(1);
       }

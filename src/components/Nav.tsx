@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LogoWordmark } from "./LogoWordmark";
-import { ThemeToggle } from "./ThemeToggle";
 import { openDemo } from "@/lib/demo";
 
 const LINKS = [
@@ -37,9 +36,13 @@ export function Nav() {
         className="mx-auto flex h-16 max-w-[1240px] items-center justify-between"
         style={{ paddingInline: "var(--gutter)" }}
       >
-        <Link href="/" aria-label="tOOrunt AI home" className="-my-2 py-2">
+        {/* A plain <a>, not next/link, on purpose: a soft client-side route
+            back to "/" keeps the existing Lenis instance, the GSAP ticker and
+            every ScrollTrigger alive, which is where the stale-scroll and
+            stuck-background bugs came from. A real navigation rebuilds them. */}
+        <a href="/" aria-label="tOOrunt AI home" className="-my-2 inline-flex min-h-11 items-center py-2">
           <LogoWordmark />
-        </Link>
+        </a>
 
         <div className="hidden items-center gap-8 md:flex">
           {LINKS.map((l) => (
@@ -51,7 +54,6 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
-          <ThemeToggle />
           <button
             type="button"
             data-magnetic
@@ -63,7 +65,6 @@ export function Nav() {
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
-        <ThemeToggle />
         <button
           className="flex h-11 w-11 items-center justify-center rounded-lg border border-line text-ink"
           aria-label={open ? "Close menu" : "Open menu"}

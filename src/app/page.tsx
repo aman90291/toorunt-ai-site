@@ -1,5 +1,4 @@
 import { Container, Heading, Accent, Hot, Button, Eyebrow } from "@/components/ui";
-import { ScrollJack } from "@/components/ScrollJack";
 import { Hero } from "@/components/Hero";
 import { StickyFeatures } from "@/components/StickyFeatures";
 import { Timeline } from "@/components/Timeline";
@@ -47,8 +46,6 @@ function Panel({
 export default function Home() {
   return (
     <>
-      <ScrollJack />
-
       {/* 1 · Hero */}
       <Hero />
 

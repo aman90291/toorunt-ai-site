@@ -1,29 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
-import { themeState } from "@/lib/theme";
 import { SCENE } from "@/lib/daynight";
 import { scrollProgress } from "./scroll";
-import { Constellation, FocusGroup, LAYOUT_DAY, LAYOUT_NIGHT } from "./Constellation";
 import { CloudField } from "./CloudField";
 import { DustField } from "./DustField";
 
 /**
- * The global background scene (every page): fluid haze + particle dust, plus the
- * brain-of-bots constellation and the orbiting scroll camera on the home page.
- * All colour/luminosity follows the global theme value (scroll journey or the
- * instant toggle) — CSS and WebGL repaint on the same frames.
+ * The global background scene: the cloud field plus thin particle dust, on one
+ * persistent canvas mounted in the layout so navigation never rebuilds the GL
+ * context. Fixed dark palette — there is no theme journey any more.
  */
 
 // Derived from the palette, never re-typed — the canvas sits directly behind
 // the page, so a drifted literal here shows up as a seam at the viewport edge.
-const C_BG_DAY = new THREE.Color(SCENE.bgDay);
-const C_BG_NIGHT = new THREE.Color(SCENE.bgNight);
-const _bg = new THREE.Color();
+const C_BG = new THREE.Color(SCENE.bg);
 
 const CENTER: [number, number, number] = [0, 0, 0];
 export const KEYS: { p: [number, number, number]; t: [number, number, number] }[] = [
@@ -57,57 +52,26 @@ function Rig({ reduced }: { reduced: boolean }) {
   return null;
 }
 
-/** Fixed framing for interior pages. */
-function StaticCam() {
-  const { camera } = useThree();
-  useEffect(() => {
-    camera.position.set(...KEYS[0].p);
-    camera.lookAt(0, 0, 0);
-  }, [camera]);
-  return null;
-}
+/* StaticCam removed. Swapping <Rig> for <StaticCam> on navigation changed the
+   shape of the R3F tree, and the reconciler threw "Converting circular
+   structure to JSON" mid-route-change. GLBoundary caught it and swapped in the
+   StaticPipeline fallback — the stray line art that appeared on the background
+   after visiting another page. One unconditional camera keeps the tree stable
+   across routes, and since the scene no longer differs per page there was
+   nothing for the swap to buy. */
 
-/** Lerps scene bg/fog + lights + bloom on the global theme value. */
-function Atmosphere({ reduced, keyRef, fillRef, ambRef, bloomRef }: {
-  reduced: boolean;
-  keyRef: React.RefObject<THREE.DirectionalLight | null>;
-  fillRef: React.RefObject<THREE.DirectionalLight | null>;
-  ambRef: React.RefObject<THREE.AmbientLight | null>;
-  bloomRef: React.RefObject<{ intensity: number; luminanceMaterial?: { threshold: number } } | null>;
-}) {
-  const { scene } = useThree();
-  useFrame(() => {
-    const n = themeState.value;
-    _bg.copy(C_BG_DAY).lerp(C_BG_NIGHT, n);
-    if (scene.background instanceof THREE.Color) scene.background.copy(_bg);
-    if (scene.fog) (scene.fog as THREE.Fog).color.copy(_bg);
-    if (keyRef.current) keyRef.current.intensity = 1.6 - n * 0.9;
-    if (fillRef.current) fillRef.current.intensity = 0.5 - n * 0.18;
-    if (ambRef.current) ambRef.current.intensity = 0.7 - n * 0.18;
-    if (bloomRef.current) {
-      bloomRef.current.intensity = 0.5 + n * 0.7;
-      if (bloomRef.current.luminanceMaterial) bloomRef.current.luminanceMaterial.threshold = 0.98 - n * 0.26;
-    }
-  });
-  return null;
-}
 
-function SceneContents({ home, reduced, lite }: { home: boolean; reduced: boolean; lite: boolean }) {
-  const keyRef = useRef<THREE.DirectionalLight>(null);
-  const fillRef = useRef<THREE.DirectionalLight>(null);
-  const ambRef = useRef<THREE.AmbientLight>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const bloomRef = useRef<any>(null);
+function SceneContents({ reduced, lite }: { reduced: boolean; lite: boolean }) {
 
   return (
     <>
-      <color attach="background" args={[SCENE.bgDay]} />
-      <fog attach="fog" args={[SCENE.bgDay, 7, 20]} />
-      <ambientLight ref={ambRef} intensity={0.7} />
-      <directionalLight ref={keyRef} position={[5, 8, 6]} intensity={1.6} />
-      <directionalLight ref={fillRef} position={[-6, 3, -4]} intensity={0.5} color="#f3ead6" />
+      <color attach="background" args={[SCENE.bg]} />
+      <fog attach="fog" args={[SCENE.bg, 7, 20]} />
+      <ambientLight intensity={0.42} />
+      <directionalLight position={[5, 8, 6]} intensity={0.7} />
+      <directionalLight position={[-6, 3, -4]} intensity={0.32} color="#f3ead6" />
 
-      {home ? <Rig reduced={reduced} /> : <StaticCam />}
+      <Rig reduced={reduced} />
 
       {/* The clouds are the background, so they render on every tier — the lite
           path drops to 2 layers / 3 octaves inside the shader rather than being
@@ -137,24 +101,23 @@ function SceneContents({ home, reduced, lite }: { home: boolean; reduced: boolea
 
       {!reduced && !lite && (
         <EffectComposer>
-          <Bloom ref={bloomRef} intensity={0.5} luminanceThreshold={0.98} luminanceSmoothing={0.15} mipmapBlur />
+          <Bloom intensity={1.2} luminanceThreshold={0.72} luminanceSmoothing={0.15} mipmapBlur />
           <Vignette eskil={false} offset={0.2} darkness={0.42} />
         </EffectComposer>
       )}
 
-      <Atmosphere reduced={reduced} keyRef={keyRef} fillRef={fillRef} ambRef={ambRef} bloomRef={bloomRef} />
     </>
   );
 }
 
-export default function Scene3D({ home, reduced, lite = false }: { home: boolean; reduced: boolean; lite?: boolean }) {
+export default function Scene3D({ reduced, lite = false }: { reduced: boolean; lite?: boolean }) {
   return (
     <Canvas
       dpr={lite ? [1, 1.25] : [1, 1.5]}
       gl={{ antialias: !lite, powerPreference: lite ? "low-power" : "high-performance" }}
       camera={{ position: KEYS[0].p, fov: 42, near: 0.1, far: 100 }}
     >
-      <SceneContents home={home} reduced={reduced} lite={lite} />
+      <SceneContents reduced={reduced} lite={lite} />
     </Canvas>
   );
 }

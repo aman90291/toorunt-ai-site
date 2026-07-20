@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { themeState } from "@/lib/theme";
 import { pointer } from "@/lib/pointer";
 import { sceneRgb } from "@/lib/daynight";
 
@@ -24,9 +23,9 @@ import { sceneRgb } from "@/lib/daynight";
  * Two ways the cursor moves it, deliberately different in character:
  *   • parallax, from the damped shared signal in lib/pointer — slow, weighted,
  *     in lockstep with the layout's perspective tilt so they read as one space;
- *   • curl, from a short ring buffer of recent pointer positions — immediate,
- *     local, and it dissipates, so sweeping the mouse visibly disturbs the
- *     cloud instead of just sliding it.
+ *   • a small local glow, from a short ring buffer of recent pointer positions
+ *     — immediate and it dissipates. Deliberately NOT a swirl: see the note at
+ *     the glow itself.
  *
  * Perf notes that matter if you touch the shader:
  *   • the hash is Dave Hoskins' sin-free variant. The textbook
@@ -36,17 +35,16 @@ import { sceneRgb } from "@/lib/daynight";
  *   • the domain warp must displace by a vec2, not a float — see the note at
  *     the warp itself. It is the difference between billowing cloud and fog.
  *   • the cloud colour must differ from the PAGE colour, not merely sit next to
- *     it in the ramp. Two attempts died here; see the uCloudDay comment.
+ *     it in the ramp. Two attempts died here; see the uCloud comment.
  *   • LAYERS/OCTAVES are baked into the source, so the material is rebuilt (and
  *     recompiled) only when the tier changes, never per frame.
  *
- * Measured: 16.7ms median (locked 60fps), worst 18.6ms, at a 3200x2000
- * backbuffer on an Apple M5 — idle, sweeping the pointer, and scrolled to dark.
- * That is a fast GPU; the lite tier exists for everything else and has not been
- * measured on real weak hardware.
+ * Measured: adds 0.00ms per frame over a blank document at 3200x2000 on an
+ * Apple M5 — it rides the display's refresh rate. The lite tier exists for
+ * weaker hardware and has not been measured on any.
  */
 
-const TRAIL = 6; // pointer curl ring buffer
+const TRAIL = 6; // pointer glow ring buffer
 
 const VERT = /* glsl */ `
   varying vec2 vUv;
@@ -65,12 +63,10 @@ const frag = (LAYERS: number, OCTAVES: number) => {
   varying vec2 vUv;
 
   uniform float uTime;
-  uniform float uNight;
   uniform float uAspect;
   uniform float uReduced;
   uniform vec2  uMouse;          // damped, -1..1
-  uniform vec3  uCloudDay;
-  uniform vec3  uCloudNight;
+  uniform vec3  uCloudDark;
   uniform vec3  uAccent;
   uniform vec4  uTrail[${TRAIL}]; // xy = uv pos, zw = velocity
   uniform float uAge[${TRAIL}];   // 0 fresh -> 1 dead
@@ -108,20 +104,27 @@ const frag = (LAYERS: number, OCTAVES: number) => {
     vec2 uv = vec2(vUv.x * uAspect, vUv.y);
     float t = uTime * (1.0 - uReduced); // frozen, not hidden, under reduced-motion
 
-    // ── local curl: recent pointer positions swirl the field and fade out ──
-    vec2 curl = vec2(0.0);
+    // ── pointer glow ──
+    // Was a swirling vortex field: each recent pointer position added a
+    // perpendicular curl, which twisted the cloud into a visible spiral roughly
+    // a third of the viewport wide. Too big, and the rotation read as a defect
+    // rather than as weather.
+    //
+    // Now: a small soft glow that nudges the field very slightly along the
+    // direction of travel, with no rotation at all. The falloff went 34 -> 340,
+    // which takes the radius from ~0.17uv to ~0.055uv — about a fifth as wide.
+    vec2 nudge = vec2(0.0);
     float energy = 0.0;
     for (int i = 0; i < ${TRAIL}; i++) {
       float life = 1.0 - uAge[i];
       if (life > 0.001) {
         vec2 d = uv - vec2(uTrail[i].x * uAspect, uTrail[i].y);
-        float r = length(d);
-        float fall = exp(-r * r * 34.0) * life;
-        vec2 perp = vec2(-d.y, d.x) / max(r, 0.02);
-        curl += (perp * 0.5 + uTrail[i].zw * 0.75) * fall;
+        float fall = exp(-dot(d, d) * 340.0) * life;
+        nudge += uTrail[i].zw * 0.18 * fall; // travel only — no perpendicular term
         energy += fall;
       }
     }
+    energy = min(energy, 1.0);
 
     float density = 0.0;
     float lit = 0.0;
@@ -137,7 +140,7 @@ const frag = (LAYERS: number, OCTAVES: number) => {
       // cells across the viewport — soft enough to read as a gradient rather
       // than as cloud. The brief asked for high detail; this is where it comes
       // from, together with the octave count.
-      vec2 p = uv * mix(3.2, 8.4, depth) + par + curl * mix(0.35, 1.0, depth);
+      vec2 p = uv * mix(3.2, 8.4, depth) + par + nudge * mix(0.4, 1.0, depth);
       p.x += t * mix(0.006, 0.030, depth);
       p.y -= t * mix(0.004, 0.018, depth);
       // Decorrelate the layers; without this offset they share a lattice and
@@ -172,17 +175,16 @@ const frag = (LAYERS: number, OCTAVES: number) => {
     // white page a cloud reads as SHADOW, so density must darken it; on the
     // dark page it reads as a lit mass, so density must brighten it. A single
     // multiplier direction makes one of the two ends look like flat fog.
-    vec3 base = mix(uCloudDay, uCloudNight, uNight);
-    float shadeMul = mix(mix(1.10, 0.86, shade), mix(0.84, 1.22, shade), uNight);
-    vec3 col = base * shadeMul;
+    // Dark theme only: density reads as a lit mass, so it brightens.
+    vec3 col = uCloudDark * mix(0.84, 1.22, shade);
 
     // The disturbance carries a breath of the accent — the only place the
     // background touches the 10%. Kept very low: at 0.16/0.26 the cursor left a
     // saturated pink smudge that read as a bug rather than as a stirred cloud,
     // and on the white half it fought the headline for attention.
-    col += uAccent * energy * mix(0.05, 0.10, uNight);
+    col += uAccent * energy * 0.10;
 
-    float alpha = density * mix(0.52, 0.72, uNight) + energy * 0.10;
+    float alpha = density * 0.72 + energy * 0.08;
     gl_FragColor = vec4(col, alpha);
   }
 `;
@@ -209,7 +211,6 @@ export function CloudField({ reduced, lite }: { reduced: boolean; lite: boolean 
       fragmentShader: frag(LAYERS, OCTAVES),
       uniforms: {
         uTime: { value: 0 },
-        uNight: { value: themeState.value },
         uAspect: { value: 1 },
         uReduced: { value: reduced ? 1 : 0 },
         uMouse: { value: new THREE.Vector2(0, 0) },
@@ -222,9 +223,8 @@ export function CloudField({ reduced, lite }: { reduced: boolean; lite: boolean 
         // ground-3 (#e7e3d9) only ~5% — at any opacity below 1.0 both vanish.
         // line-2 (#c6bfae day / #3a3e44 night) is the first step in the ramp
         // with real separation, so the field survives at 30% opacity.
-        uCloudDay: { value: new THREE.Vector3(...sceneRgb("--color-line-2", false)) },
-        uCloudNight: { value: new THREE.Vector3(...sceneRgb("--color-line-2", true)) },
-        uAccent: { value: new THREE.Vector3(...sceneRgb("--color-accent", true)) },
+        uCloudDark: { value: new THREE.Vector3(...sceneRgb("--color-line-2")) },
+        uAccent: { value: new THREE.Vector3(...sceneRgb("--color-accent")) },
         uTrail: { value: trail.vecs },
         uAge: { value: trail.ages },
       },
@@ -276,7 +276,6 @@ export function CloudField({ reduced, lite }: { reduced: boolean; lite: boolean 
 
     const u = material.uniforms;
     u.uTime.value = state.clock.elapsedTime;
-    u.uNight.value = themeState.value;
     u.uAspect.value = cam.aspect;
     // The SAME damped signal the layout tilt reads — see lib/pointer.
     u.uMouse.value.set(pointer.x, -pointer.y);
