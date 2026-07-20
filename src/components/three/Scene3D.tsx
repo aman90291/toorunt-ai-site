@@ -18,10 +18,12 @@ import { DustField } from "./DustField";
 
 // Derived from the palette, never re-typed — the canvas sits directly behind
 // the page, so a drifted literal here shows up as a seam at the viewport edge.
-const C_BG = new THREE.Color(SCENE.bg);
+// Scratch vectors, reused every frame — see the note in CloudField.
+const _a = new THREE.Vector3();
+const _b = new THREE.Vector3();
 
 const CENTER: [number, number, number] = [0, 0, 0];
-export const KEYS: { p: [number, number, number]; t: [number, number, number] }[] = [
+const KEYS: { p: [number, number, number]; t: [number, number, number] }[] = [
   { p: [1.6, 1.1, 7.2], t: CENTER },
   { p: [6.4, 0.6, 2.6], t: CENTER },
   { p: [4.4, 3.6, -4.6], t: CENTER },
@@ -42,8 +44,8 @@ function Rig({ reduced }: { reduced: boolean }) {
     const f = prog * (KEYS.length - 1);
     const i = Math.min(KEYS.length - 2, Math.floor(f));
     const t = f - i;
-    dp.current.set(...KEYS[i].p).lerp(new THREE.Vector3(...KEYS[i + 1].p), t);
-    dt.current.set(...KEYS[i].t).lerp(new THREE.Vector3(...KEYS[i + 1].t), t);
+    dp.current.set(...KEYS[i].p).lerp(_a.set(...KEYS[i + 1].p), t);
+    dt.current.set(...KEYS[i].t).lerp(_b.set(...KEYS[i + 1].t), t);
     pos.current.lerp(dp.current, reduced ? 1 : 0.06);
     tgt.current.lerp(dt.current, reduced ? 1 : 0.06);
     camera.position.copy(pos.current);
@@ -84,14 +86,6 @@ function SceneContents({ reduced, lite }: { reduced: boolean; lite: boolean }) {
           starfield and the rail stopped reading as a sequence. */}
       <DustField reduced={reduced} count={lite ? 180 : 420} />
 
-      {/* The constellation is deliberately not rendered.
-          It was the old site's signature image, and it works against what this
-          rebuild is for: it is busy, it occupies the centre of the viewport
-          where the headline lives, and it dominates every hero screenshot. The
-          brief puts the clouds in the background — one atmosphere, with the
-          type carrying the page.
-          Kept in the tree (three/Constellation.tsx) rather than deleted so it
-          can be restored in one line if we want it back on an interior page. */}
 
       <Environment resolution={256}>
         <Lightformer intensity={2.0} position={[0, 5, -5]} scale={[10, 6, 1]} color="#ffffff" />

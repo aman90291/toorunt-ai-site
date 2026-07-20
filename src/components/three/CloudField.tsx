@@ -46,6 +46,10 @@ import { sceneRgb } from "@/lib/daynight";
 
 const TRAIL = 6; // pointer glow ring buffer
 
+// Scratch, reused every frame. Allocating in useFrame lands on the same minor-GC
+// budget as the scroll, which is exactly where a hitch is most visible.
+const _fwd = new THREE.Vector3();
+
 const VERT = /* glsl */ `
   varying vec2 vUv;
   void main() {
@@ -270,7 +274,7 @@ export function CloudField({ reduced, lite }: { reduced: boolean; lite: boolean 
     const cam = camera as THREE.PerspectiveCamera;
     const dist = 19.5;
     m.quaternion.copy(cam.quaternion);
-    m.position.copy(cam.position).add(new THREE.Vector3(0, 0, -dist).applyQuaternion(cam.quaternion));
+    m.position.copy(cam.position).add(_fwd.set(0, 0, -dist).applyQuaternion(cam.quaternion));
     const h = 2 * Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2) * dist * 1.3;
     m.scale.set(h * cam.aspect, h, 1);
 

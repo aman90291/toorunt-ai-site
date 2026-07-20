@@ -5,7 +5,6 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { BackgroundFX } from "@/components/BackgroundFX";
-import { ThemeDriver } from "@/components/ThemeDriver";
 import { IslandCursor } from "@/components/IslandCursor";
 import { Magnetic } from "@/components/Magnetic";
 import { PerspectiveTilt } from "@/components/PerspectiveTilt";
@@ -79,7 +78,6 @@ gtag('config', '${GA_ID}');`}
         <BackgroundFX />
         {/* Before the effects that read it, so the signal exists on frame one. */}
         <PointerDriver />
-        <ThemeDriver />
         <Magnetic />
         <PerspectiveTilt />
         <IslandCursor />

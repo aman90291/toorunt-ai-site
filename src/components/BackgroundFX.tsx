@@ -7,10 +7,29 @@ import { Component, useEffect, useState, type ReactNode } from "react";
 const Scene3D = dynamic(() => import("./three/Scene3D"), { ssr: false });
 
 /** If WebGL throws at runtime, fall back instead of a blank page. */
-class GLBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
-  state = { failed: false };
+class GLBoundary extends Component<
+  { fallback: ReactNode; children: ReactNode; resetKey: string },
+  { failed: boolean; forKey: string }
+> {
+  state = { failed: false, forKey: "" };
   static getDerivedStateFromError() {
     return { failed: true };
+  }
+  // Without this the boundary latches: BackgroundFX lives in the layout and is
+  // never unmounted, so a single transient GL throw left the page on the
+  // fallback for the whole session with no canvas, no clouds and no dust.
+  // Navigating gives it one chance to recover.
+  static getDerivedStateFromProps(
+    props: { resetKey: string },
+    state: { failed: boolean; forKey: string }
+  ) {
+    if (state.failed && state.forKey !== props.resetKey) {
+      return { failed: false, forKey: props.resetKey };
+    }
+    if (!state.failed && state.forKey !== props.resetKey) {
+      return { forKey: props.resetKey };
+    }
+    return null;
   }
   render() {
     return this.state.failed ? this.props.fallback : this.props.children;
@@ -83,7 +102,7 @@ export function BackgroundFX() {
       {mode === "static" ? (
         home ? <StaticPipeline /> : null
       ) : (
-        <GLBoundary fallback={home ? <StaticPipeline /> : null}>
+        <GLBoundary resetKey={pathname} fallback={home ? <StaticPipeline /> : null}>
           <Scene3D reduced={mode === "reduced"} lite={lite} />
         </GLBoundary>
       )}

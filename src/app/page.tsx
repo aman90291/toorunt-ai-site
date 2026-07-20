@@ -6,15 +6,12 @@ import { DemoButton } from "@/components/DemoButton";
 import { ProblemBeat, CostErasBeat, ProvenFixesBeat, TrustScreenBeat, WhyUsBeat } from "@/components/story";
 import { RECEIPT } from "@/lib/stats";
 
-/** A text panel that sits over the fixed 3D scene, anchored to one side.
- *  `nightAnchor` marks the section whose arrival brings nightfall. */
+/** A text panel that sits over the fixed 3D scene. */
 function Panel({
   side = "left",
-  nightAnchor = false,
   children,
 }: {
   side?: "left" | "right" | "center";
-  nightAnchor?: boolean;
   children: React.ReactNode;
 }) {
   const align =
@@ -22,7 +19,6 @@ function Panel({
   return (
     <section
       data-side={side}
-      {...(nightAnchor ? { "data-night-anchor": "" } : {})}
       className="relative"
       style={{ paddingBlock: "var(--space-section)" }}
     >
@@ -64,22 +60,10 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 4 · Three eras of cost.
-          Dusk is anchored here — roughly a third down the page — so the dark
-          60% owns the majority of the scroll. It used to sit on "On the record"
-          at section 11 of 12, which left the page white for ~80% of its length
-          and inverted the 60/30 split.
-
-          This section also satisfies the DUSK_BAND constraint in
-          lib/daynight.ts: the crossing lands on a tabular block rather than on
-          crimson body copy or a crimson CTA, neither of which is legible
-          against mid-dusk grey. */}
+      {/* 4 · Three eras of cost */}
       <CostErasBeat />
 
-      {/* 5 · The approval gate. Dusk is anchored here, ~a third down, so the
-          dark 60% owns the majority of the scroll. Anchored on CostEras it
-          crossed at 20% (80% dark); on "On the record" — where it started —
-          it crossed at 80%, leaving the page white almost throughout. */}
+      {/* 5 · The approval gate */}
       <Panel side="left">
         <Eyebrow>Human decision · 01</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
@@ -91,14 +75,8 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 6 · Peer review + sign-off. Dusk is anchored HERE.
-          Measured crossings while tuning: on "On the record" (section 11) it
-          fell at 80% — white almost throughout; on CostEras (4) at 20%; on
-          "Human decision 01" (5) at 37%, which then drifted to 25% once the
-          footer grew. Section 6 puts it back in range. The anchor is
-          proportional to content, so this is worth re-measuring whenever the
-          page gains or loses a section. */}
-      <Panel side="right" nightAnchor>
+      {/* 6 · Peer review + sign-off */}
+      <Panel side="right">
         <Eyebrow>Human decision · 02</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
           Two bots review each other. <Accent>You sign off the PR.</Accent>

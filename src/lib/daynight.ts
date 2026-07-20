@@ -11,12 +11,6 @@
  *   ink 17.1:1 · ink-dim 9.0:1 · ink-faint 4.6:1 · accent 4.8:1 · pass 6.4:1
  */
 
-/** Kept as a named export because a few call sites still smooth values. */
-export function smoothstep(a: number, b: number, x: number): number {
-  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
-  return t * t * (3 - 2 * t);
-}
-
 export const TOKENS: Record<string, string> = {
   "--color-ground": "#0d0e10",
   "--color-ground-2": "#16181b",

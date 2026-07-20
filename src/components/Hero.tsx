@@ -31,7 +31,7 @@ export function Hero() {
       <Container>
         <div className="tilt-stage">
           <div className="grid grid-cols-12 gap-y-8">
-            <div className="col-span-12 lg:col-span-8 xl:col-span-7">
+            <div className="par-far col-span-12 lg:col-span-8 xl:col-span-7">
               <div className="reveal">
                 <Eyebrow>Governed AI engineering teams</Eyebrow>
               </div>
@@ -41,7 +41,7 @@ export function Hero() {
                   statement. */}
               <h1
                 data-split
-                className="reveal par-far mt-[var(--space-block)] font-display font-semibold tracking-[-0.038em] text-balance text-ink"
+                className="reveal mt-[var(--space-block)] font-display font-semibold tracking-[-0.038em] text-balance text-ink"
                 style={{ fontSize: "var(--text-hero)", lineHeight: 0.94 }}
               >
                 Software Development Lifecycle{" "}

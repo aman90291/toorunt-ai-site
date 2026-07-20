@@ -8,7 +8,7 @@
  * and they move as a single system.
  *
  * A module singleton rather than context, because it has to cross the R3F
- * reconciler boundary into useFrame — the same reason lib/theme.ts is one.
+ * reconciler boundary into useFrame.
  *
  * Updated on gsap.ticker (which R3F, Lenis and ScrollTrigger already share) so
  * this adds no new rAF loop. pointermove only writes raw target values; the
@@ -48,7 +48,8 @@ const DAMP = 0.075;
 let started = false;
 let stop: (() => void) | null = null;
 
-/** Idempotent — safe to call from several components; only the first wins. */
+/** Idempotent. PointerDriver is the single owner — see the note there on why
+ *  consumers must not call this. */
 export function startPointer(): () => void {
   if (started) return () => {};
   started = true;
@@ -69,9 +70,20 @@ export function startPointer(): () => void {
 
   // Returning to centre when the cursor leaves avoids the layout being frozen
   // mid-tilt while the pointer sits in another window.
-  const onLeave = () => {
+  //
+  // The relatedTarget check is load-bearing. `pointerout` BUBBLES, so window
+  // receives one for every element-to-element transition — parking the cursor
+  // off-centre and scrolling fired it constantly with no intervening
+  // pointermove, which snapped the tilt and the cloud parallax back to centre
+  // while the cursor was visibly nowhere near it. Only a null relatedTarget
+  // means the pointer actually left the window.
+  const recentre = () => {
     pointer.tx = 0;
     pointer.ty = 0;
+  };
+  const onOut = (e: PointerEvent) => {
+    if (e.relatedTarget !== null) return;
+    recentre();
   };
 
   const tick = () => {
@@ -91,15 +103,15 @@ export function startPointer(): () => void {
 
   if (!reduce) {
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerout", onLeave, { passive: true });
-    window.addEventListener("blur", onLeave);
+    window.addEventListener("pointerout", onOut, { passive: true });
+    window.addEventListener("blur", recentre);
     gsap.ticker.add(tick);
   }
 
   stop = () => {
     window.removeEventListener("pointermove", onMove);
-    window.removeEventListener("pointerout", onLeave);
-    window.removeEventListener("blur", onLeave);
+    window.removeEventListener("pointerout", onOut);
+    window.removeEventListener("blur", recentre);
     gsap.ticker.remove(tick);
     started = false;
     stop = null;
@@ -107,6 +119,3 @@ export function startPointer(): () => void {
   return stop;
 }
 
-export function stopPointer() {
-  stop?.();
-}
