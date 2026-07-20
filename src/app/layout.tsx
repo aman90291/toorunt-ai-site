@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { BackgroundFX } from "@/components/BackgroundFX";
 import { ThemeDriver } from "@/components/ThemeDriver";
-import { GlowCursor } from "@/components/GlowCursor";
+import { IslandCursor } from "@/components/IslandCursor";
 import { Magnetic } from "@/components/Magnetic";
 import { PerspectiveTilt } from "@/components/PerspectiveTilt";
 import { PointerDriver } from "@/components/PointerDriver";
@@ -94,7 +94,7 @@ gtag('config', '${GA_ID}');`}
         <ThemeDriver />
         <Magnetic />
         <PerspectiveTilt />
-        <GlowCursor />
+        <IslandCursor />
         <SmoothScroll>
           <Nav />
           <main>{children}</main>
