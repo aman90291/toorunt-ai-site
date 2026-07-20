@@ -48,14 +48,14 @@ export default function ProductPage() {
                   <span className="font-display text-[40px] leading-none text-accent/80 tabular-nums">{p.n}</span>
                 </div>
                 <div>
-                  <h3 className="flex items-center gap-3 font-display text-[24px] text-ink">
+                  <h2 className="flex items-center gap-3 font-display text-[24px] text-ink">
                     {p.t}
                     {p.human && (
                       <span className="rounded-sm bg-accent-wash px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent-text">
                         human decision
                       </span>
                     )}
-                  </h3>
+                  </h2>
                   <p className="mt-2 max-w-2xl text-[16px] leading-relaxed text-ink-dim">{p.d}</p>
                 </div>
               </div>

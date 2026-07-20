@@ -73,7 +73,7 @@ export default function PricingPage() {
                   t.accent ? "border-accent/40 bg-accent-wash/40" : "border-line bg-ground-2/50"
                 }`}
               >
-                <h3 className="text-[15px] font-semibold text-ink">{t.name}</h3>
+                <h2 className="text-[15px] font-semibold text-ink">{t.name}</h2>
                 <div className="mt-4 flex items-baseline gap-1.5">
                   <span className="font-display text-[40px] leading-none text-ink">{t.price}</span>
                   {t.unit && <span className="font-mono text-[12px] text-ink-faint">{t.unit}</span>}

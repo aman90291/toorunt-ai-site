@@ -83,7 +83,7 @@ export default function Home() {
           dark 60% owns the majority of the scroll. Anchored on CostEras it
           crossed at 20% (80% dark); on "On the record" — where it started —
           it crossed at 80%, leaving the page white almost throughout. */}
-      <Panel side="left" nightAnchor>
+      <Panel side="left">
         <Eyebrow>Human decision · 01</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
           It never writes code <Accent>before you approve the plan.</Accent>
@@ -94,8 +94,14 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 4 · Peer review + sign-off — close on the second bronze node */}
-      <Panel side="right">
+      {/* 6 · Peer review + sign-off. Dusk is anchored HERE.
+          Measured crossings while tuning: on "On the record" (section 11) it
+          fell at 80% — white almost throughout; on CostEras (4) at 20%; on
+          "Human decision 01" (5) at 37%, which then drifted to 25% once the
+          footer grew. Section 6 puts it back in range. The anchor is
+          proportional to content, so this is worth re-measuring whenever the
+          page gains or loses a section. */}
+      <Panel side="right" nightAnchor>
         <Eyebrow>Human decision · 02</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
           Two bots review each other. <Accent>You sign off the PR.</Accent>

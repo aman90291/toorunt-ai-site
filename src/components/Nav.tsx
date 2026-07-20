@@ -56,7 +56,7 @@ export function Nav() {
             type="button"
             data-magnetic
             onClick={openDemo}
-            className="rounded-full bg-accent px-4 py-2 text-[14px] font-medium text-ground transition-all hover:bg-accent-text hover:-translate-y-px"
+            className="inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-[14px] font-medium text-ground transition-all hover:bg-accent-text hover:-translate-y-px"
           >
             Book a demo
           </button>
@@ -65,7 +65,7 @@ export function Nav() {
         <div className="flex items-center gap-2 md:hidden">
         <ThemeToggle />
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink"
+          className="flex h-11 w-11 items-center justify-center rounded-lg border border-line text-ink"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}

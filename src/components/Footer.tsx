@@ -45,7 +45,7 @@ export function Footer() {
                       {l.href === "#book-demo" ? (
                         <DemoButton variant="link">{l.label}</DemoButton>
                       ) : (
-                        <Link href={l.href} className="text-[14px] text-ink-dim transition-colors hover:text-ink">
+                        <Link href={l.href} className="inline-flex min-h-11 items-center text-[14px] text-ink-dim transition-colors hover:text-ink">
                           {l.label}
                         </Link>
                       )}

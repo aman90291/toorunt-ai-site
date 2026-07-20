@@ -45,7 +45,7 @@ export default function SecurityPage() {
           <div className="reveal mt-10 grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line sm:grid-cols-2">
             {CONTROLS.map((c) => (
               <div key={c.t} className="bg-ground-2/60 p-6 sm:p-7">
-                <h3 className="text-[17px] font-semibold text-ink">{c.t}</h3>
+                <h2 className="text-[17px] font-semibold text-ink">{c.t}</h2>
                 <p className="mt-2 text-[14.5px] leading-relaxed text-ink-dim">{c.d}</p>
               </div>
             ))}

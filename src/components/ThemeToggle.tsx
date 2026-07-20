@@ -58,7 +58,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       onClick={cycle}
       aria-label={LABEL[mode]}
       title={LABEL[mode]}
-      className={`flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-dim transition-colors hover:border-accent hover:text-ink ${className}`}
+      className={`flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink-dim transition-colors hover:border-accent hover:text-ink ${className}`}
     >
       <Icon mode={mode} />
     </button>
