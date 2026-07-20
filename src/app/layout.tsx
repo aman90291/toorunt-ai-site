@@ -9,6 +9,7 @@ import { ThemeDriver } from "@/components/ThemeDriver";
 import { GlowCursor } from "@/components/GlowCursor";
 import { Magnetic } from "@/components/Magnetic";
 import { PerspectiveTilt } from "@/components/PerspectiveTilt";
+import { PointerDriver } from "@/components/PointerDriver";
 import { BookDemoDialog } from "@/components/BookDemoDialog";
 import { DEFAULT_MODE, NIGHT_TOKENS } from "@/lib/daynight";
 import Script from "next/script";
@@ -88,6 +89,8 @@ gtag('config', '${GA_ID}');`}
         </Script>
 
         <BackgroundFX />
+        {/* Before the effects that read it, so the signal exists on frame one. */}
+        <PointerDriver />
         <ThemeDriver />
         <Magnetic />
         <PerspectiveTilt />

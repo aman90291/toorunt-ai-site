@@ -9,7 +9,7 @@ import { themeState } from "@/lib/theme";
 import { SCENE } from "@/lib/daynight";
 import { scrollProgress } from "./scroll";
 import { Constellation, FocusGroup, LAYOUT_DAY, LAYOUT_NIGHT } from "./Constellation";
-import { HazeLayer } from "./HazeLayer";
+import { CloudField } from "./CloudField";
 import { DustField } from "./DustField";
 
 /**
@@ -109,8 +109,10 @@ function SceneContents({ home, reduced, lite }: { home: boolean; reduced: boolea
 
       {home ? <Rig reduced={reduced} /> : <StaticCam />}
 
-      {/* Haze = heaviest fragment work — desktop only. Dust thinned on low-power. */}
-      {!lite && <HazeLayer reduced={reduced} />}
+      {/* The clouds are the background, so they render on every tier — the lite
+          path drops to 2 layers / 3 octaves inside the shader rather than being
+          cut, since removing them entirely leaves the page visibly bare. */}
+      <CloudField reduced={reduced} lite={lite} />
       <DustField reduced={reduced} count={lite ? 650 : 1600} />
 
       {home && (
