@@ -113,7 +113,12 @@ function SceneContents({ home, reduced, lite }: { home: boolean; reduced: boolea
           path drops to 2 layers / 3 octaves inside the shader rather than being
           cut, since removing them entirely leaves the page visibly bare. */}
       <CloudField reduced={reduced} lite={lite} />
-      <DustField reduced={reduced} count={lite ? 650 : 1600} />
+      {/* Dust thinned hard (was 1600/650). With the clouds carrying the
+          background it is no longer doing the atmospheric work it was added
+          for, and at the old density its particles are the same size and
+          value as the timeline's gate dots — the nodes got lost in the
+          starfield and the rail stopped reading as a sequence. */}
+      <DustField reduced={reduced} count={lite ? 180 : 420} />
 
       {/* The constellation is deliberately not rendered.
           It was the old site's signature image, and it works against what this
