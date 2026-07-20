@@ -82,8 +82,30 @@ export function Heading({
   );
 }
 
-/** Emphasis for the important words in a heading — bronze + a weight bump. */
+/**
+ * Emphasis for the turn of a heading — a weight bump, in ink.
+ *
+ * This used to be crimson, and it broke the 60-30-10 budget badly: `<Accent>`
+ * wraps roughly half of every section heading, so at h2 scale, on every band of
+ * the page, the accent was reading as 15-20% of the visual field rather than
+ * 10%. Weight alone carries the emphasis; the colour is what has to stay rare.
+ *
+ * Use `<Hot>` where crimson genuinely belongs — see below.
+ */
 export function Accent({ children }: { children: ReactNode }) {
+  return <span className="font-bold text-ink">{children}</span>;
+}
+
+/**
+ * The 10%. Crimson, and deliberately scarce — the whole colour idea is that it
+ * marks where a human is accountable, so spending it on ordinary emphasis
+ * makes it mean nothing.
+ *
+ * Reserved for: the hero and closing CTA turns (the bookends), the human gates
+ * on the timeline, primary buttons, and the eyebrow dot. If you are reaching
+ * for it anywhere else, reach for `<Accent>` instead.
+ */
+export function Hot({ children }: { children: ReactNode }) {
   return <span className="font-bold text-accent-text">{children}</span>;
 }
 

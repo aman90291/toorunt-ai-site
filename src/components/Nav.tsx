@@ -27,10 +27,16 @@ export function Nav() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? "border-b border-line bg-ground/95" : "border-b border-transparent"
+        // Fully opaque, not /95. Five percent is enough to read the headline
+        // scrolling underneath as a ghost, and backdrop-blur is not an option
+        // here — blurring an animated WebGL backdrop every frame is a GPU sink.
+        scrolled ? "border-b border-line bg-ground" : "border-b border-transparent"
       }`}
     >
-      <nav className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 sm:px-8">
+      <nav
+        className="mx-auto flex h-16 max-w-[1240px] items-center justify-between"
+        style={{ paddingInline: "var(--gutter)" }}
+      >
         <Link href="/" aria-label="tOOrunt AI home" className="-my-2 py-2">
           <LogoWordmark />
         </Link>

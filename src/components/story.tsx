@@ -2,10 +2,25 @@ import { Container, Heading, Accent, Eyebrow } from "@/components/ui";
 import { CountUp } from "@/components/CountUp";
 import type { ReactNode } from "react";
 
-/** Full-screen story beat. `side` feeds the 3D model-avoidance. */
+/**
+ * A story beat.
+ *
+ * Was `min-h-screen` with vertically centred content — every section its own
+ * full viewport, text floating in the middle. That is the single biggest reason
+ * the page read as the old site: a stack of identical full-height slides has no
+ * rhythm, because nothing is ever longer or shorter than anything else.
+ *
+ * Now on the shared `--space-section` interval, so beats size to their content
+ * and the page has a cadence. `side` still feeds the 3D model-avoidance.
+ */
 function Beat({ side = "left", id, children }: { side?: "left" | "right" | "center"; id?: string; children: ReactNode }) {
   return (
-    <section data-side={side} id={id} className="relative flex min-h-screen items-center py-24">
+    <section
+      data-side={side}
+      id={id}
+      className="relative"
+      style={{ paddingBlock: "var(--space-section)" }}
+    >
       <Container>{children}</Container>
     </section>
   );
@@ -27,12 +42,12 @@ export function ProblemBeat() {
     <Beat side="center">
       <div className="reveal txt-legible mx-auto max-w-4xl text-center">
         <Eyebrow>Act I · The shift</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[clamp(28px,4.4vw,58px)] leading-[1.06]">
+        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.06]">
           The code is already written by AI. <Accent>Nobody owns accountability for it.</Accent>
         </Heading>
         <div className="mt-12 grid grid-cols-1 gap-10 sm:mt-16 sm:grid-cols-2">
           <div>
-            <div className="font-display text-[clamp(60px,11vw,128px)] font-semibold leading-[0.9] tracking-[-0.03em] text-accent-text">
+            <div className="font-display text-[length:var(--text-stat)] font-semibold leading-[0.9] tracking-[-0.03em] text-accent-text">
               <CountUp value={75} suffix="%" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
@@ -40,7 +55,7 @@ export function ProblemBeat() {
             </p>
           </div>
           <div>
-            <div className="font-display text-[clamp(60px,11vw,128px)] font-semibold leading-[0.9] tracking-[-0.03em] text-accent-text">
+            <div className="font-display text-[length:var(--text-stat)] font-semibold leading-[0.9] tracking-[-0.03em] text-accent-text">
               <CountUp value={95} suffix="%" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
@@ -67,7 +82,7 @@ export function CostErasBeat() {
     <Beat side="right">
       <div className="reveal txt-legible ml-auto max-w-2xl">
         <Eyebrow>Act I · The economics</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[clamp(30px,4.4vw,60px)] leading-[1.03]">
+        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.03]">
           Same ticket. <Accent>Three eras of cost.</Accent>
         </Heading>
       </div>
@@ -76,7 +91,7 @@ export function CostErasBeat() {
           {ERAS.map((e) => (
             <div key={e.label} className={`flex flex-col gap-2 rounded-lg p-3 ${e.accent ? "bg-accent-wash" : ""}`}>
               <p className={`font-mono text-[10px] uppercase tracking-[0.12em] ${e.accent ? "text-accent-text" : "text-ink-faint"}`}>{e.label}</p>
-              <p className={`font-display text-[clamp(20px,2.4vw,30px)] font-semibold leading-none ${e.accent ? "text-accent-text" : "text-ink"}`}>{e.cost}</p>
+              <p className={`font-display text-[length:var(--text-figure)] font-semibold leading-none ${e.accent ? "text-accent-text" : "text-ink"}`}>{e.cost}</p>
               <p className="text-[12px] text-ink-dim">{e.people}</p>
               <p className="text-[12px] text-ink-dim">{e.time}</p>
             </div>
@@ -117,7 +132,7 @@ export function WhyUsBeat() {
     <Beat side="left">
       <div className="reveal txt-legible max-w-3xl">
         <Eyebrow>Act III · The business</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[clamp(28px,4.2vw,56px)] leading-[1.04]">
+        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.04]">
           Everyone sells an agent. <Accent>Nobody sells an accountable team.</Accent>
         </Heading>
       </div>
@@ -172,7 +187,7 @@ export function ProvenFixesBeat() {
     <Beat side="right">
       <div className="reveal txt-legible ml-auto max-w-3xl text-right">
         <Eyebrow>Act II · Our USP</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[clamp(30px,4.4vw,60px)] leading-[1.03]">
+        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.03]">
           Anyone can generate code. <Accent>We land proven fixes.</Accent>
         </Heading>
       </div>
@@ -192,7 +207,7 @@ export function ProvenFixesBeat() {
         </div>
       </Glass>
       <p className="reveal mt-6 ml-auto flex max-w-4xl items-baseline justify-end gap-3 text-[15px] text-ink-dim">
-        <span className="font-display text-[clamp(28px,3.4vw,40px)] font-semibold text-accent-text">
+        <span className="font-display text-[length:var(--text-h2)] font-semibold text-accent-text">
           <CountUp value={76} prefix="~" suffix="%" />
         </span>
         true resolution on SWE-bench Lite — the defensible half nobody else gates on.
@@ -213,7 +228,7 @@ export function TrustScreenBeat() {
     <Beat side="left">
       <div className="reveal txt-legible max-w-3xl">
         <Eyebrow>Act II · The answer</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[clamp(30px,4.4vw,60px)] leading-[1.03]">
+        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.03]">
           Trust is a screen, <Accent>not a promise.</Accent>
         </Heading>
       </div>

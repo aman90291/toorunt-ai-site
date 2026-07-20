@@ -177,8 +177,10 @@ const frag = (LAYERS: number, OCTAVES: number) => {
     vec3 col = base * shadeMul;
 
     // The disturbance carries a breath of the accent — the only place the
-    // background touches the 10%.
-    col += uAccent * energy * mix(0.16, 0.26, uNight);
+    // background touches the 10%. Kept very low: at 0.16/0.26 the cursor left a
+    // saturated pink smudge that read as a bug rather than as a stirred cloud,
+    // and on the white half it fought the headline for attention.
+    col += uAccent * energy * mix(0.05, 0.10, uNight);
 
     float alpha = density * mix(0.52, 0.72, uNight) + energy * 0.10;
     gl_FragColor = vec4(col, alpha);

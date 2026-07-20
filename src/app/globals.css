@@ -48,6 +48,7 @@
   --text-stat: clamp(56px, 7.4vw, 108px);  /* one number, carrying a section */
   --text-hero: clamp(40px, 6.2vw, 84px);
   --text-h2: clamp(34px, 5vw, 68px);
+  --text-figure: clamp(26px, 3.2vw, 42px); /* a number inside a grid cell */
   --text-h3: clamp(21px, 2.1vw, 29px);
   --text-lead: clamp(17px, 1.35vw, 21px);
   --text-body: clamp(15px, 1.05vw, 17px);

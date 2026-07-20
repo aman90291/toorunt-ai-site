@@ -1,4 +1,4 @@
-import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
+import { Container, Heading, Accent, Hot, Button, Eyebrow } from "@/components/ui";
 import { ScrollJack } from "@/components/ScrollJack";
 import { Hero } from "@/components/Hero";
 import { StickyFeatures } from "@/components/StickyFeatures";
@@ -24,7 +24,8 @@ function Panel({
     <section
       data-side={side}
       {...(nightAnchor ? { "data-night-anchor": "" } : {})}
-      className="relative flex min-h-screen items-center py-24"
+      className="relative"
+      style={{ paddingBlock: "var(--space-section)" }}
     >
       <Container>
         {/* Two elements, deliberately. `.reveal` animates transform, and a
@@ -57,7 +58,7 @@ export default function Home() {
       {/* 3 · What it is — the thesis */}
       <Panel side="right">
         <Eyebrow>What it is</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[clamp(32px,5vw,64px)] leading-[1.04]">
+        <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.04]">
           We don&rsquo;t sell the brain. <Accent>We sell the organization that brain works inside.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -84,7 +85,7 @@ export default function Home() {
           it crossed at 80%, leaving the page white almost throughout. */}
       <Panel side="left" nightAnchor>
         <Eyebrow>Human decision · 01</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
+        <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
           It never writes code <Accent>before you approve the plan.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -96,7 +97,7 @@ export default function Home() {
       {/* 4 · Peer review + sign-off — close on the second bronze node */}
       <Panel side="right">
         <Eyebrow>Human decision · 02</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
+        <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
           Two bots review each other. <Accent>You sign off the PR.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -119,13 +120,13 @@ export default function Home() {
       {/* 11 · The numbers — crane overview. */}
       <Panel side="center">
         <Eyebrow>On the record</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
+        <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
           One evening. One product. <Accent>Three decisions.</Accent>
         </Heading>
         <div className="mx-auto mt-10 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4">
           {RECEIPT.map((r) => (
             <div key={r.label}>
-              <div className="font-display text-[clamp(28px,3.4vw,40px)] leading-none tabular-nums text-ink">
+              <div className="font-display text-[length:var(--text-figure)] leading-none tabular-nums text-ink">
                 {r.value}
               </div>
               <div className="mt-2 text-[13px] text-ink-dim">{r.label}</div>
@@ -138,9 +139,9 @@ export default function Home() {
       <section id="demo" className="relative scroll-mt-24 bg-ground pt-24 pb-32 sm:pt-32">
         <Container className="text-center">
           <Eyebrow>Get started</Eyebrow>
-          <Heading as="h2" split className="perspective-3d mx-auto mt-6 max-w-4xl text-[clamp(40px,6.5vw,92px)] leading-[0.98]">
+          <Heading as="h2" split className="perspective-3d mx-auto mt-6 max-w-4xl text-[length:var(--text-hero)] leading-[0.98]">
             Every company will employ engineers that aren&rsquo;t people.{" "}
-            <Accent>We make them accountable.</Accent>
+            <Hot>We make them accountable.</Hot>
           </Heading>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <DemoButton>Book a demo</DemoButton>
