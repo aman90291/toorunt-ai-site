@@ -23,7 +23,11 @@ export const GATES: Gate[] = [
   { name: "No secrets in the code", evidence: "scanned for live credential values and secret patterns: clean", actor: "auto" },
   { name: "Risk & confidence", evidence: "scores risk and confidence; anything past the cap escalates to a human", actor: "auto" },
   { name: "Independent review", evidence: "a second agent reviews a 7-point checklist; a human reviewer signs the PR", actor: "human" },
-  { name: "Merged", evidence: "merges only on verified-green tests, CI, no conflicts, and review approval", actor: "auto" },
+  // The third human decision. Every page claims "a human decides three things"
+  // but only 04 and 12 were ever tagged, so the site promised three and showed
+  // two. /product/ already describes phase 05 "Merge & watch" as a human
+  // decision; this makes the gate chain agree with the copy.
+  { name: "Merged", evidence: "merges only on verified-green tests, CI, no conflicts, and review approval", actor: "human" },
   { name: "Watched after merge", evidence: "watches CI and production after merge; raises a revert alert if it regresses", actor: "auto" },
 ];
 
@@ -36,6 +40,6 @@ export const PIPELINE_STAGES = [
   { key: "test", label: "Test", actor: "auto" as const },
   { key: "review", label: "Peer review", actor: "auto" as const },
   { key: "signoff", label: "Sign-off", actor: "human" as const },
-  { key: "merge", label: "Merge", actor: "auto" as const },
+  { key: "merge", label: "Merge", actor: "human" as const },
   { key: "watch", label: "Watch", actor: "auto" as const },
 ];
