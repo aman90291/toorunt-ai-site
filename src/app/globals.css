@@ -283,6 +283,47 @@ body::before {
 /* Line-mask reveal container for GSAP SplitText (JS adds the tween). */
 .split-mask .line { overflow: hidden; }
 
+/* ── Sticky feature stack (StickyFeatures.tsx) ─────────────────
+   The occlusion trick, which is the whole illusion. Without these the cards
+   are transparent to each other, you see three sets of copy at once, and the
+   stack reads as a bug rather than as depth. */
+/* Full-bleed opaque card. Izanami insets its occlusion panel from the viewport
+   edges because its cards are black plates on a black page, so a leak is
+   invisible. Ours are not: an inset panel let the outgoing card ghost through
+   at the top and showed the starfield in the gap between cards. Painting the
+   background on the card itself, edge to edge, is what actually occludes —
+   and with it the separate masking band becomes unnecessary. */
+.sticky-card {
+  position: sticky;
+  /* padding-top must clear the deepest fan offset (STAGGER * (n-2) in
+     StickyFeatures.tsx, currently 22 * 2 = 44px) so the exposed sliver of each
+     pinned card underneath is empty ground and its hairline, never copy. */
+  padding-top: clamp(64px, 6vw, 96px);
+  padding-bottom: clamp(24px, 3vw, 44px);
+  background: var(--color-ground);
+}
+.sticky-card__inner { position: relative; }
+
+/* Divider between stacked cards. Suppressed on the first, which has nothing
+   above it to divide from. */
+.sticky-card:not(:first-of-type)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1560px, calc(100% - 2 * var(--gutter)));
+  height: 1px;
+  background: var(--color-line);
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Flowed, not stacked. JS also un-sticks them; this covers the window before
+     JS has run. The background stays — flowed cards still need to sit on the
+     page ground rather than on the live canvas. */
+  .sticky-card { position: static; }
+}
+
 /* Reduced-motion clamp — nothing hides, everything just stops moving. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

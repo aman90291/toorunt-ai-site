@@ -1,6 +1,7 @@
 import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
 import { ScrollJack } from "@/components/ScrollJack";
 import { Hero } from "@/components/Hero";
+import { StickyFeatures } from "@/components/StickyFeatures";
 import { DemoButton } from "@/components/DemoButton";
 import { ProblemBeat, CostErasBeat, ProvenFixesBeat, TrustScreenBeat, WhyUsBeat } from "@/components/story";
 import { RECEIPT } from "@/lib/stats";
@@ -102,6 +103,9 @@ export default function Home() {
           waits for your approval before the second gate opens.
         </p>
       </Panel>
+
+      {/* 7 · The four core surfaces, as a scroll-driven sticky stack. */}
+      <StickyFeatures />
 
       {/* 8 · Proven fixes — 9 · Trust is a screen — 10 · Why us */}
       <ProvenFixesBeat />
