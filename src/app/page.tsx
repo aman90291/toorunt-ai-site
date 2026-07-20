@@ -24,7 +24,17 @@ function Panel({
       className="relative flex min-h-screen items-center py-24"
     >
       <Container>
-        <div className={`reveal txt-legible max-w-2xl ${align}`}>{children}</div>
+        {/* Two elements, deliberately. `.reveal` animates transform, and a
+            running animation's transform WINS over a base transform
+            declaration — sharing one element silently reduced the tilt to the
+            reveal's identity matrix with no error anywhere.
+
+            tilt-stage is also applied per panel rather than once around the
+            page: it transforms, and a transformed ancestor would capture the
+            fixed nav and demo dialog as its containing block. */}
+        <div className={`tilt-stage ${align}`}>
+          <div className="reveal txt-legible max-w-2xl">{children}</div>
+        </div>
       </Container>
     </section>
   );

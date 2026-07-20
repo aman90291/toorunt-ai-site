@@ -92,8 +92,50 @@ html {
 }
 .glow-cursor-dot.is-hot { width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; }
 
-/* Mouse-tilt targets (PerspectiveTilt.tsx). Transform is driven inline by JS. */
-.perspective-3d { will-change: transform; transform-style: preserve-3d; }
+/* ── Cursor perspective (PerspectiveTilt.tsx) ──────────────────
+   PerspectiveTilt publishes the damped pointer as --mx/--my (-1 … 1, viewport
+   centre = 0). Elements opt in with a class; nothing large is ever transformed,
+   because a transformed ancestor would become the containing block for the
+   fixed nav and dialog and silently break them.
+
+   Registered with @property so they are typed <number> rather than raw tokens —
+   an unregistered custom property in a calc() is invalid-at-computed-value-time
+   if it is ever momentarily unset, which makes the whole transform drop out. */
+@property --mx { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --my { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+/* The stage rotation. Magnitudes are deliberately small — past about 6° this
+   stops reading as a room and starts reading as a gimmick. Perspective is
+   1400px: below ~1000px the distortion becomes obvious at the viewport edges. */
+.tilt-stage {
+  transform: perspective(1400px)
+             rotateX(calc(var(--my) * -2.5deg))
+             rotateY(calc(var(--mx) * 3.5deg));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Depth. Nearer things travel further, which is the cue the eye actually reads
+   as distance — and it matches the cloud shader, where the near layers get the
+   larger parallax gain. Sign is negative so content slides against the cursor,
+   as it would if you were panning past it. */
+.par-near { transform: translate3d(calc(var(--mx) * -14px), calc(var(--my) * -10px), 0); will-change: transform; }
+.par-mid  { transform: translate3d(calc(var(--mx) *  -8px), calc(var(--my) *  -6px), 0); will-change: transform; }
+.par-far  { transform: translate3d(calc(var(--mx) *  -3px), calc(var(--my) *  -2px), 0); will-change: transform; }
+
+/* Retained so existing markup keeps working; it now participates in the shared
+   stage instead of running its own per-element hover tilt. */
+.perspective-3d { transform-style: preserve-3d; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt-stage, .par-near, .par-mid, .par-far { transform: none !important; }
+}
+/* Nothing to follow without a cursor — and on touch the values never update,
+   so leaving the transforms on would freeze the layout at whatever a stray
+   tap last produced. */
+@media (hover: none), (pointer: coarse) {
+  .tilt-stage, .par-near, .par-mid, .par-far { transform: none !important; }
+}
 
 /* WebGL ripple layer over screenshots (WarpImage.tsx) — fades in when ready. */
 .warp-canvas {
