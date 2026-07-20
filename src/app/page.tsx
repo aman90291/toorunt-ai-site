@@ -1,5 +1,6 @@
 import { Container, Heading, Accent, Button, Eyebrow } from "@/components/ui";
 import { ScrollJack } from "@/components/ScrollJack";
+import { Hero } from "@/components/Hero";
 import { DemoButton } from "@/components/DemoButton";
 import { ProblemBeat, CostErasBeat, ProvenFixesBeat, TrustScreenBeat, WhyUsBeat } from "@/components/story";
 import { RECEIPT } from "@/lib/stats";
@@ -46,24 +47,7 @@ export default function Home() {
       <ScrollJack />
 
       {/* 1 · Hero */}
-      <Panel side="left">
-        <Eyebrow>Governed AI engineering teams</Eyebrow>
-        <Heading as="h1" split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.0]">
-          Software Development Lifecycle <Accent>automation, end&nbsp;to&nbsp;end.</Accent>
-        </Heading>
-        <p className="mt-6 text-[18px] leading-relaxed text-ink-dim">
-          A governed team of AI engineers that carries every ticket from your Jira board to a reviewed,
-          tested, merged pull request — behind fourteen hard gates, with a human on every decision that
-          counts.
-        </p>
-        <div className="mt-9 flex flex-wrap items-center gap-3">
-          <DemoButton>Book a demo</DemoButton>
-          <Button href="/product/" variant="ghost">See how it works →</Button>
-        </div>
-        <p className="mt-14 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
-          Scroll to look around ↓
-        </p>
-      </Panel>
+      <Hero />
 
       {/* 2 · The problem — 75% / 95% */}
       <ProblemBeat />
@@ -80,11 +64,23 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 4 · Three eras of cost */}
+      {/* 4 · Three eras of cost.
+          Dusk is anchored here — roughly a third down the page — so the dark
+          60% owns the majority of the scroll. It used to sit on "On the record"
+          at section 11 of 12, which left the page white for ~80% of its length
+          and inverted the 60/30 split.
+
+          This section also satisfies the DUSK_BAND constraint in
+          lib/daynight.ts: the crossing lands on a tabular block rather than on
+          crimson body copy or a crimson CTA, neither of which is legible
+          against mid-dusk grey. */}
       <CostErasBeat />
 
-      {/* 5 · The approval gate — close on the first bronze node */}
-      <Panel side="left">
+      {/* 5 · The approval gate. Dusk is anchored here, ~a third down, so the
+          dark 60% owns the majority of the scroll. Anchored on CostEras it
+          crossed at 20% (80% dark); on "On the record" — where it started —
+          it crossed at 80%, leaving the page white almost throughout. */}
+      <Panel side="left" nightAnchor>
         <Eyebrow>Human decision · 01</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
           It never writes code <Accent>before you approve the plan.</Accent>
@@ -112,8 +108,8 @@ export default function Home() {
       <TrustScreenBeat />
       <WhyUsBeat />
 
-      {/* 11 · The numbers — crane overview. Night falls as this section arrives. */}
-      <Panel side="center" nightAnchor>
+      {/* 11 · The numbers — crane overview. */}
+      <Panel side="center">
         <Eyebrow>On the record</Eyebrow>
         <Heading split className="perspective-3d mt-6 text-[clamp(34px,5.4vw,72px)] leading-[1.02]">
           One evening. One product. <Accent>Three decisions.</Accent>

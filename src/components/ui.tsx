@@ -1,9 +1,54 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-/** Page shell — consistent max width + horizontal gutter. */
-export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-[1200px] px-6 sm:px-8 ${className}`}>{children}</div>;
+/** Page shell — consistent max width + fluid gutter.
+ *  `wide` opens up to full-bleed-ish for the stacked and pinned sections. */
+export function Container({
+  children,
+  className = "",
+  wide = false,
+}: {
+  children: ReactNode;
+  className?: string;
+  wide?: boolean;
+}) {
+  return (
+    <div
+      className={`mx-auto w-full ${wide ? "max-w-[1560px]" : "max-w-[1240px]"} ${className}`}
+      style={{ paddingInline: "var(--gutter)" }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * The section rhythm. Every band on the page uses this, which is most of what
+ * makes a layout read as composed rather than assembled — the eye picks up the
+ * repeating interval even when it cannot name it.
+ */
+export function Section({
+  children,
+  className = "",
+  wide = false,
+  id,
+  ...rest
+}: {
+  children: ReactNode;
+  className?: string;
+  wide?: boolean;
+  id?: string;
+} & Record<string, unknown>) {
+  return (
+    <section
+      id={id}
+      className={`relative ${className}`}
+      style={{ paddingBlock: "var(--space-section)" }}
+      {...rest}
+    >
+      <Container wide={wide}>{children}</Container>
+    </section>
+  );
 }
 
 export function Eyebrow({ children }: { children: ReactNode }) {

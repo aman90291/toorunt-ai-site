@@ -115,12 +115,14 @@ function SceneContents({ home, reduced, lite }: { home: boolean; reduced: boolea
       <CloudField reduced={reduced} lite={lite} />
       <DustField reduced={reduced} count={lite ? 650 : 1600} />
 
-      {home && (
-        <FocusGroup reduced={reduced}>
-          <Constellation layout={LAYOUT_DAY} phase="day" reduced={reduced} />
-          <Constellation layout={LAYOUT_NIGHT} phase="night" reduced={reduced} />
-        </FocusGroup>
-      )}
+      {/* The constellation is deliberately not rendered.
+          It was the old site's signature image, and it works against what this
+          rebuild is for: it is busy, it occupies the centre of the viewport
+          where the headline lives, and it dominates every hero screenshot. The
+          brief puts the clouds in the background — one atmosphere, with the
+          type carrying the page.
+          Kept in the tree (three/Constellation.tsx) rather than deleted so it
+          can be restored in one line if we want it back on an interior page. */}
 
       <Environment resolution={256}>
         <Lightformer intensity={2.0} position={[0, 5, -5]} scale={[10, 6, 1]} color="#ffffff" />
