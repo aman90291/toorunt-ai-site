@@ -1,52 +1,49 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
+import type { RefObject } from "react";
 import { FEATURES } from "@/content/features";
 import { SHOTS } from "@/lib/shots";
 import { Container } from "@/components/ui";
 import { Doodle } from "@/components/Doodle";
 
 /**
- * The feature walk — the Vorflux mechanic, all three layers of it.
+ * The feature walk — the Vorflux mechanic.
  *
  * The stage pins. Scroll drives two kinds of motion in the framed box on the
- * right, layered:
+ * right: WITHIN a step the screenshot pans upward inside the window
+ * (continuous, straight to the node), and BETWEEN steps the track slides one
+ * frame-height — easing on single steps, snapping on multi-step jumps so a
+ * fast wheel flick never leaves the box trailing the page.
  *
- *   1. WITHIN a step, the screenshot is taller than the frame and PANS
- *      upward inside it as you scroll through the step's segment — the "box
- *      that scrolls" in the reference. Continuous, no transition, written
- *      straight to the node each frame.
- *   2. BETWEEN steps, the track slides up by one frame-height on a CSS
- *      transition, so the next screenshot enters from the bottom and rests.
+ * RENDER ARCHITECTURE — the left and right halves are deliberately decoupled:
  *
- * The pan needs headroom to exist: the frame's aspect is deliberately WIDER
- * (shorter) than the screenshots', so at equal width the image is taller than
- * the frame and has somewhere to go. Give the frame the image's own ratio and
- * the pan distance is zero — that is why the earlier build could not scroll
- * inside the box.
+ *   • <Stage> (the right half) renders exactly ONCE. It is memoised and every
+ *     prop is a stable ref, so React never reconciles it again; all of its
+ *     motion is imperative writes from the scroll handler. Before this split,
+ *     each step change re-rendered the whole section — four <img>s, the track,
+ *     the lot — and that reconciliation landed precisely on the busiest frames
+ *     of a fast scroll.
+ *   • <CopyColumn> and <Rail> (the left half and the index) are the only
+ *     things `active` re-renders, and they are a handful of text nodes.
  *
- * One rAF-throttled scroll handler drives everything: overall progress p,
- * the discrete step index (copy fade, counter, track slide — via state), and
- * the per-image pan offsets (via refs, no re-render). The IntersectionObserver
- * sentinels are gone; segments of p replace them.
+ * The scroll handler does zero DOM reads: geometry is measured once (and on
+ * resize) into a cache, and everything derives from window.scrollY.
  *
- * Perf: all four stage screenshots load EAGERLY. They were lazy, so each
- * arrived and decoded mid-slide the first time it was needed — that decode hitch
- * is what made the section feel slow. Four AVIFs up front is far cheaper than
- * one decode during an animation.
+ * Stage screenshots load eagerly at 1100w only — lazy 2x sources meant
+ * multi-megabyte decodes landing mid-animation.
  *
- * Reduced motion: the global clamp makes the slide instant, and the pan is
- * skipped entirely — images rest at their top edge.
+ * Reduced motion: slides snap, pans are skipped — images rest at their tops.
  */
 
 const STEP_VH = 82; // scroll distance per step
 
-/* The frame is 15% SHORTER than the image renders at full width — that is
-   where the pan headroom comes from now. The previous build made the image
-   115% of the frame's HEIGHT instead, which cropped both sides of every
-   screenshot; full width has to be visible, so the frame gives up height
-   rather than the image giving up edges. */
+/* The window is 12% shorter than the image renders at full width — that gap
+   is the pan. Full width must stay visible (an earlier build sized the image
+   by height and cropped both edges); the frame gives up height instead. */
 const PAN = 0.12;
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
 
 export function StickyFeatures() {
   const [active, setActive] = useState(0);
@@ -66,10 +63,6 @@ export function StickyFeatures() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0;
 
-    /* All geometry is measured ONCE here and cached — the scroll path below
-       does no DOM reads at all. Reading clientHeight/getBoundingClientRect
-       inside the rAF forced a synchronous layout on every scrolled frame,
-       which is a large part of why fast scrolling stuttered. */
     const m = { top: 0, range: 1, heads: [] as number[], lastSeg: 0 };
     const measure = () => {
       const r = stageEl.getBoundingClientRect();
@@ -77,7 +70,6 @@ export function StickyFeatures() {
       m.range = Math.max(1, stageEl.offsetHeight - window.innerHeight);
       const slotW = frameEl.clientWidth;
       const slotH = frameEl.clientHeight;
-      // headroom per image, from the intrinsic ratios — no <img> reads needed
       m.heads = FEATURES.map((f) => {
         const s = SHOTS[f.shot];
         return Math.max(0, slotW * (s.height / s.width) - slotH);
@@ -87,18 +79,13 @@ export function StickyFeatures() {
     const apply = () => {
       raf = 0;
       const p = Math.min(1, Math.max(0, (window.scrollY - m.top) / m.range));
-
       const seg = Math.min(n - 1, Math.floor(p * n));
       const within = Math.min(1, Math.max(0, p * n - seg));
 
+      // Re-renders ONLY CopyColumn and Rail — Stage is memoised out.
       setActive((prev) => (prev === seg ? prev : seg));
 
-      /* The slide is imperative now, not React-rendered, for one reason: fast
-         scrolling. A fast wheel flick moves several steps in a handful of
-         frames, and a fixed 650ms ease from wherever the track happened to be
-         meant the right half visibly trailed the page. Single-step changes
-         keep the ease; a multi-step jump snaps instantly and re-eases from
-         there. */
+      // The slide: ease on ±1, snap on jumps.
       const t = track.current;
       if (t) {
         const jumped = Math.abs(seg - m.lastSeg) > 1;
@@ -108,7 +95,7 @@ export function StickyFeatures() {
       }
 
       if (reduce) return;
-      // Pan the segment's image; neighbours too, so a slide never reveals a
+      // The pan: current segment plus neighbours, so a slide never reveals a
       // half-panned frame.
       for (let i = Math.max(0, seg - 1); i <= Math.min(n - 1, seg + 1); i++) {
         const img = imgs.current[i];
@@ -139,9 +126,6 @@ export function StickyFeatures() {
       window.removeEventListener("resize", onResize);
     };
   }, []);
-
-  const total = FEATURES.length;
-  const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
     <section aria-labelledby="features-heading" className="on-dark relative bg-ground">
@@ -178,151 +162,161 @@ export function StickyFeatures() {
         <div
           ref={stage}
           className="relative pb-[var(--space-section)]"
-          style={{ height: `${total * STEP_VH}vh` }}
+          style={{ height: `${FEATURES.length * STEP_VH}vh` }}
         >
           <div className="sticky top-[14vh] grid grid-cols-12 items-center gap-x-8">
-            {/* copy — absolutely stacked so each fades in the same place */}
-            <div className="relative col-span-4 min-h-[300px]">
-              {FEATURES.map((f, i) => (
-                <div
-                  key={f.key}
-                  aria-hidden={live && i !== active}
-                  className={`absolute inset-x-0 top-0 transition-all duration-500 ease-out ${
-                    !live || i === active
-                      ? "translate-y-0 opacity-100"
-                      : "pointer-events-none translate-y-3 opacity-0"
-                  }`}
-                >
-                  <span className="font-mono text-[11px] tracking-[0.2em] text-ink-faint">
-                    {f.index}
-                  </span>
-                  <h3
-                    className="mt-4 font-display font-semibold tracking-[-0.02em] text-ink"
-                    style={{ fontSize: "var(--text-h3)", lineHeight: 1.15 }}
-                  >
-                    {f.title}
-                  </h3>
-                  <p className="mt-3 text-[var(--text-lead)] leading-[1.5] text-accent-text">
-                    {f.lead}
-                  </p>
-                  <p className="mt-4 max-w-[42ch] text-[var(--text-body)] leading-[1.7] text-ink-dim">
-                    {f.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* the framed box — a big dark stage with the app window floating
-                inset, vorflux-style: generous padding on every side so the
-                gradient ground reads as a deliberate backdrop, not a border */}
-            <div className="col-span-7">
-              <div className="rounded-[calc(var(--radius-card)+12px)] border border-line bg-gradient-to-br from-ground-2 via-ground-2 to-ground-3 p-8 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.7)] sm:p-12 xl:p-16">
-                {/* The window's height comes from the first shot's ratio, cut
-                    by the pan factor — so the full WIDTH of every screenshot
-                    is visible (nothing cropped at the sides) and the ~12%
-                    of image that doesn't fit vertically is what pans. */}
-                <div
-                  ref={frame}
-                  className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.65)]"
-                  style={{
-                    aspectRatio: `${SHOTS[FEATURES[0].shot].width} / ${SHOTS[FEATURES[0].shot].height * (1 - PAN)}`,
-                  }}
-                >
-                  {/* The step slide. No inline transform and no Tailwind
-                      duration: apply() owns both — it snaps on multi-step
-                      jumps and eases on single steps, which a fixed CSS
-                      duration cannot do. */}
-                  <div
-                    ref={track}
-                    className="absolute inset-x-0 top-0 transition-transform ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
-                    style={{ height: `${total * 100}%` }}
-                  >
-                    {FEATURES.map((f, i) => {
-                      const s = SHOTS[f.shot];
-                      return (
-                        /* each slot clips its own image; the image is taller
-                           than the slot and pans inside it */
-                        <div
-                          key={f.key}
-                          className="relative overflow-hidden"
-                          style={{ height: `${100 / total}%` }}
-                        >
-                          {/* 1100w only, no 2x source: the four 2200px bitmaps
-                              decoded to ~40MB of GPU layers between them, and
-                              compositing those during fast scroll is what was
-                              lagging the whole page. At the frame's rendered
-                              size 1100w still covers ~1.5x density. Ditto the
-                              removed will-change: four permanently-promoted
-                              layers cost more than promoting on demand. */}
-                          <img
-                            ref={(el) => { imgs.current[i] = el; }}
-                            src={`/shots/${f.shot}-1100.webp`}
-                            width={s.width}
-                            height={s.height}
-                            alt={s.alt}
-                            loading="eager"
-                            decoding="async"
-                            className="absolute left-0 top-0 h-auto w-full"
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* index rail */}
-            <div className="col-span-1 flex flex-col items-end">
-              <span className="font-mono text-[12px] tabular-nums text-ink">{pad(active + 1)}</span>
-              <span className="my-3 block h-24 w-px bg-line-2">
-                <span
-                  className="block w-px bg-accent transition-[height] duration-500"
-                  style={{ height: `${((active + 1) / total) * 100}%` }}
-                />
-              </span>
-              <span className="font-mono text-[12px] tabular-nums text-ink-faint">{pad(total)}</span>
-            </div>
+            <CopyColumn active={active} live={live} />
+            <Stage frame={frame} track={track} imgs={imgs} />
+            <Rail active={active} />
           </div>
         </div>
       </Container>
 
-      {/* ── mobile: plain stack, each step with its own screen ────── */}
-      <Container className="lg:hidden">
-        <div className="divide-y divide-line border-t border-line pb-[var(--space-section)]">
-          {FEATURES.map((f, i) => {
-            const s = SHOTS[f.shot];
-            return (
-              <article key={f.key} className="py-10">
-                <span className="font-mono text-[11px] tracking-[0.2em] text-ink-faint">{f.index}</span>
-                <h3
-                  className="mt-3 font-display font-semibold tracking-[-0.02em] text-ink"
-                  style={{ fontSize: "var(--text-h3)", lineHeight: 1.15 }}
-                >
-                  {f.title}
-                </h3>
-                <p className="mt-3 text-[var(--text-lead)] leading-[1.5] text-accent-text">{f.lead}</p>
-                <p className="mt-4 text-[var(--text-body)] leading-[1.7] text-ink-dim">{f.body}</p>
-                <figure className="mt-6 overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2">
-                  <picture>
-                    <source type="image/avif" srcSet={`/shots/${f.shot}-1100.avif 1x, /shots/${f.shot}-2200.avif 2x`} />
-                    <img
-                      src={`/shots/${f.shot}-1100.webp`}
-                      srcSet={`/shots/${f.shot}-1100.webp 1x, /shots/${f.shot}-2200.webp 2x`}
-                      width={s.width}
-                      height={s.height}
-                      alt={s.alt}
-                      loading={i === 0 ? "eager" : "lazy"}
-                      decoding="async"
-                      className="block h-auto w-full"
-                    />
-                  </picture>
-                </figure>
-              </article>
-            );
-          })}
-        </div>
-      </Container>
+      <MobileStack />
     </section>
   );
 }
+
+/* ── left half: the only thing a step change re-renders ─────────── */
+const CopyColumn = memo(function CopyColumn({ active, live }: { active: number; live: boolean }) {
+  return (
+    <div className="relative col-span-4 min-h-[300px]">
+      {FEATURES.map((f, i) => (
+        <div
+          key={f.key}
+          aria-hidden={live && i !== active}
+          className={`absolute inset-x-0 top-0 transition-all duration-500 ease-out ${
+            !live || i === active
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-3 opacity-0"
+          }`}
+        >
+          <span className="font-mono text-[11px] tracking-[0.2em] text-ink-faint">{f.index}</span>
+          <h3
+            className="mt-4 font-display font-semibold tracking-[-0.02em] text-ink"
+            style={{ fontSize: "var(--text-h3)", lineHeight: 1.15 }}
+          >
+            {f.title}
+          </h3>
+          <p className="mt-3 text-[var(--text-lead)] leading-[1.5] text-accent-text">{f.lead}</p>
+          <p className="mt-4 max-w-[42ch] text-[var(--text-body)] leading-[1.7] text-ink-dim">
+            {f.body}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+});
+
+/* ── right half: renders once, then React never touches it again ──
+   memo + ref-only props = no reconciliation on step changes; every pixel of
+   motion is an imperative write from the scroll handler. */
+const Stage = memo(function Stage({
+  frame,
+  track,
+  imgs,
+}: {
+  frame: RefObject<HTMLDivElement | null>;
+  track: RefObject<HTMLDivElement | null>;
+  imgs: RefObject<(HTMLImageElement | null)[]>;
+}) {
+  const total = FEATURES.length;
+  return (
+    <div className="col-span-7">
+      {/* a big dark stage with the app window floating inset — the gradient
+          ground reads as a deliberate backdrop, not a border */}
+      <div className="rounded-[calc(var(--radius-card)+12px)] border border-line bg-gradient-to-br from-ground-2 via-ground-2 to-ground-3 p-8 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.7)] sm:p-12 xl:p-16">
+        <div
+          ref={frame}
+          className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.65)]"
+          style={{
+            aspectRatio: `${SHOTS[FEATURES[0].shot].width} / ${SHOTS[FEATURES[0].shot].height * (1 - PAN)}`,
+          }}
+        >
+          <div
+            ref={track}
+            className="absolute inset-x-0 top-0 transition-transform ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
+            style={{ height: `${total * 100}%` }}
+          >
+            {FEATURES.map((f, i) => {
+              const s = SHOTS[f.shot];
+              return (
+                <div key={f.key} className="relative overflow-hidden" style={{ height: `${100 / total}%` }}>
+                  {/* 1100w only, eager: 2x sources decoded ~40MB of bitmaps
+                      mid-animation, which was most of the original lag */}
+                  <img
+                    ref={(el) => { imgs.current[i] = el; }}
+                    src={`/shots/${f.shot}-1100.webp`}
+                    width={s.width}
+                    height={s.height}
+                    alt={s.alt}
+                    loading="eager"
+                    decoding="async"
+                    className="absolute left-0 top-0 h-auto w-full"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+const Rail = memo(function Rail({ active }: { active: number }) {
+  const total = FEATURES.length;
+  return (
+    <div className="col-span-1 flex flex-col items-end">
+      <span className="font-mono text-[12px] tabular-nums text-ink">{pad2(active + 1)}</span>
+      <span className="my-3 block h-24 w-px bg-line-2">
+        <span
+          className="block w-px bg-accent transition-[height] duration-500"
+          style={{ height: `${((active + 1) / total) * 100}%` }}
+        />
+      </span>
+      <span className="font-mono text-[12px] tabular-nums text-ink-faint">{pad2(total)}</span>
+    </div>
+  );
+});
+
+/* ── mobile: a plain stack, stateless, rendered once ────────────── */
+const MobileStack = memo(function MobileStack() {
+  return (
+    <Container className="lg:hidden">
+      <div className="divide-y divide-line border-t border-line pb-[var(--space-section)]">
+        {FEATURES.map((f, i) => {
+          const s = SHOTS[f.shot];
+          return (
+            <article key={f.key} className="py-10">
+              <span className="font-mono text-[11px] tracking-[0.2em] text-ink-faint">{f.index}</span>
+              <h3
+                className="mt-3 font-display font-semibold tracking-[-0.02em] text-ink"
+                style={{ fontSize: "var(--text-h3)", lineHeight: 1.15 }}
+              >
+                {f.title}
+              </h3>
+              <p className="mt-3 text-[var(--text-lead)] leading-[1.5] text-accent-text">{f.lead}</p>
+              <p className="mt-4 text-[var(--text-body)] leading-[1.7] text-ink-dim">{f.body}</p>
+              <figure className="mt-6 overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2">
+                <picture>
+                  <source type="image/avif" srcSet={`/shots/${f.shot}-1100.avif 1x, /shots/${f.shot}-2200.avif 2x`} />
+                  <img
+                    src={`/shots/${f.shot}-1100.webp`}
+                    srcSet={`/shots/${f.shot}-1100.webp 1x, /shots/${f.shot}-2200.webp 2x`}
+                    width={s.width}
+                    height={s.height}
+                    alt={s.alt}
+                    loading={i === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                    className="block h-auto w-full"
+                  />
+                </picture>
+              </figure>
+            </article>
+          );
+        })}
+      </div>
+    </Container>
+  );
+});
