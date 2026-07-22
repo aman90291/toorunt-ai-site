@@ -74,7 +74,7 @@ export function ProblemBeat() {
 const ERAS = [
   { label: "Manual SDLC", people: "4–6 people", time: "1–2 weeks", cost: "$500–1,000", bar: "100%", accent: false },
   { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", accent: false },
-  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$10–50", bar: "6%", accent: true },
+  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$100–200", bar: "20%", accent: true },
 ];
 export function CostErasBeat() {
   return (
@@ -142,7 +142,7 @@ export function CostErasBeat() {
       </div>
 
       <p className="reveal mx-auto mt-6 max-w-5xl text-center text-[15px] text-ink-dim">
-        <span className="font-semibold text-ink">~95% lower cost</span> per unit of shipped, reviewed work ·{" "}
+        <span className="font-semibold text-ink">~80% lower cost</span> per unit of shipped, reviewed work ·{" "}
         <span className="font-semibold text-ink">10–20×</span> cycle-time compression — weeks become hours.
       </p>
     </Beat>
@@ -165,7 +165,7 @@ const COMPARE = {
     ["Identity", "The developer’s own", "The user’s own", "One shared org agent", "Per-bot Jira + GitHub identities"],
     ["Review", "You review your own output", "—", "Your humans review it", "Bot-to-bot adversarial review — gates the merge"],
     ["Governance", "IDE / org settings", "Folder / tool permissions", "SSO + VPC + logs", "14 gates · hash-chained audit · vault · kill switch"],
-    ["Cost model", "Per-seat subscription", "Subscription", "Usage ACUs, open-ended", "3 LLM layers · capped · $10–50/PR, to the dollar"],
+    ["Cost model", "Per-seat subscription", "Subscription", "Usage ACUs, open-ended", "3 LLM layers · capped · $100–200/PR, to the dollar"],
   ],
 };
 export function WhyUsBeat() {
