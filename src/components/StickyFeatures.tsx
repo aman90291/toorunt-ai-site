@@ -46,13 +46,14 @@ const STEP_VH = 82; // scroll distance per step
    115% of the frame's HEIGHT instead, which cropped both sides of every
    screenshot; full width has to be visible, so the frame gives up height
    rather than the image giving up edges. */
-const PAN = 0.15;
+const PAN = 0.12;
 
 export function StickyFeatures() {
   const [active, setActive] = useState(0);
   const [live, setLive] = useState(false);
   const stage = useRef<HTMLDivElement | null>(null);
   const frame = useRef<HTMLDivElement | null>(null);
+  const track = useRef<HTMLDivElement | null>(null);
   const imgs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export function StickyFeatures() {
        does no DOM reads at all. Reading clientHeight/getBoundingClientRect
        inside the rAF forced a synchronous layout on every scrolled frame,
        which is a large part of why fast scrolling stuttered. */
-    const m = { top: 0, range: 1, heads: [] as number[] };
+    const m = { top: 0, range: 1, heads: [] as number[], lastSeg: 0 };
     const measure = () => {
       const r = stageEl.getBoundingClientRect();
       m.top = r.top + window.scrollY;
@@ -91,6 +92,20 @@ export function StickyFeatures() {
       const within = Math.min(1, Math.max(0, p * n - seg));
 
       setActive((prev) => (prev === seg ? prev : seg));
+
+      /* The slide is imperative now, not React-rendered, for one reason: fast
+         scrolling. A fast wheel flick moves several steps in a handful of
+         frames, and a fixed 650ms ease from wherever the track happened to be
+         meant the right half visibly trailed the page. Single-step changes
+         keep the ease; a multi-step jump snaps instantly and re-eases from
+         there. */
+      const t = track.current;
+      if (t) {
+        const jumped = Math.abs(seg - m.lastSeg) > 1;
+        t.style.transitionDuration = jumped || reduce ? "0ms" : "550ms";
+        t.style.transform = `translateY(-${(seg * 100) / n}%)`;
+        m.lastSeg = seg;
+      }
 
       if (reduce) return;
       // Pan the segment's image; neighbours too, so a slide never reveals a
@@ -197,27 +212,30 @@ export function StickyFeatures() {
               ))}
             </div>
 
-            {/* the framed box — outer card, inset window, panning content */}
+            {/* the framed box — a big dark stage with the app window floating
+                inset, vorflux-style: generous padding on every side so the
+                gradient ground reads as a deliberate backdrop, not a border */}
             <div className="col-span-7">
-              <div className="rounded-[calc(var(--radius-card)+10px)] border border-line bg-gradient-to-br from-ground-2 to-ground-3 p-4 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.7)] sm:p-6">
+              <div className="rounded-[calc(var(--radius-card)+12px)] border border-line bg-gradient-to-br from-ground-2 via-ground-2 to-ground-3 p-8 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.7)] sm:p-12 xl:p-16">
                 {/* The window's height comes from the first shot's ratio, cut
                     by the pan factor — so the full WIDTH of every screenshot
-                    is visible (nothing cropped at the sides) and the ~15%
+                    is visible (nothing cropped at the sides) and the ~12%
                     of image that doesn't fit vertically is what pans. */}
                 <div
                   ref={frame}
-                  className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2"
+                  className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.65)]"
                   style={{
                     aspectRatio: `${SHOTS[FEATURES[0].shot].width} / ${SHOTS[FEATURES[0].shot].height * (1 - PAN)}`,
                   }}
                 >
-                  {/* the step slide: one frame-height per step */}
+                  {/* The step slide. No inline transform and no Tailwind
+                      duration: apply() owns both — it snaps on multi-step
+                      jumps and eases on single steps, which a fixed CSS
+                      duration cannot do. */}
                   <div
-                    className="absolute inset-x-0 top-0 transition-transform duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
-                    style={{
-                      height: `${total * 100}%`,
-                      transform: `translateY(-${(active * 100) / total}%)`,
-                    }}
+                    ref={track}
+                    className="absolute inset-x-0 top-0 transition-transform ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
+                    style={{ height: `${total * 100}%` }}
                   >
                     {FEATURES.map((f, i) => {
                       const s = SHOTS[f.shot];
