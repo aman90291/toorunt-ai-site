@@ -3,7 +3,6 @@ import { DemoButton } from "@/components/DemoButton";
 import { Button } from "@/components/ui";
 import { HeroBackground } from "@/components/HeroBackground";
 import { Doodle } from "@/components/Doodle";
-import { RECEIPT } from "@/lib/stats";
 
 /**
  * The hero — the page's one dark band, and the only place anything moves.
@@ -67,32 +66,11 @@ export function Hero() {
           </div>
         </Container>
 
-        {/* Receipts. Hairline-separated rather than boxed — a card here would
-            introduce a surface the rest of the page does not use. */}
-        <Container>
-          <div className="mt-[7vh]">
-            <div className="mb-6 h-px w-full bg-line" />
-            <div className="grid grid-cols-2 gap-x-10 gap-y-12 text-center md:grid-cols-4 md:gap-x-16">
-              {RECEIPT.map((r) => (
-                <div key={r.label}>
-                  <div
-                    className="font-display font-bold tracking-[-0.02em] text-ink"
-                    style={{ fontSize: "clamp(30px, 3vw, 44px)", lineHeight: 1 }}
-                  >
-                    {r.value}
-                  </div>
-                  {/* ink-dim, not ink: this line is the caption for the number
-                      above it, and at this size in full-strength ink the two
-                      competed instead of reading as figure-then-label. */}
-                  <div className="mt-2.5 text-[15px] leading-snug text-ink-dim">{r.label}</div>
-                  <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint">
-                    {r.sub}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Container>
+        {/* The receipts strip (2h 36m · 3 · 14 · $10–50) that closed the hero
+            was removed — the same figures already carry the cost and decision
+            beats further down the page. The bottom padding stands in for the
+            vertical space it occupied so the hero keeps its proportions. */}
+        <div className="pb-[10vh]" />
       </div>
     </section>
   );
