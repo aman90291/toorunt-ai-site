@@ -39,18 +39,18 @@ export function Timeline() {
           {/* The spine sits behind the dots, drawn from the left. Rendered as a
               plain element rather than SVG so it inherits the themed hairline
               colour and needs no separate light/dark handling. */}
-          {/* 27px = the HUMAN tag (13) + its margin (6) + half the 16px dot
-              row (8). The dots are centred in a fixed-height row precisely so
+          {/* 38px = the HUMAN tag (16) + its margin (8) + half the 28px dot
+              row (14). The dots are centred in a fixed-height row precisely so
               this one number lines the spine up with every dot regardless of
               its size. */}
           <li
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-[27px] hidden h-px sm:block"
+            className="pointer-events-none absolute inset-x-0 top-[38px] hidden h-[2px] sm:block"
             style={{ gridColumn: "1 / -1" }}
           >
             <span
               data-spine
-              className="block h-px w-full origin-left bg-line-2"
+              className="block h-[2px] w-full origin-left bg-line-2"
             />
           </li>
 
@@ -64,7 +64,7 @@ export function Timeline() {
                 {/* HUMAN tag, above the dot, in the accent. This is the only
                     place the 10% appears in this section, and it appears
                     exactly on the gates a person has to clear. */}
-                <span className="mb-1.5 block h-[13px] font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-text">
+                <span className="mb-2 block h-[16px] font-mono text-[12px] font-semibold uppercase tracking-[0.18em] text-accent-text">
                   {human ? (
                     <span data-human-tag="HUMAN" data-order={i}>
                       HUMAN
@@ -75,15 +75,15 @@ export function Timeline() {
                 {/* Fixed-height row, dot centred inside it. Without this the
                     15px human dots and the 9px autonomous ones sat on
                     different axes and neither met the spine. */}
-                <span className="relative z-10 flex h-4 items-center justify-center">
+                <span className="relative z-10 flex h-7 items-center justify-center">
                   <span
                     data-dot
                     className={`block rounded-full ${
-                      human ? "h-[15px] w-[15px] bg-accent-text" : "h-[9px] w-[9px] bg-pass"
+                      human ? "h-[22px] w-[22px] bg-accent-text" : "h-[13px] w-[13px] bg-pass"
                     }`}
                     style={
                       human
-                        ? { boxShadow: "0 0 0 5px var(--color-accent-wash)" }
+                        ? { boxShadow: "0 0 0 7px var(--color-accent-wash)" }
                         : undefined
                     }
                   />
@@ -91,7 +91,7 @@ export function Timeline() {
 
                 <span
                   data-label
-                  className={`mt-3 block font-mono text-[10px] leading-tight uppercase tracking-[0.08em] ${
+                  className={`mt-4 block font-mono text-[13px] leading-tight uppercase tracking-[0.08em] ${
                     human ? "font-semibold text-accent-text" : "text-ink-dim"
                   }`}
                 >
@@ -110,7 +110,7 @@ export function Timeline() {
           })}
         </ol>
 
-        <p className="mt-[clamp(40px,5vw,72px)] font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
+        <p className="mt-[clamp(40px,5vw,72px)] font-mono text-[12.5px] uppercase tracking-[0.18em] text-ink-faint">
           {HUMAN_GATE_COUNT} human decisions · 14 gates · everything else autonomous
         </p>
       </Container>

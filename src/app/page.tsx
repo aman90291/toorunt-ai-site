@@ -14,8 +14,13 @@ function Panel({
   side?: "left" | "right" | "center";
   children: React.ReactNode;
 }) {
+  /* The alignment classes must live on the SAME element as the max-width.
+     They used to sit on a full-width wrapper around the constrained block —
+     and `ml-auto` on an element that already fills its parent moves nothing,
+     so `side="right"` silently rendered identical to `side="left"` and the
+     alternating panels all stacked down the left edge. */
   const align =
-    side === "right" ? "lg:ml-auto lg:text-left" : side === "center" ? "mx-auto text-center" : "";
+    side === "right" ? "lg:ml-auto" : side === "center" ? "mx-auto text-center" : "";
   return (
     <section
       data-side={side}
@@ -23,13 +28,7 @@ function Panel({
       style={{ paddingBlock: "var(--space-section)" }}
     >
       <Container>
-        {/* `.reveal` is opacity-only now, so the second wrapper that used to
-            keep the reveal's transform from clobbering the panel tilt is no
-            longer load-bearing — it is kept only because `align` and the
-            measure constraint are separate concerns. */}
-        <div className={align}>
-          <div className="reveal max-w-2xl">{children}</div>
-        </div>
+        <div className={`reveal max-w-2xl ${align}`}>{children}</div>
       </Container>
     </section>
   );

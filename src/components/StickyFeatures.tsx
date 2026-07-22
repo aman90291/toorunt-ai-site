@@ -41,61 +41,87 @@ import { Doodle } from "@/components/Doodle";
 
 const STEP_VH = 82; // scroll distance per step
 
+/* The frame is 15% SHORTER than the image renders at full width — that is
+   where the pan headroom comes from now. The previous build made the image
+   115% of the frame's HEIGHT instead, which cropped both sides of every
+   screenshot; full width has to be visible, so the frame gives up height
+   rather than the image giving up edges. */
+const PAN = 0.15;
+
 export function StickyFeatures() {
   const [active, setActive] = useState(0);
   const [live, setLive] = useState(false);
   const stage = useRef<HTMLDivElement | null>(null);
+  const frame = useRef<HTMLDivElement | null>(null);
   const imgs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
     const stageEl = stage.current;
-    if (!stageEl) return;
+    const frameEl = frame.current;
+    if (!stageEl || !frameEl) return;
     setLive(true);
 
     const n = FEATURES.length;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0;
 
+    /* All geometry is measured ONCE here and cached — the scroll path below
+       does no DOM reads at all. Reading clientHeight/getBoundingClientRect
+       inside the rAF forced a synchronous layout on every scrolled frame,
+       which is a large part of why fast scrolling stuttered. */
+    const m = { top: 0, range: 1, heads: [] as number[] };
+    const measure = () => {
+      const r = stageEl.getBoundingClientRect();
+      m.top = r.top + window.scrollY;
+      m.range = Math.max(1, stageEl.offsetHeight - window.innerHeight);
+      const slotW = frameEl.clientWidth;
+      const slotH = frameEl.clientHeight;
+      // headroom per image, from the intrinsic ratios — no <img> reads needed
+      m.heads = FEATURES.map((f) => {
+        const s = SHOTS[f.shot];
+        return Math.max(0, slotW * (s.height / s.width) - slotH);
+      });
+    };
+
     const apply = () => {
       raf = 0;
-      const r = stageEl.getBoundingClientRect();
-      const range = stageEl.offsetHeight - window.innerHeight;
-      if (range <= 0) return;
-      const p = Math.min(1, Math.max(0, -r.top / range));
+      const p = Math.min(1, Math.max(0, (window.scrollY - m.top) / m.range));
 
-      // Which segment of the runway we are in, and how far through it.
       const seg = Math.min(n - 1, Math.floor(p * n));
       const within = Math.min(1, Math.max(0, p * n - seg));
 
       setActive((prev) => (prev === seg ? prev : seg));
 
       if (reduce) return;
-      // Pan the segment's image inside its slot. Neighbours are set too so a
-      // slide never reveals a half-panned frame. The -50% x keeps the
-      // horizontal centring that the class transform provided before this
-      // inline transform overwrote it.
+      // Pan the segment's image; neighbours too, so a slide never reveals a
+      // half-panned frame.
       for (let i = Math.max(0, seg - 1); i <= Math.min(n - 1, seg + 1); i++) {
         const img = imgs.current[i];
-        const slot = img?.parentElement;
-        if (!img || !slot) continue;
-        const head = img.clientHeight - slot.clientHeight; // pan headroom, px
-        if (head <= 0) continue;
+        if (!img || m.heads[i] <= 0) continue;
         const w = i < seg ? 1 : i > seg ? 0 : within;
-        img.style.transform = `translate3d(-50%, ${-w * head}px, 0)`;
+        img.style.transform = `translate3d(0, ${-w * m.heads[i]}px, 0)`;
       }
     };
 
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(apply);
     };
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
 
+    measure();
     apply();
+    // Late layout shifts (fonts, images above the stage) move the cached top.
+    const settle = setTimeout(onResize, 1200);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     return () => {
+      clearTimeout(settle);
       if (raf) cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
@@ -174,15 +200,16 @@ export function StickyFeatures() {
             {/* the framed box — outer card, inset window, panning content */}
             <div className="col-span-7">
               <div className="rounded-[calc(var(--radius-card)+10px)] border border-line bg-gradient-to-br from-ground-2 to-ground-3 p-4 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.7)] sm:p-6">
-                {/* The window is sized by viewport height, not by the image's
-                    ratio — a big vorflux-scale box. The image inside renders at
-                    115% of the window's HEIGHT, which guarantees ~15% of pan
-                    headroom whatever each screenshot's aspect happens to be;
-                    deriving the box from the image ratio left ~20px of
-                    headroom and the inner scroll was imperceptible. */}
+                {/* The window's height comes from the first shot's ratio, cut
+                    by the pan factor — so the full WIDTH of every screenshot
+                    is visible (nothing cropped at the sides) and the ~15%
+                    of image that doesn't fit vertically is what pans. */}
                 <div
+                  ref={frame}
                   className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2"
-                  style={{ height: "min(62vh, 600px)" }}
+                  style={{
+                    aspectRatio: `${SHOTS[FEATURES[0].shot].width} / ${SHOTS[FEATURES[0].shot].height * (1 - PAN)}`,
+                  }}
                 >
                   {/* the step slide: one frame-height per step */}
                   <div
@@ -202,26 +229,22 @@ export function StickyFeatures() {
                           className="relative overflow-hidden"
                           style={{ height: `${100 / total}%` }}
                         >
+                          {/* 1100w only, no 2x source: the four 2200px bitmaps
+                              decoded to ~40MB of GPU layers between them, and
+                              compositing those during fast scroll is what was
+                              lagging the whole page. At the frame's rendered
+                              size 1100w still covers ~1.5x density. Ditto the
+                              removed will-change: four permanently-promoted
+                              layers cost more than promoting on demand. */}
                           <img
                             ref={(el) => { imgs.current[i] = el; }}
                             src={`/shots/${f.shot}-1100.webp`}
-                            srcSet={`/shots/${f.shot}-1100.webp 1x, /shots/${f.shot}-2200.webp 2x`}
                             width={s.width}
                             height={s.height}
                             alt={s.alt}
-                            /* eager, all four: lazy meant decode-during-slide,
-                               which is the slowness that was visible */
                             loading="eager"
                             decoding="async"
-                            /* Centring lives in the inline transform, NOT in a
-                               -translate-x-1/2 class: Tailwind v4 translate
-                               utilities set the modern `translate` property,
-                               which COMPOSES with `transform` — so the class
-                               plus the per-frame translate3d(-50%) shifted the
-                               image left twice and opened a dark gap on the
-                               right of the frame. */
-                            className="absolute left-1/2 top-0 h-[115%] w-auto max-w-none will-change-transform"
-                            style={{ transform: "translate3d(-50%, 0, 0)" }}
+                            className="absolute left-0 top-0 h-auto w-full"
                           />
                         </div>
                       );
