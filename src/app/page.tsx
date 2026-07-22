@@ -82,11 +82,12 @@ export default function Home() {
         </p>
       </Panel>
 
-      {/* 7 · The four core surfaces, as a scroll-driven sticky stack. */}
-      <StickyFeatures />
-
-      {/* 7b · IDEA → SHIPPED SOFTWARE. Strictly visual, strictly scroll-driven. */}
+      {/* 7 · IDEA → SHIPPED SOFTWARE — the rail leads into the feature walk,
+          so the reader sees the journey before the surfaces that run it. */}
       <Timeline />
+
+      {/* 7b · The four core surfaces, as the pinned feature walk. */}
+      <StickyFeatures />
 
       {/* 8 · Proven fixes — 9 · Trust is a screen — 10 · Why us */}
       <ProvenFixesBeat />

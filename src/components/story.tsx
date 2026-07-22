@@ -150,14 +150,22 @@ export function CostErasBeat() {
 }
 
 /* ── Act III · Why us (competitive) ─────────────────────────────────── */
+/* Competitors grouped by CATEGORY, one column per group, so the table
+   compares kinds of product rather than a flat list of names — the exemplar
+   products sit under each group label. */
 const COMPARE = {
-  cols: ["Claude Cowork", "Devin", "tOOrunt AI"],
+  cols: [
+    { group: "Copilots", names: "Copilot · Cursor" },
+    { group: "Session assistants", names: "Claude Cowork · ChatGPT" },
+    { group: "Autonomous agents", names: "Devin · OpenHands" },
+    { group: "The team", names: "tOOrunt AI" },
+  ],
   rows: [
-    ["Unit of value", "One person’s session", "One task → one PR", "An accountable team"],
-    ["Identity", "The user’s own", "One shared org agent", "Per-bot Jira + GitHub identities"],
-    ["Review", "—", "Your humans review it", "Bot-to-bot adversarial review — gates the merge"],
-    ["Governance", "Folder / tool permissions", "SSO + VPC + logs", "14 gates · hash-chained audit · vault · kill switch"],
-    ["Cost model", "Subscription", "Usage ACUs, open-ended", "3 LLM layers · capped · $10–50/PR, to the dollar"],
+    ["Unit of value", "Suggestions in your editor", "One person’s session", "One task → one PR", "An accountable team"],
+    ["Identity", "The developer’s own", "The user’s own", "One shared org agent", "Per-bot Jira + GitHub identities"],
+    ["Review", "You review your own output", "—", "Your humans review it", "Bot-to-bot adversarial review — gates the merge"],
+    ["Governance", "IDE / org settings", "Folder / tool permissions", "SSO + VPC + logs", "14 gates · hash-chained audit · vault · kill switch"],
+    ["Cost model", "Per-seat subscription", "Subscription", "Usage ACUs, open-ended", "3 LLM layers · capped · $10–50/PR, to the dollar"],
   ],
 };
 export function WhyUsBeat() {
@@ -168,19 +176,28 @@ export function WhyUsBeat() {
           Everyone sells an agent. <Accent>Nobody sells an accountable team.</Accent>
         </Heading>
       </div>
-      <Glass className="reveal mt-8 max-w-4xl overflow-x-auto">
+      <Glass className="reveal mt-8 max-w-5xl overflow-x-auto">
         <table className="w-full border-collapse text-left">
           <thead>
             <tr>
-              <th className="w-[22%]" />
-              {COMPARE.cols.map((c, i) => (
-                <th
-                  key={c}
-                  className={`px-3 pb-3 align-bottom font-display text-[14px] font-semibold ${i === 2 ? "text-accent-text" : "text-ink-dim"}`}
-                >
-                  {c}
-                </th>
-              ))}
+              <th className="w-[14%]" />
+              {COMPARE.cols.map((c, i) => {
+                const us = i === COMPARE.cols.length - 1;
+                return (
+                  <th key={c.group} className="px-3 pb-3 align-bottom">
+                    <span
+                      className={`block font-mono text-[9px] uppercase tracking-[0.16em] ${us ? "text-accent-text" : "text-ink-faint"}`}
+                    >
+                      {c.group}
+                    </span>
+                    <span
+                      className={`mt-1 block font-display text-[14px] font-semibold ${us ? "text-accent-text" : "text-ink-dim"}`}
+                    >
+                      {c.names}
+                    </span>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
@@ -190,7 +207,11 @@ export function WhyUsBeat() {
                 {r.slice(1).map((cell, i) => (
                   <td
                     key={i}
-                    className={`px-3 py-3 text-[13px] leading-snug ${i === 2 ? "rounded-sm bg-accent-wash font-medium text-ink" : "text-ink-dim"}`}
+                    className={`px-3 py-3 text-[13px] leading-snug ${
+                      i === COMPARE.cols.length - 1
+                        ? "rounded-sm bg-accent-wash font-medium text-ink"
+                        : "text-ink-dim"
+                    }`}
                   >
                     {cell}
                   </td>
