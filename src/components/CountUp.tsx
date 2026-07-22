@@ -1,17 +1,19 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-
 /**
- * Count-up number that tweens from 0 → value the first time it scrolls into view.
- * Used for the investor-story stat beats. Respects reduced-motion (shows final
- * value immediately).
+ * A formatted stat number.
+ *
+ * This used to tween 0 → value on an IntersectionObserver + rAF loop the first
+ * time it scrolled into view. The count-up is gone with the rest of the scroll
+ * choreography, which also makes it a server component: no "use client", no
+ * observer, no rAF, and the real number is in the initial HTML instead of a 0
+ * that corrects itself a beat later.
+ *
+ * The signature is unchanged so callers in story.tsx did not have to move; the
+ * `duration` prop is accepted and ignored.
  */
 export function CountUp({
   value,
   prefix = "",
   suffix = "",
-  duration = 1300,
   className = "",
 }: {
   value: number;
@@ -20,44 +22,10 @@ export function CountUp({
   duration?: number;
   className?: string;
 }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) { setDisplay(value); return; }
-
-    let raf = 0;
-    let started = false;
-    const run = (t0: number) => {
-      const step = (t: number) => {
-        const p = Math.min(1, (t - t0) / duration);
-        const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
-        setDisplay(value * eased);
-        if (p < 1) raf = requestAnimationFrame(step);
-      };
-      raf = requestAnimationFrame(step);
-    };
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !started) {
-          started = true;
-          run(performance.now());
-          io.disconnect();
-        }
-      },
-      { threshold: 0.4 }
-    );
-    io.observe(el);
-    return () => { io.disconnect(); cancelAnimationFrame(raf); };
-  }, [value, duration]);
-
   return (
-    <span ref={ref} className={className}>
+    <span className={className}>
       {prefix}
-      {Math.round(display)}
+      {value}
       {suffix}
     </span>
   );

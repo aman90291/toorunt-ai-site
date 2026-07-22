@@ -4,7 +4,7 @@ import { StickyFeatures } from "@/components/StickyFeatures";
 import { Timeline } from "@/components/Timeline";
 import { DemoButton } from "@/components/DemoButton";
 import { ProblemBeat, CostErasBeat, ProvenFixesBeat, TrustScreenBeat, WhyUsBeat } from "@/components/story";
-import { RECEIPT } from "@/lib/stats";
+import { Integrations } from "@/components/Integrations";
 
 /** A text panel that sits over the fixed 3D scene. */
 function Panel({
@@ -23,16 +23,12 @@ function Panel({
       style={{ paddingBlock: "var(--space-section)" }}
     >
       <Container>
-        {/* Two elements, deliberately. `.reveal` animates transform, and a
-            running animation's transform WINS over a base transform
-            declaration — sharing one element silently reduced the tilt to the
-            reveal's identity matrix with no error anywhere.
-
-            tilt-stage is also applied per panel rather than once around the
-            page: it transforms, and a transformed ancestor would capture the
-            fixed nav and demo dialog as its containing block. */}
-        <div className={`tilt-stage ${align}`}>
-          <div className="reveal txt-legible max-w-2xl">{children}</div>
+        {/* `.reveal` is opacity-only now, so the second wrapper that used to
+            keep the reveal's transform from clobbering the panel tilt is no
+            longer load-bearing — it is kept only because `align` and the
+            measure constraint are separate concerns. */}
+        <div className={align}>
+          <div className="reveal max-w-2xl">{children}</div>
         </div>
       </Container>
     </section>
@@ -51,7 +47,7 @@ export default function Home() {
       {/* 3 · What it is — the thesis */}
       <Panel side="right">
         <Eyebrow>What it is</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.04]">
+        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.04]">
           We don&rsquo;t sell the brain. <Accent>We sell the organization that brain works inside.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -66,7 +62,7 @@ export default function Home() {
       {/* 5 · The approval gate */}
       <Panel side="left">
         <Eyebrow>Human decision · 01</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
+        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.02]">
           It never writes code <Accent>before you approve the plan.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -78,7 +74,7 @@ export default function Home() {
       {/* 6 · Peer review + sign-off */}
       <Panel side="right">
         <Eyebrow>Human decision · 02</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
+        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.02]">
           Two bots review each other. <Accent>You sign off the PR.</Accent>
         </Heading>
         <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
@@ -98,29 +94,18 @@ export default function Home() {
       <TrustScreenBeat />
       <WhyUsBeat />
 
-      {/* 11 · The numbers — crane overview. */}
-      <Panel side="center">
-        <Eyebrow>On the record</Eyebrow>
-        <Heading split className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.02]">
-          One evening. One product. <Accent>Three decisions.</Accent>
-        </Heading>
-        <div className="mx-auto mt-10 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4">
-          {RECEIPT.map((r) => (
-            <div key={r.label}>
-              <div className="font-display text-[length:var(--text-figure)] leading-none tabular-nums text-ink">
-                {r.value}
-              </div>
-              <div className="mt-2 text-[13px] text-ink-dim">{r.label}</div>
-            </div>
-          ))}
-        </div>
-      </Panel>
+      {/* Integrations wall — dark band, logos light up with their brand colour */}
+      <Integrations />
+
+      {/* The "On the record" numbers panel that used to sit here was removed —
+          the hero's receipt strip already shows the same four RECEIPT figures,
+          so this was the one place on the page saying something twice. */}
 
       {/* 12 · CTA — solid, ends the 3D */}
       <section id="demo" className="relative scroll-mt-24 bg-ground pt-24 pb-32 sm:pt-32">
         <Container className="text-center">
           <Eyebrow>Get started</Eyebrow>
-          <Heading as="h2" split className="perspective-3d mx-auto mt-6 max-w-4xl text-[length:var(--text-hero)] leading-[0.98]">
+          <Heading as="h2" className="mx-auto mt-6 max-w-4xl text-[length:var(--text-hero)] leading-[0.98]">
             Every company will employ engineers that aren&rsquo;t people.{" "}
             <Hot>We make them accountable.</Hot>
           </Heading>

@@ -36,7 +36,7 @@ function Row({ r, prev }: { r: (typeof ROWS)[number]; prev: string }) {
 export function AuditTrailTicker() {
   const doubled = [...ROWS, ...ROWS];
   return (
-    <div className="relative h-[240px] overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2/60 px-4">
+    <div className="relative h-[240px] overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 px-4">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-12 bg-gradient-to-b from-ground-2 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-12 bg-gradient-to-t from-ground-2 to-transparent" />
       <ul className="animate-marquee-y">

@@ -9,12 +9,12 @@ export function PricingCalculator({ compact = false }: { compact?: boolean }) {
   const r = computePricing(prs);
 
   return (
-    <div className={`rounded-[var(--radius-card)] border border-line bg-ground-2/60 p-6 ${compact ? "" : "sm:p-8"}`}>
+    <div className={`rounded-[var(--radius-card)] border border-line bg-ground-2 p-6 ${compact ? "" : "sm:p-8"}`}>
       <div className="flex items-baseline justify-between">
         <label htmlFor="prs" className="text-[14px] text-ink-dim">
           Merged PRs / month
         </label>
-        <span className="font-display text-[28px] tabular-nums text-accent">{prs}</span>
+        <span className="font-display text-[28px] tabular-nums text-accent-text">{prs}</span>
       </div>
       <input
         id="prs"
@@ -24,7 +24,7 @@ export function PricingCalculator({ compact = false }: { compact?: boolean }) {
         step={5}
         value={prs}
         onChange={(e) => setPrs(Number(e.target.value))}
-        className="mt-3 w-full accent-[#1a1b1e]"
+        className="mt-3 w-full accent-[var(--color-accent-text)]"
         aria-valuetext={`${prs} merged pull requests per month`}
       />
 
@@ -68,7 +68,7 @@ function Metric({
       <div className="eyebrow">{label}</div>
       <div
         className={`mt-1.5 font-display text-[clamp(22px,3vw,30px)] leading-none tabular-nums ${
-          accent ? "text-accent" : strike ? "text-ink-dim line-through decoration-line-2" : "text-ink"
+          accent ? "text-accent-text" : strike ? "text-ink-dim line-through decoration-line-2" : "text-ink"
         }`}
       >
         {value}

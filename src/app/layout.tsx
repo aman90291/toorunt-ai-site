@@ -3,16 +3,12 @@ import { Geist, Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
-import { SmoothScroll } from "@/components/SmoothScroll";
-import { BackgroundFX } from "@/components/BackgroundFX";
-import { IslandCursor } from "@/components/IslandCursor";
-import { Magnetic } from "@/components/Magnetic";
-import { PerspectiveTilt } from "@/components/PerspectiveTilt";
-import { PointerDriver } from "@/components/PointerDriver";
 import { BookDemoDialog } from "@/components/BookDemoDialog";
 import Script from "next/script";
 
-// Display face — a modern, flat grotesk (no serif). Body stays Inter; data stays Geist Mono.
+/* Geist is the primary face — display, body and UI. Inter is kept only as a
+   metric-compatible fallback in the font stack; Geist Mono still carries data
+   and labels. */
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
@@ -54,6 +50,15 @@ const jsonLd = {
   offers: { "@type": "Offer", priceCurrency: "USD", price: "150", description: "Per merged pull request" },
 };
 
+/**
+ * The layout is now just chrome.
+ *
+ * It previously mounted six client components before the page even started:
+ * a fixed full-viewport WebGL canvas, a pointer-signal driver, a magnetic-hover
+ * binder, a perspective-tilt writer, the Dynamic Island cursor, and a Lenis
+ * smooth-scroll provider wrapping the whole tree. All six are gone. The only
+ * animated surface left is the hero's own canvas, which the hero mounts itself.
+ */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -66,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Google tag (gtag.js) — every page, after hydration so it never blocks the 3D */}
+        {/* Google tag (gtag.js) — every page, after hydration */}
         <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <Script id="gtag-init" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
@@ -75,17 +80,9 @@ gtag('js', new Date());
 gtag('config', '${GA_ID}');`}
         </Script>
 
-        <BackgroundFX />
-        {/* Before the effects that read it, so the signal exists on frame one. */}
-        <PointerDriver />
-        <Magnetic />
-        <PerspectiveTilt />
-        <IslandCursor />
-        <SmoothScroll>
-          <Nav />
-          <main>{children}</main>
-          <Footer />
-        </SmoothScroll>
+        <Nav />
+        <main>{children}</main>
+        <Footer />
         <BookDemoDialog />
       </body>
     </html>

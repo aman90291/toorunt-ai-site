@@ -28,7 +28,7 @@ export default function SecurityPage() {
       <section className="pt-32 pb-16 sm:pt-40">
         <Container>
           <Eyebrow>Security & governance</Eyebrow>
-          <Heading as="h1" split className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
+          <Heading as="h1" className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
             Worst case is <Accent>a rejected pull request.</Accent>
           </Heading>
           <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">
@@ -44,7 +44,7 @@ export default function SecurityPage() {
           <SectionRule label="The controls" />
           <div className="reveal mt-10 grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line sm:grid-cols-2">
             {CONTROLS.map((c) => (
-              <div key={c.t} className="bg-ground-2/60 p-6 sm:p-7">
+              <div key={c.t} className="bg-ground-2 p-6 sm:p-7">
                 <h2 className="text-[17px] font-semibold text-ink">{c.t}</h2>
                 <p className="mt-2 text-[14.5px] leading-relaxed text-ink-dim">{c.d}</p>
               </div>
@@ -54,12 +54,12 @@ export default function SecurityPage() {
       </section>
 
       {/* Audit trail */}
-      <section className="border-y border-line bg-ground-2/30 py-24 sm:py-28">
+      <section className="border-y border-line bg-ground-2 py-24 sm:py-28">
         <Container>
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <SectionRule label="Tamper-evident audit" />
-              <Heading split className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
+              <Heading className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
                 Every action, <Accent>hash-chained.</Accent>
               </Heading>
               <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
@@ -76,7 +76,7 @@ export default function SecurityPage() {
       <section className="py-24 sm:py-28">
         <Container>
           <SectionRule label="The 14 gates" />
-          <Heading split className="mt-6 max-w-2xl text-[clamp(26px,4vw,40px)] leading-[1.1]">
+          <Heading className="mt-6 max-w-2xl text-[clamp(26px,4vw,40px)] leading-[1.1]">
             What every change passes <Accent>before it can merge.</Accent>
           </Heading>
           <div className="reveal mt-10 grid gap-x-10 gap-y-0 sm:grid-cols-2">
@@ -85,7 +85,7 @@ export default function SecurityPage() {
                 <span className="mt-0.5 font-mono text-[11px] tabular-nums text-ink-faint">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: g.actor === "human" ? "var(--color-accent)" : "var(--color-pass)" }} />
+                <span className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: g.actor === "human" ? "var(--color-accent-text)" : "var(--color-pass)" }} />
                 <div>
                   <p className="flex items-center gap-2 text-[15px] font-medium text-ink">
                     {g.name}

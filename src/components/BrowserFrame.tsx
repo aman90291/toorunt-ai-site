@@ -1,11 +1,10 @@
 import { SHOTS, type ShotName } from "@/lib/shots";
-import { WarpImage } from "./WarpImage";
 
 /**
  * A clean browser-chrome frame (our own traffic lights + fake URL) around a
  * real dashboard screenshot served as <picture> AVIF/WebP at two sizes with an
- * LQIP background. Server component — the only client part is the WarpImage
- * ripple layer that overlays the picture on capable devices. Zero CLS.
+ * LQIP background. Fully static server component now — the WarpImage WebGL
+ * ripple that used to overlay the picture is gone. Zero CLS.
  */
 export function BrowserFrame({
   shot,
@@ -21,15 +20,16 @@ export function BrowserFrame({
   const s = SHOTS[shot];
   return (
     <figure
-      className={`overflow-hidden rounded-[var(--radius-card)] border border-line-2 bg-ground-2 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)] ${className}`}
+      className={`overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 shadow-[0_18px_48px_-24px_rgba(15,23,32,0.18)] ${className}`}
     >
       <div className="flex h-9 items-center gap-2 border-b border-line px-4">
         <span className="flex gap-1.5" aria-hidden="true">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#c6bfae]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#c6bfae]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#c6bfae]" />
+          {/* were #c6bfae — a leftover from the retired warm palette */}
+          <span className="h-2.5 w-2.5 rounded-full bg-line-2" />
+          <span className="h-2.5 w-2.5 rounded-full bg-line-2" />
+          <span className="h-2.5 w-2.5 rounded-full bg-line-2" />
         </span>
-        <span className="mx-auto flex items-center gap-1.5 rounded-md bg-ground/60 px-3 py-1 font-mono text-[11px] text-ink-faint">
+        <span className="mx-auto flex items-center gap-1.5 rounded-md bg-ground-2 px-3 py-1 font-mono text-[11px] text-ink-faint">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <rect x="4" y="10" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
             <path d="M8 10V7a4 4 0 118 0v3" stroke="currentColor" strokeWidth="2" />
@@ -52,8 +52,6 @@ export function BrowserFrame({
             style={{ backgroundImage: `url(${s.lqip})`, backgroundSize: "cover" }}
           />
         </picture>
-        {/* liquid-ripple layer (client; skips itself on touch/reduced-motion/no-GL) */}
-        <WarpImage src={`/shots/${shot}-1100.webp`} />
       </div>
     </figure>
   );

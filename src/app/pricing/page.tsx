@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container, Heading, Accent, Eyebrow, SectionRule, Button } from "@/components/ui";
+import { Doodle } from "@/components/Doodle";
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { CTASection } from "@/components/CTASection";
 import { DemoButton } from "@/components/DemoButton";
@@ -52,7 +53,7 @@ export default function PricingPage() {
       <section className="pt-32 pb-16 sm:pt-40">
         <Container>
           <Eyebrow>Pricing</Eyebrow>
-          <Heading as="h1" split className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
+          <Heading as="h1" className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
             Priced like labor, <Accent>not like seats.</Accent>
           </Heading>
           <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">
@@ -69,8 +70,8 @@ export default function PricingPage() {
             {TIERS.map((t) => (
               <div
                 key={t.name}
-                className={`perspective-3d flex flex-col rounded-[var(--radius-card)] border p-7 ${
-                  t.accent ? "border-accent/40 bg-accent-wash/40" : "border-line bg-ground-2/50"
+                className={`flex flex-col rounded-[var(--radius-card)] border p-7 ${
+                  t.accent ? "border-accent-text/40 bg-accent-wash" : "border-line bg-ground-2"
                 }`}
               >
                 <h2 className="text-[15px] font-semibold text-ink">{t.name}</h2>
@@ -82,7 +83,7 @@ export default function PricingPage() {
                 <ul className="mt-6 flex flex-1 flex-col gap-3">
                   {t.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-[13.5px] text-ink-dim">
-                      <span className="mt-[3px] text-accent">✓</span>
+                      <Doodle name="check" width={13} className="mt-[5px] shrink-0 text-teal" />
                       {f}
                     </li>
                   ))}
@@ -106,7 +107,7 @@ export default function PricingPage() {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
             <div>
               <SectionRule label="Do the math" />
-              <Heading split className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
+              <Heading className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
                 What it saves you, <Accent>per month.</Accent>
               </Heading>
               <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
@@ -128,7 +129,7 @@ export default function PricingPage() {
               <details key={f.q} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between text-[17px] font-medium text-ink">
                   {f.q}
-                  <span className="ml-4 text-accent transition-transform duration-200 group-open:rotate-45">+</span>
+                  <span className="ml-4 text-accent-text transition-transform duration-200 group-open:rotate-45">+</span>
                 </summary>
                 <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-dim">{f.a}</p>
               </details>

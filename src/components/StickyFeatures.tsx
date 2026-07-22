@@ -1,235 +1,287 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { useEffect, useRef, useState } from "react";
 import { FEATURES } from "@/content/features";
 import { SHOTS } from "@/lib/shots";
 import { Container } from "@/components/ui";
+import { Doodle } from "@/components/Doodle";
 
 /**
- * The feature stack — Izanami's scroll mechanic, rebuilt from what the site
- * actually does rather than from what it looks like it does.
+ * The feature walk — the Vorflux mechanic, all three layers of it.
  *
- * Worth stating plainly, because the brief assumed otherwise: izanami-official
- * .com's School/Craft/Retreat section has NO hover interaction. Reading its
- * bundle, there is not a single mouseenter bound to those cards — the only
- * hover code in the section is on the small "View" text links. The effect is
- * entirely scroll-driven, and it is inert to the pointer. That is what is
- * rebuilt here.
+ * The stage pins. Scroll drives two kinds of motion in the framed box on the
+ * right, layered:
  *
- * The mechanic, and why each part matters:
+ *   1. WITHIN a step, the screenshot is taller than the frame and PANS
+ *      upward inside it as you scroll through the step's segment — the "box
+ *      that scrolls" in the reference. Continuous, no transition, written
+ *      straight to the node each frame.
+ *   2. BETWEEN steps, the track slides up by one frame-height on a CSS
+ *      transition, so the next screenshot enters from the bottom and rests.
  *
- *   1. HALF-RATE COUNTER-SCROLL. The wrapper translates up by
- *      progress * cardHeight * 0.5 while the page scrolls past at full rate.
- *      The stack therefore closes at half the speed you are scrolling, which is
- *      what produces the weighted "cards settling onto each other" feel. A 1:1
- *      slide feels cheap and is the usual giveaway of a reimplementation.
+ * The pan needs headroom to exist: the frame's aspect is deliberately WIDER
+ * (shorter) than the screenshots', so at equal width the image is taller than
+ * the frame and has somewhere to go. Give the frame the image's own ratio and
+ * the pan distance is zero — that is why the earlier build could not scroll
+ * inside the box.
  *
- *   2. STAGGERED STICKY TOPS. Sticky elements all pin at the same offset by
- *      default, which gives a dead stack with no depth. Each card gets a
- *      computed `top` that fans them out, tied to the length of the scroll
- *      runway so it stays correct at any viewport height. The last card clears
- *      its top entirely so it scrolls free and finishes on top.
+ * One rAF-throttled scroll handler drives everything: overall progress p,
+ * the discrete step index (copy fade, counter, track slide — via state), and
+ * the per-image pan offsets (via refs, no re-render). The IntersectionObserver
+ * sentinels are gone; segments of p replace them.
  *
- *   3. OCCLUSION. Each card carries an opaque panel behind it so it can cover
- *      the one below, plus a masking band that hides the seam of the outgoing
- *      card as the next slides over it. Without these you see cards through
- *      each other and the illusion collapses.
+ * Perf: all four stage screenshots load EAGERLY. They were lazy, so each
+ * arrived and decoded mid-slide the first time it was needed — that decode hitch
+ * is what made the section feel slow. Four AVIFs up front is far cheaper than
+ * one decode during an animation.
  *
- * Because none of it depends on hover, the section behaves identically on
- * touch — no separate mobile fallback is needed, which is exactly why the
- * original was built this way.
+ * Reduced motion: the global clamp makes the slide instant, and the pan is
+ * skipped entirely — images rest at their top edge.
  */
 
-const SHOT_W = 1100;
+const STEP_VH = 82; // scroll distance per step
 
 export function StickyFeatures() {
-  const target = useRef<HTMLDivElement>(null);
-  const sections = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const [live, setLive] = useState(false);
+  const stage = useRef<HTMLDivElement | null>(null);
+  const imgs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
-    const targetEl = target.current;
-    const wrapEl = sections.current;
-    if (!targetEl || !wrapEl) return;
+    const stageEl = stage.current;
+    if (!stageEl) return;
+    setLive(true);
 
+    const n = FEATURES.length;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const cards = Array.from(wrapEl.querySelectorAll<HTMLElement>("[data-card]"));
-    if (!cards.length) return;
+    let raf = 0;
 
-    // Under reduced motion the stack becomes a plain flow of cards: nothing
-    // pins, nothing counter-scrolls, and every card is readable in order.
-    if (reduce) {
-      targetEl.style.height = "auto";
-      cards.forEach((c) => {
-        c.style.position = "static";
-        c.style.top = "";
-      });
-      return;
-    }
+    const apply = () => {
+      raf = 0;
+      const r = stageEl.getBoundingClientRect();
+      const range = stageEl.offsetHeight - window.innerHeight;
+      if (range <= 0) return;
+      const p = Math.min(1, Math.max(0, -r.top / range));
 
-    /** Fan between pinned cards, so the stack shows a deck edge rather than a
-     *  single flat plate. Small on purpose: a deep fan exposes the previous
-     *  card's heading in the sliver instead of just its edge. */
-    const STAGGER = 22;
+      // Which segment of the runway we are in, and how far through it.
+      const seg = Math.min(n - 1, Math.floor(p * n));
+      const within = Math.min(1, Math.max(0, p * n - seg));
 
-    const layout = () => {
-      // The runway is the natural content height — deliberately NOT shortened.
-      //
-      // Izanami counter-scrolls the whole wrapper by h * 0.5 and shortens the
-      // runway to match. Both parts were tried here and both misbehaved with
-      // our card proportions. Measured: the transform shifts sticky's
-      // already-resolved position, so the ACTIVE card was pushed up to 311px
-      // past the viewport top with its heading clipped; and shrinking the
-      // runway made the wrapper overflow its own container, which exhausted
-      // the sticky containing block early and dropped every card out of its
-      // pin past ~75% of the section.
-      //
-      // Their cards absorb both because they are tall portrait images with
-      // ~6vw of top padding and 100-200px fan offsets. Ours lead with text.
-      // The settle is now carried by the pins and by the covered-card
-      // treatment below, which gives the same weighted depth without the two
-      // failure modes.
-      targetEl.style.height = "";
-      cards.forEach((card, i) => {
-        if (i === cards.length - 1) card.style.top = "";
-        else card.style.top = `${STAGGER * i}px`;
-      });
-    };
+      setActive((prev) => (prev === seg ? prev : seg));
 
-    // As the next card rises over a pinned one, the covered card eases back and
-    // dims. This is what reads as depth: without it a sticky stack looks like
-    // sheets of paper sliding, with it they look like they have thickness.
-    const tick = () => {
-      const vh = window.innerHeight;
-      for (let i = 0; i < cards.length - 1; i++) {
-        const next = cards[i + 1].getBoundingClientRect().top;
-        const self = cards[i].getBoundingClientRect();
-        // 0 while the next card is still below; 1 once it fully covers this one.
-        const covered = Math.min(1, Math.max(0, (self.top + self.height - next) / self.height));
-        // Dim and scale the CONTENT, never the card. The card is the occluding
-        // surface — giving it opacity < 1 makes it translucent and the card
-        // behind reads straight through it, which put two headings on screen at
-        // once. Scaling it would likewise shrink its background and open a gap
-        // at the edges.
-        const inner = cards[i].querySelector<HTMLElement>(".sticky-card__inner");
-        if (!inner) continue;
-        inner.style.transformOrigin = "50% 0%";
-        inner.style.transform = `scale(${(1 - covered * 0.04).toFixed(4)})`;
-        inner.style.opacity = `${(1 - covered * 0.55).toFixed(3)}`;
-        // Nothing to composite once it is fully hidden.
-        cards[i].style.visibility = covered >= 0.999 && next < vh ? "hidden" : "";
+      if (reduce) return;
+      // Pan the segment's image inside its slot. Neighbours are set too so a
+      // slide never reveals a half-panned frame. The -50% x keeps the
+      // horizontal centring that the class transform provided before this
+      // inline transform overwrote it.
+      for (let i = Math.max(0, seg - 1); i <= Math.min(n - 1, seg + 1); i++) {
+        const img = imgs.current[i];
+        const slot = img?.parentElement;
+        if (!img || !slot) continue;
+        const head = img.clientHeight - slot.clientHeight; // pan headroom, px
+        if (head <= 0) continue;
+        const w = i < seg ? 1 : i > seg ? 0 : within;
+        img.style.transform = `translate3d(-50%, ${-w * head}px, 0)`;
       }
     };
 
-    layout();
-    gsap.ticker.add(tick);
-    const ro = new ResizeObserver(layout);
-    ro.observe(wrapEl);
-    window.addEventListener("resize", layout);
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
 
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
-      gsap.ticker.remove(tick);
-      ro.disconnect();
-      window.removeEventListener("resize", layout);
-      cards.forEach((c) => {
-        c.style.visibility = "";
-        const inner = c.querySelector<HTMLElement>(".sticky-card__inner");
-        if (inner) {
-          inner.style.transform = "";
-          inner.style.opacity = "";
-        }
-      });
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
+  const total = FEATURES.length;
+  const pad = (n: number) => String(n).padStart(2, "0");
+
   return (
-    <section aria-labelledby="features-heading" className="relative">
+    <section aria-labelledby="features-heading" className="on-dark relative bg-ground">
+      {/* ── heading, centred in the open space above the stage ────── */}
       <Container>
-        <div className="pt-[var(--space-section)]">
-          <p className="eyebrow flex items-center gap-3">
-            <span className="inline-block h-[6px] w-[6px] rounded-full bg-accent" />
+        <div className="pt-[var(--space-section)] pb-[var(--space-block)] text-center">
+          <p className="eyebrow inline-flex items-center gap-3">
+            <span className="inline-block h-[6px] w-[6px] rounded-full bg-accent-text" />
             What you get
           </p>
           <h2
             id="features-heading"
-            data-split
-            className="reveal mt-[var(--space-block)] max-w-[16ch] font-display font-semibold tracking-[-0.035em] text-ink"
-            style={{ fontSize: "var(--text-h2)", lineHeight: 0.98 }}
+            className="mx-auto mt-6 max-w-[18ch] font-display font-semibold tracking-[-0.03em] text-ink"
+            style={{ fontSize: "var(--text-h2)", lineHeight: 1.03 }}
           >
-            Not an agent. <span className="text-accent-text">An organization.</span>
+            Not an agent.{" "}
+            <span className="relative inline-block">
+              <span className="text-accent">An organization.</span>
+              <Doodle
+                name="underline"
+                stretch
+                className="absolute -bottom-[0.24em] left-0 h-[0.16em] w-full text-accent"
+              />
+            </span>
           </h2>
+          <p className="mx-auto mt-5 max-w-[52ch] text-[var(--text-lead)] leading-relaxed text-ink-dim">
+            One accountable team — each capability its own bot, its own identity, its own gate.
+          </p>
         </div>
       </Container>
 
-      {/* The runway. Its height is set in JS from the real content height. */}
-      <div ref={target} className="relative">
-        <div ref={sections} className="will-change-transform">
-          {FEATURES.map((f, i) => {
-            const shot = SHOTS[f.shot];
-            return (
-              <article
-                key={f.key}
-                data-card
-                className="sticky-card sticky"
-                style={{ top: 0 }}
-                aria-label={f.title}
-              >
-                <div className="sticky-card__inner">
-                  <Container wide>
-                    <div className="grid grid-cols-12 items-start gap-x-8 gap-y-10 py-[clamp(40px,5vw,72px)]">
-                      {/* Rail number — the quiet index that makes a stack read
-                          as a sequence rather than a pile. */}
-                      <div className="col-span-12 lg:col-span-1">
-                        <span className="font-mono text-[11px] tracking-[0.2em] text-ink-faint">
-                          {f.index}
-                        </span>
-                      </div>
-
-                      <div className="col-span-12 lg:col-span-4">
-                        <h3
-                          className="font-display font-semibold tracking-[-0.03em] text-ink"
-                          style={{ fontSize: "var(--text-h3)", lineHeight: 1.1 }}
-                        >
-                          {f.title}
-                        </h3>
-                        <p className="mt-4 text-[var(--text-lead)] leading-[1.5] text-accent-text">
-                          {f.lead}
-                        </p>
-                        <p className="mt-5 max-w-[46ch] text-[var(--text-body)] leading-[1.7] text-ink-dim">
-                          {f.body}
-                        </p>
-                      </div>
-
-                      <div className="col-span-12 lg:col-span-7">
-                        <figure className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2">
-                          <picture>
-                            <source
-                              type="image/avif"
-                              srcSet={`/shots/${f.shot}-${SHOT_W}.avif 1x, /shots/${f.shot}-2200.avif 2x`}
-                            />
-                            <img
-                              src={`/shots/${f.shot}-${SHOT_W}.webp`}
-                              srcSet={`/shots/${f.shot}-${SHOT_W}.webp 1x, /shots/${f.shot}-2200.webp 2x`}
-                              width={shot.width}
-                              height={shot.height}
-                              alt={shot.alt}
-                              // The first card is above the fold once the stack
-                              // is reached; the rest genuinely can wait.
-                              loading={i === 0 ? "eager" : "lazy"}
-                              decoding="async"
-                              className="block h-auto w-full"
-                            />
-                          </picture>
-                        </figure>
-                      </div>
-                    </div>
-                  </Container>
+      {/* ── desktop: pinned stage ─────────────────────────────────── */}
+      <Container wide className="hidden lg:block">
+        <div
+          ref={stage}
+          className="relative pb-[var(--space-section)]"
+          style={{ height: `${total * STEP_VH}vh` }}
+        >
+          <div className="sticky top-[14vh] grid grid-cols-12 items-center gap-x-8">
+            {/* copy — absolutely stacked so each fades in the same place */}
+            <div className="relative col-span-4 min-h-[300px]">
+              {FEATURES.map((f, i) => (
+                <div
+                  key={f.key}
+                  aria-hidden={live && i !== active}
+                  className={`absolute inset-x-0 top-0 transition-all duration-500 ease-out ${
+                    !live || i === active
+                      ? "translate-y-0 opacity-100"
+                      : "pointer-events-none translate-y-3 opacity-0"
+                  }`}
+                >
+                  <span className="font-mono text-[11px] tracking-[0.2em] text-ink-faint">
+                    {f.index}
+                  </span>
+                  <h3
+                    className="mt-4 font-display font-semibold tracking-[-0.02em] text-ink"
+                    style={{ fontSize: "var(--text-h3)", lineHeight: 1.15 }}
+                  >
+                    {f.title}
+                  </h3>
+                  <p className="mt-3 text-[var(--text-lead)] leading-[1.5] text-accent-text">
+                    {f.lead}
+                  </p>
+                  <p className="mt-4 max-w-[42ch] text-[var(--text-body)] leading-[1.7] text-ink-dim">
+                    {f.body}
+                  </p>
                 </div>
+              ))}
+            </div>
+
+            {/* the framed box — outer card, inset window, panning content */}
+            <div className="col-span-7">
+              <div className="rounded-[calc(var(--radius-card)+10px)] border border-line bg-gradient-to-br from-ground-2 to-ground-3 p-4 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.7)] sm:p-6">
+                {/* The window is sized by viewport height, not by the image's
+                    ratio — a big vorflux-scale box. The image inside renders at
+                    115% of the window's HEIGHT, which guarantees ~15% of pan
+                    headroom whatever each screenshot's aspect happens to be;
+                    deriving the box from the image ratio left ~20px of
+                    headroom and the inner scroll was imperceptible. */}
+                <div
+                  className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2"
+                  style={{ height: "min(62vh, 600px)" }}
+                >
+                  {/* the step slide: one frame-height per step */}
+                  <div
+                    className="absolute inset-x-0 top-0 transition-transform duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
+                    style={{
+                      height: `${total * 100}%`,
+                      transform: `translateY(-${(active * 100) / total}%)`,
+                    }}
+                  >
+                    {FEATURES.map((f, i) => {
+                      const s = SHOTS[f.shot];
+                      return (
+                        /* each slot clips its own image; the image is taller
+                           than the slot and pans inside it */
+                        <div
+                          key={f.key}
+                          className="relative overflow-hidden"
+                          style={{ height: `${100 / total}%` }}
+                        >
+                          <img
+                            ref={(el) => { imgs.current[i] = el; }}
+                            src={`/shots/${f.shot}-1100.webp`}
+                            srcSet={`/shots/${f.shot}-1100.webp 1x, /shots/${f.shot}-2200.webp 2x`}
+                            width={s.width}
+                            height={s.height}
+                            alt={s.alt}
+                            /* eager, all four: lazy meant decode-during-slide,
+                               which is the slowness that was visible */
+                            loading="eager"
+                            decoding="async"
+                            /* Centring lives in the inline transform, NOT in a
+                               -translate-x-1/2 class: Tailwind v4 translate
+                               utilities set the modern `translate` property,
+                               which COMPOSES with `transform` — so the class
+                               plus the per-frame translate3d(-50%) shifted the
+                               image left twice and opened a dark gap on the
+                               right of the frame. */
+                            className="absolute left-1/2 top-0 h-[115%] w-auto max-w-none will-change-transform"
+                            style={{ transform: "translate3d(-50%, 0, 0)" }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* index rail */}
+            <div className="col-span-1 flex flex-col items-end">
+              <span className="font-mono text-[12px] tabular-nums text-ink">{pad(active + 1)}</span>
+              <span className="my-3 block h-24 w-px bg-line-2">
+                <span
+                  className="block w-px bg-accent transition-[height] duration-500"
+                  style={{ height: `${((active + 1) / total) * 100}%` }}
+                />
+              </span>
+              <span className="font-mono text-[12px] tabular-nums text-ink-faint">{pad(total)}</span>
+            </div>
+          </div>
+        </div>
+      </Container>
+
+      {/* ── mobile: plain stack, each step with its own screen ────── */}
+      <Container className="lg:hidden">
+        <div className="divide-y divide-line border-t border-line pb-[var(--space-section)]">
+          {FEATURES.map((f, i) => {
+            const s = SHOTS[f.shot];
+            return (
+              <article key={f.key} className="py-10">
+                <span className="font-mono text-[11px] tracking-[0.2em] text-ink-faint">{f.index}</span>
+                <h3
+                  className="mt-3 font-display font-semibold tracking-[-0.02em] text-ink"
+                  style={{ fontSize: "var(--text-h3)", lineHeight: 1.15 }}
+                >
+                  {f.title}
+                </h3>
+                <p className="mt-3 text-[var(--text-lead)] leading-[1.5] text-accent-text">{f.lead}</p>
+                <p className="mt-4 text-[var(--text-body)] leading-[1.7] text-ink-dim">{f.body}</p>
+                <figure className="mt-6 overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2">
+                  <picture>
+                    <source type="image/avif" srcSet={`/shots/${f.shot}-1100.avif 1x, /shots/${f.shot}-2200.avif 2x`} />
+                    <img
+                      src={`/shots/${f.shot}-1100.webp`}
+                      srcSet={`/shots/${f.shot}-1100.webp 1x, /shots/${f.shot}-2200.webp 2x`}
+                      width={s.width}
+                      height={s.height}
+                      alt={s.alt}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                      className="block h-auto w-full"
+                    />
+                  </picture>
+                </figure>
               </article>
             );
           })}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

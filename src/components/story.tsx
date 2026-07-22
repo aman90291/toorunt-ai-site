@@ -1,4 +1,4 @@
-import { Container, Heading, Accent, Eyebrow } from "@/components/ui";
+import { Container, Heading, Accent } from "@/components/ui";
 import { CountUp } from "@/components/CountUp";
 import type { ReactNode } from "react";
 
@@ -30,7 +30,7 @@ function Beat({ side = "left", id, children }: { side?: "left" | "right" | "cent
  *  backdrop-blur — blurring an animated WebGL backdrop every frame is a GPU sink). */
 function Glass({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-[var(--radius-card)] border border-line bg-ground-2/90 p-6 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)] sm:p-8 ${className}`}>
+    <div className={`rounded-[var(--radius-card)] border border-line bg-ground-2 p-6 shadow-[0_10px_30px_-16px_rgba(20,24,28,0.14)] sm:p-8 ${className}`}>
       {children}
     </div>
   );
@@ -40,14 +40,13 @@ function Glass({ children, className = "" }: { children: ReactNode; className?: 
 export function ProblemBeat() {
   return (
     <Beat side="center">
-      <div className="reveal txt-legible mx-auto max-w-4xl text-center">
-        <Eyebrow>Act I · The shift</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.06]">
+      <div className="reveal mx-auto max-w-4xl text-center">
+        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.06]">
           The code is already written by AI. <Accent>Nobody owns accountability for it.</Accent>
         </Heading>
         <div className="mt-12 grid grid-cols-1 gap-10 sm:mt-16 sm:grid-cols-2">
           <div>
-            <div className="font-display text-[length:var(--text-stat)] font-semibold leading-[0.9] tracking-[-0.03em] text-accent-text">
+            <div className="font-display text-[length:var(--text-stat)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
               <CountUp value={75} suffix="%" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
@@ -55,7 +54,7 @@ export function ProblemBeat() {
             </p>
           </div>
           <div>
-            <div className="font-display text-[length:var(--text-stat)] font-semibold leading-[0.9] tracking-[-0.03em] text-accent-text">
+            <div className="font-display text-[length:var(--text-stat)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
               <CountUp value={95} suffix="%" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
@@ -79,36 +78,70 @@ const ERAS = [
 ];
 export function CostErasBeat() {
   return (
-    <Beat side="right">
-      <div className="reveal txt-legible ml-auto max-w-2xl">
-        <Eyebrow>Act I · The economics</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.03]">
+    <Beat side="center">
+      <div className="reveal mx-auto max-w-3xl text-center">
+        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.03]">
           Same ticket. <Accent>Three eras of cost.</Accent>
         </Heading>
       </div>
-      <Glass className="reveal mt-8 ml-auto max-w-3xl">
-        <div className="grid grid-cols-3 gap-4">
+
+      {/* Wider and structured: the card is now a real comparison table — three
+          equal columns split by hairlines, a consistent row grammar inside each
+          (label / price / spec rows), and the chart in its own ruled band
+          below. Padding lives on the sections, not the card, so the dividers
+          run edge to edge. */}
+      {/* Not <Glass>: its baked-in p-6/p-8 would inset the column dividers,
+          and overriding it needs an important-modifier arms race. Same shell,
+          zero padding — the sections pad themselves. */}
+      <div className="reveal mx-auto mt-10 max-w-5xl overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 shadow-[0_10px_30px_-16px_rgba(20,24,28,0.14)]">
+        <div className="grid grid-cols-1 divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {ERAS.map((e) => (
-            <div key={e.label} className={`flex flex-col gap-2 rounded-lg p-3 ${e.accent ? "bg-accent-wash" : ""}`}>
-              <p className={`font-mono text-[10px] uppercase tracking-[0.12em] ${e.accent ? "text-accent-text" : "text-ink-faint"}`}>{e.label}</p>
-              <p className={`font-display text-[length:var(--text-figure)] font-semibold leading-none ${e.accent ? "text-accent-text" : "text-ink"}`}>{e.cost}</p>
-              <p className="text-[12px] text-ink-dim">{e.people}</p>
-              <p className="text-[12px] text-ink-dim">{e.time}</p>
+            <div key={e.label} className={`p-6 sm:p-8 ${e.accent ? "bg-accent-wash" : ""}`}>
+              <p className={`font-mono text-[10px] uppercase tracking-[0.14em] ${e.accent ? "text-accent-text" : "text-ink-faint"}`}>
+                {e.label}
+              </p>
+              {/* whitespace-nowrap: "$500–1,000" was breaking after the dash
+                  and reading as two stacked numbers */}
+              <p className={`mt-3 font-display text-[clamp(26px,2.4vw,36px)] font-semibold leading-none whitespace-nowrap tabular-nums ${e.accent ? "text-accent-text" : "text-ink"}`}>
+                {e.cost}
+              </p>
+              <dl className="mt-6 space-y-2.5 border-t border-line pt-4 text-[13px]">
+                <div className="flex items-baseline justify-between gap-3">
+                  <dt className="shrink-0 text-ink-faint">Team</dt>
+                  <dd className="text-right text-ink-dim">{e.people}</dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-3">
+                  <dt className="shrink-0 text-ink-faint">Cycle</dt>
+                  <dd className="text-right text-ink-dim">{e.time}</dd>
+                </div>
+              </dl>
             </div>
           ))}
         </div>
-        <div className="mt-6 flex flex-col gap-2.5">
-          {ERAS.map((e) => (
-            <div key={e.label} className="flex items-center gap-3">
-              <span className="w-28 shrink-0 text-right font-mono text-[10px] text-ink-faint">{e.cost}</span>
-              <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-ground-3">
-                <span className={`block h-full rounded-full ${e.accent ? "bg-accent-text" : "bg-line-2"}`} style={{ width: e.bar }} />
-              </span>
-            </div>
-          ))}
+
+        <div className="border-t border-line px-6 py-6 sm:px-8">
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+            Cost per shipped ticket
+          </p>
+          <div className="mt-4 flex flex-col gap-3">
+            {ERAS.map((e) => (
+              <div key={e.label} className="flex items-center gap-4">
+                <span className="w-32 shrink-0 truncate font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+                  {e.label}
+                </span>
+                <span className="h-2 flex-1 overflow-hidden rounded-full bg-ground-3">
+                  <span className={`block h-full rounded-full ${e.accent ? "bg-accent-text" : "bg-line-2"}`} style={{ width: e.bar }} />
+                </span>
+                <span className={`w-24 shrink-0 text-right font-mono text-[11px] tabular-nums ${e.accent ? "font-semibold text-accent-text" : "text-ink-dim"}`}>
+                  {e.cost}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      </Glass>
-      <p className="reveal mt-6 ml-auto max-w-3xl text-[15px] text-ink-dim">
+      </div>
+
+      <p className="reveal mx-auto mt-6 max-w-5xl text-center text-[15px] text-ink-dim">
         <span className="font-semibold text-ink">~95% lower cost</span> per unit of shipped, reviewed work ·{" "}
         <span className="font-semibold text-ink">10–20×</span> cycle-time compression — weeks become hours.
       </p>
@@ -130,9 +163,8 @@ const COMPARE = {
 export function WhyUsBeat() {
   return (
     <Beat side="left">
-      <div className="reveal txt-legible max-w-3xl">
-        <Eyebrow>Act III · The business</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.04]">
+      <div className="reveal max-w-3xl">
+        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.04]">
           Everyone sells an agent. <Accent>Nobody sells an accountable team.</Accent>
         </Heading>
       </div>
@@ -185,16 +217,15 @@ const STAGES = [
 export function ProvenFixesBeat() {
   return (
     <Beat side="right">
-      <div className="reveal txt-legible ml-auto max-w-3xl text-right">
-        <Eyebrow>Act II · Our USP</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.03]">
+      <div className="reveal ml-auto max-w-3xl text-right">
+        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.03]">
           Anyone can generate code. <Accent>We land proven fixes.</Accent>
         </Heading>
       </div>
       <Glass className="reveal mt-8 ml-auto max-w-4xl">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {STAGES.map((s, i) => (
-            <div key={s.name} className={`rounded-lg border p-4 ${i === 3 ? "border-accent-text/40 bg-accent-wash" : "border-line bg-ground/40"}`}>
+            <div key={s.name} className={`rounded-lg border p-4 ${i === 3 ? "border-accent-text/40 bg-accent-wash" : "border-line bg-ground-2"}`}>
               <p className="font-mono text-[10px] text-ink-faint">{s.n}</p>
               <p className={`mt-1.5 font-display text-[17px] font-semibold ${i === 3 ? "text-accent-text" : "text-ink"}`}>{s.name}</p>
               <p className="mt-1.5 text-[12px] leading-snug text-ink-dim">{s.note}</p>
@@ -226,9 +257,8 @@ const GUARANTEES = [
 export function TrustScreenBeat() {
   return (
     <Beat side="left">
-      <div className="reveal txt-legible max-w-3xl">
-        <Eyebrow>Act II · The answer</Eyebrow>
-        <Heading className="perspective-3d mt-6 text-[length:var(--text-h2)] leading-[1.03]">
+      <div className="reveal max-w-3xl">
+        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.03]">
           Trust is a screen, <Accent>not a promise.</Accent>
         </Heading>
       </div>

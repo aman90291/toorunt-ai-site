@@ -28,14 +28,16 @@ export function DemoButton({
       </button>
     );
   }
+  /* Kept in lockstep with ui.Button — see the note there on why the hover is
+     a single colour change. */
   const base =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2";
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[14px] font-medium transition-colors duration-150";
   const styles =
     variant === "primary"
-      ? "bg-accent text-ground hover:bg-accent-text hover:-translate-y-px shadow-[0_1px_0_rgba(255,255,255,0.15)_inset]"
-      : "border border-line-2 text-ink hover:border-accent hover:bg-accent-wash";
+      ? "bg-accent text-accent-ink hover:brightness-95"
+      : "border border-line-2 text-ink hover:bg-ground-2";
   return (
-    <button type="button" data-magnetic onClick={openDemo} className={`${base} ${styles} ${className}`}>
+    <button type="button" onClick={openDemo} className={`${base} ${styles} ${className}`}>
       {children}
     </button>
   );

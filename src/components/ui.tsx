@@ -54,29 +54,25 @@ export function Section({
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
     <p className="eyebrow flex items-center gap-3">
-      <span className="inline-block h-[6px] w-[6px] rounded-full bg-accent" />
+      <span className="inline-block h-[6px] w-[6px] rounded-full bg-accent-text" />
       {children}
     </p>
   );
 }
 
-/** Modern flat-sans section heading. Pass `split` to enable line-by-line mask reveal. */
+/** Section heading. The `split` prop is gone with TextReveals — headings are
+ *  plain server-rendered text now, with no per-line mask reveal. */
 export function Heading({
   children,
   as: As = "h2",
   className = "",
-  split = false,
 }: {
   children: ReactNode;
   as?: "h1" | "h2" | "h3";
   className?: string;
-  split?: boolean;
 }) {
   return (
-    <As
-      {...(split ? { "data-split": true } : {})}
-      className={`font-display font-semibold tracking-[-0.035em] text-balance text-ink ${className}`}
-    >
+    <As className={`font-display font-semibold tracking-[-0.025em] text-balance text-ink ${className}`}>
       {children}
     </As>
   );
@@ -120,14 +116,22 @@ export function Button({
   variant?: "primary" | "ghost";
   className?: string;
 }) {
+  /* One property changes on hover, and it changes instantly enough to feel like
+     a control rather than an animation. The old button stacked four things —
+     a background swap, a 1px lift, an inset white highlight, and a magnetic
+     pull that dragged the element toward the cursor — which is why it read as
+     a marketing flourish instead of a button. */
   const base =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2";
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[14px] font-medium transition-colors duration-150";
+  /* text-accent-ink, not text-white: the fill is lime, and white on lime is
+     1.16:1. accent-ink stays near-black inside .on-dark too, so the same
+     button works in the hero and the footer. */
   const styles =
     variant === "primary"
-      ? "bg-accent text-ground hover:bg-accent-text hover:-translate-y-px shadow-[0_1px_0_rgba(255,255,255,0.15)_inset]"
-      : "border border-line-2 text-ink hover:border-accent hover:bg-accent-wash";
+      ? "bg-accent text-accent-ink hover:brightness-95"
+      : "border border-line-2 text-ink hover:bg-ground-2";
   return (
-    <Link href={href} data-magnetic className={`${base} ${styles} ${className}`}>
+    <Link href={href} className={`${base} ${styles} ${className}`}>
       {children}
     </Link>
   );

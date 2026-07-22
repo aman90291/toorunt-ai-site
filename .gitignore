@@ -45,3 +45,6 @@ toorunt-ai-site.zip
 
 # MCP config may contain API keys — never commit
 .mcp.json
+
+# stray screen recordings dropped into the repo root
+*.mov

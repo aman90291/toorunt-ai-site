@@ -26,7 +26,9 @@ const COLS = [
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-line bg-ground">
+    /* The page's closing dark bookend. `.on-dark` re-points the tokens for the
+       subtree, so every utility below resolves to its dark value unchanged. */
+    <footer className="on-dark relative bg-ground">
       <div className="mx-auto max-w-[1200px] px-6 py-16 sm:px-8">
         <div className="flex flex-col gap-12 md:flex-row md:justify-between">
           <div className="max-w-xs">
@@ -39,13 +41,13 @@ export function Footer() {
             {COLS.map((c) => (
               <div key={c.title}>
                 <p className="eyebrow">{c.title}</p>
-                <ul className="mt-4 flex flex-col gap-2.5">
+                <ul className="mt-4 flex flex-col gap-0.5">
                   {c.links.map((l) => (
                     <li key={l.label}>
                       {l.href === "#book-demo" ? (
                         <DemoButton variant="link">{l.label}</DemoButton>
                       ) : (
-                        <Link href={l.href} className="inline-flex min-h-11 items-center text-[14px] text-ink-dim transition-colors hover:text-ink">
+                        <Link href={l.href} className="inline-flex min-h-8 items-center text-[14px] text-ink-dim transition-colors hover:text-ink">
                           {l.label}
                         </Link>
                       )}

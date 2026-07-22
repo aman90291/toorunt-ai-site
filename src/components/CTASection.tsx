@@ -1,5 +1,6 @@
 import { Container, Heading, Accent, Button } from "./ui";
 import { DemoButton } from "./DemoButton";
+import { Doodle } from "./Doodle";
 
 export function CTASection({
   eyebrow = "Get started",
@@ -17,8 +18,11 @@ export function CTASection({
   return (
     <section id={id} className="scroll-mt-24 border-t border-line py-24 sm:py-32">
       <Container className="text-center">
-        <p className="eyebrow justify-center">{eyebrow}</p>
-        <Heading as="h2" split className="mx-auto mt-5 max-w-3xl text-[clamp(32px,5vw,56px)] leading-[1.08]">
+        <p className="eyebrow flex items-center justify-center gap-2">
+          <Doodle name="burst" width={13} className="text-coral" />
+          {eyebrow}
+        </p>
+        <Heading as="h2" className="mx-auto mt-5 max-w-3xl text-[clamp(32px,5vw,56px)] leading-[1.08]">
           {title} {accent && <Accent>{accent}</Accent>}
         </Heading>
         {sub && <p className="mx-auto mt-5 max-w-xl text-[17px] text-ink-dim">{sub}</p>}

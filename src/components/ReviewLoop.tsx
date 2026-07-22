@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { LazyMotion, domAnimation, m, AnimatePresence } from "./motion";
 
 /** The three ways tOOrunt AI answers a review comment — plus the safety flex. */
 const CASES = [
@@ -52,8 +51,8 @@ export function ReviewLoop() {
   const c = CASES[i];
 
   return (
-    <LazyMotion features={domAnimation}>
-      <div className="rounded-[var(--radius-card)] border border-line bg-ground-2/60 p-6 sm:p-8">
+    <>
+      <div className="rounded-[var(--radius-card)] border border-line bg-ground-2 p-6 sm:p-8">
         <div className="flex flex-wrap gap-2">
           {CASES.map((cc, idx) => (
             <button
@@ -61,7 +60,7 @@ export function ReviewLoop() {
               onClick={() => setI(idx)}
               className={`rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition-colors ${
                 i === idx
-                  ? "border-accent bg-accent-wash text-accent-text"
+                  ? "border-accent-text bg-accent-wash text-accent-text"
                   : "border-line text-ink-dim hover:border-line-2 hover:text-ink"
               }`}
             >
@@ -70,38 +69,31 @@ export function ReviewLoop() {
           ))}
         </div>
 
-        <AnimatePresence mode="wait">
-          <m.div
-            key={c.key}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.24 }}
-            className="mt-6 space-y-3"
-          >
+        {/* The tab swap was an AnimatePresence enter/exit slide. The tabs still
+            work; the content just changes. */}
+        <div key={c.key} className="mt-6 space-y-3">
             {/* reviewer comment */}
             <div className="rounded-xl border border-line bg-ground px-4 py-3">
               <div className="mb-1 font-mono text-[11px] text-ink-faint">{c.author}</div>
               <p className="text-[14px] text-ink-dim">{c.comment}</p>
             </div>
             {/* agent reply */}
-            <div className="ml-6 rounded-xl border border-accent/25 bg-accent-wash px-4 py-3">
+            <div className="ml-6 rounded-xl border border-accent-text/25 bg-accent-wash px-4 py-3">
               <div className="mb-1 flex items-center gap-1.5 font-mono text-[11px] text-accent-text">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent-text" />
                 toorunt-sam
               </div>
               <p className="text-[14px] text-ink">{c.reply}</p>
             </div>
             {/* outcome */}
             <div className="ml-6 flex items-center gap-2 font-mono text-[12px]">
-              <span className={c.tone === "human" ? "text-accent-text" : c.tone === "accent" ? "text-accent" : "text-pass"}>
+              <span className={c.tone === "human" ? "text-accent-text" : c.tone === "accent" ? "text-danger" : "text-pass"}>
                 {c.tone === "human" ? "●" : c.tone === "accent" ? "✕" : "✓"}
               </span>
               <span className="text-ink-dim">{c.outcome}</span>
             </div>
-          </m.div>
-        </AnimatePresence>
+        </div>
       </div>
-    </LazyMotion>
+    </>
   );
 }

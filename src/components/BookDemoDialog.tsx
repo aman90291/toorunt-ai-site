@@ -39,18 +39,26 @@ export function BookDemoDialog() {
   // lock background scroll + focus first field + Escape to close, while open
   useEffect(() => {
     if (!open) return;
-    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
-    lenis?.stop();
-    document.documentElement.style.overflow = "hidden";
+    // Lenis is gone, so the native overflow lock is the whole mechanism now.
+    // Pad by the scrollbar's width while it is hidden, or removing the bar
+    // widens the viewport and the fixed nav and page jump sideways as the
+    // dialog opens.
+    const bar = window.innerWidth - document.documentElement.clientWidth;
+    const root = document.documentElement;
+    const prevOverflow = root.style.overflow;
+    const prevPad = root.style.paddingRight;
+    root.style.overflow = "hidden";
+    if (bar > 0) root.style.paddingRight = `${bar}px`;
+
     const t = setTimeout(() => firstField.current?.focus(), 60);
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
     window.addEventListener("keydown", onKey);
     return () => {
       clearTimeout(t);
       window.removeEventListener("keydown", onKey);
-      document.documentElement.style.overflow = "";
-      lenis?.start();
-      window.dispatchEvent(new Event(CLOSE_DEMO_EVENT)); // re-enable scrolljack
+      root.style.overflow = prevOverflow;
+      root.style.paddingRight = prevPad;
+      window.dispatchEvent(new Event(CLOSE_DEMO_EVENT));
     };
   }, [open]);
 
@@ -106,8 +114,7 @@ export function BookDemoDialog() {
       {/* panel */}
       <div
         ref={panelRef}
-        data-lenis-prevent
-        className="relative z-[1] max-h-[92vh] w-full max-w-md overflow-y-auto rounded-[var(--radius-card)] border border-line-2 bg-ground-2 p-6 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)] sm:p-7"
+        className="relative z-[1] max-h-[92vh] w-full max-w-md overflow-y-auto rounded-[var(--radius-card)] border border-line-2 bg-ground-2 p-6 shadow-[0_24px_64px_-24px_rgba(20,24,28,0.22)] sm:p-7"
       >
         <button
           type="button"
@@ -136,7 +143,7 @@ export function BookDemoDialog() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-[14px] font-medium text-ground transition-colors hover:bg-accent-text"
+              className="mt-6 inline-flex items-center justify-center rounded-md bg-accent px-5 py-2.5 text-[14px] font-medium text-accent-ink transition-colors hover:brightness-95"
             >
               Done
             </button>
@@ -171,13 +178,13 @@ export function BookDemoDialog() {
               ))}
 
               {status === "error" && (
-                <p className="text-[13px] leading-relaxed text-[#c0603f]">{error}</p>
+                <p className="text-[13px] leading-relaxed text-danger">{error}</p>
               )}
 
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-[14px] font-medium text-ground transition-all hover:bg-accent-text disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-1 inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-[14px] font-medium text-accent-ink transition-colors hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {status === "submitting" ? "Sending…" : "Request demo"}
               </button>

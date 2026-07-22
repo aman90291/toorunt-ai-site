@@ -3,8 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { pointer } from "@/lib/pointer";
-import { sceneRgb } from "@/lib/daynight";
+import { sceneRgb } from "@/lib/scene";
 
 /**
  * The cloud field — the page's whole background.
@@ -20,12 +19,11 @@ import { sceneRgb } from "@/lib/daynight";
  * against the cursor. Near layers swing further than far ones, which is the
  * cue the eye actually reads as distance.
  *
- * Two ways the cursor moves it, deliberately different in character:
- *   • parallax, from the damped shared signal in lib/pointer — slow, weighted,
- *     in lockstep with the layout's perspective tilt so they read as one space;
- *   • a small local glow, from a short ring buffer of recent pointer positions
- *     — immediate and it dissipates. Deliberately NOT a swirl: see the note at
- *     the glow itself.
+ * Both cursor reactions — the parallax from lib/pointer and the ring-buffer
+ * glow that trailed recent pointer positions — have been removed with the rest
+ * of the cursor effects. uMouse is pinned at the origin and every trail slot
+ * stays fully aged, so the shader keeps its uniforms (and compiles unchanged)
+ * while contributing nothing. The field now drifts on time alone.
  *
  * Perf notes that matter if you touch the shader:
  *   • the hash is Dave Hoskins' sin-free variant. The textbook
@@ -240,37 +238,15 @@ export function CloudField({ reduced, lite }: { reduced: boolean; lite: boolean 
     return { material, geometry, trail };
   }, [LAYERS, OCTAVES, reduced]);
 
-  // Pointer -> curl ring buffer. Raw events only write refs; the uniform upload
-  // happens once per frame in useFrame, so this is effectively frame-throttled
-  // however fast the mouse reports.
-  useEffect(() => {
-    if (reduced) return;
-    const onMove = (e: PointerEvent) => {
-      const x = e.clientX / window.innerWidth;
-      const y = 1 - e.clientY / window.innerHeight;
-      const lx = trail.last.x, ly = trail.last.y;
-      trail.last.set(x, y);
-      if (lx < 0) return;
-      const dx = x - lx, dy = y - ly;
-      if (dx * dx + dy * dy < 0.000016) return; // ignore sub-pixel jitter
-      const v = trail.vecs[trail.idx % TRAIL];
-      const s = 9.0;
-      v.set(x, y, THREE.MathUtils.clamp(dx * s, -1.4, 1.4), THREE.MathUtils.clamp(dy * s, -1.4, 1.4));
-      trail.ages[trail.idx % TRAIL] = 0;
-      trail.idx++;
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
-  }, [trail, reduced]);
-
   useEffect(() => () => { material.dispose(); geometry.dispose(); }, [material, geometry]);
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     const m = mesh.current;
     if (!m) return;
 
-    // Glue the quad to the camera's far plane so it stays a full-bleed
-    // background while the home rig orbits.
+    // Glue the quad to the camera's far plane so it stays full-bleed. The
+    // camera no longer moves, but keeping this means the quad still sizes
+    // itself correctly on resize rather than baking in a start aspect.
     const cam = camera as THREE.PerspectiveCamera;
     const dist = 19.5;
     m.quaternion.copy(cam.quaternion);
@@ -281,13 +257,8 @@ export function CloudField({ reduced, lite }: { reduced: boolean; lite: boolean 
     const u = material.uniforms;
     u.uTime.value = state.clock.elapsedTime;
     u.uAspect.value = cam.aspect;
-    // The SAME damped signal the layout tilt reads — see lib/pointer.
-    u.uMouse.value.set(pointer.x, -pointer.y);
-
-    // Age the curl out over ~1.8s. delta is already frame-rate independent.
-    for (let i = 0; i < TRAIL; i++) {
-      trail.ages[i] = Math.min(1, trail.ages[i] + delta / 1.8);
-    }
+    // uMouse stays at the origin and every trail slot stays aged out — the
+    // cursor reactions are gone, so there is nothing to upload per frame.
   });
 
   return (
