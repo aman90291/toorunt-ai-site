@@ -38,10 +38,14 @@ import { Doodle } from "@/components/Doodle";
 
 const STEP_VH = 82; // scroll distance per step
 
-/* The window is 12% shorter than the image renders at full width — that gap
+/* The card is 12% shorter than the image renders at full width — that gap
    is the pan. Full width must stay visible (an earlier build sized the image
-   by height and cropped both edges); the frame gives up height instead. */
+   by height and cropped both edges); the card gives up height instead. */
 const PAN = 0.12;
+
+/* Stage-background gap that opens between cards mid-slide — what makes the
+   transition read as one card leaving and another arriving. */
+const CARD_GAP = 18;
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
 
@@ -69,10 +73,12 @@ export function StickyFeatures() {
       m.top = r.top + window.scrollY;
       m.range = Math.max(1, stageEl.offsetHeight - window.innerHeight);
       const slotW = frameEl.clientWidth;
-      const slotH = frameEl.clientHeight;
+      // The card is one slide minus the inter-card gap; pan headroom is what
+      // the full-width image overhangs the CARD by, not the slide.
+      const cardH = frameEl.clientHeight - CARD_GAP;
       m.heads = FEATURES.map((f) => {
         const s = SHOTS[f.shot];
-        return Math.max(0, slotW * (s.height / s.width) - slotH);
+        return Math.max(0, slotW * (s.height / s.width) - cardH);
       });
     };
 
@@ -223,12 +229,22 @@ const Stage = memo(function Stage({
   const total = FEATURES.length;
   return (
     <div className="col-span-7">
-      {/* a big dark stage with the app window floating inset — the gradient
-          ground reads as a deliberate backdrop, not a border */}
-      <div className="rounded-[calc(var(--radius-card)+12px)] border border-line bg-gradient-to-br from-ground-2 via-ground-2 to-ground-3 p-8 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.7)] sm:p-12 xl:p-16">
+      {/* The backdrop is sized by VIEWPORT height, not by its content — it
+          stands most of the window tall, with the card carousel centred in
+          it, so the gradient ground reads as a real stage. */}
+      <div
+        className="flex items-center rounded-[calc(var(--radius-card)+12px)] border border-line bg-gradient-to-br from-ground-2 via-ground-2 to-ground-3 px-8 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.7)] sm:px-12 xl:px-14"
+        style={{ height: "min(74vh, 780px)" }}
+      >
+        {/* The carousel viewport — pure clip, no chrome of its own. The
+            chrome (border, ground, shadow, radius) lives on each CARD, so
+            the frame travels WITH its screenshot: mid-slide you see one
+            bordered card exiting the top and the next entering from the
+            bottom with stage background between them, instead of pixels
+            swapping behind one fixed window. */}
         <div
           ref={frame}
-          className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.65)]"
+          className="relative w-full overflow-hidden"
           style={{
             aspectRatio: `${SHOTS[FEATURES[0].shot].width} / ${SHOTS[FEATURES[0].shot].height * (1 - PAN)}`,
           }}
@@ -241,19 +257,25 @@ const Stage = memo(function Stage({
             {FEATURES.map((f, i) => {
               const s = SHOTS[f.shot];
               return (
-                <div key={f.key} className="relative overflow-hidden" style={{ height: `${100 / total}%` }}>
-                  {/* 1100w only, eager: 2x sources decoded ~40MB of bitmaps
-                      mid-animation, which was most of the original lag */}
-                  <img
-                    ref={(el) => { imgs.current[i] = el; }}
-                    src={`/shots/${f.shot}-1100.webp`}
-                    width={s.width}
-                    height={s.height}
-                    alt={s.alt}
-                    loading="eager"
-                    decoding="async"
-                    className="absolute left-0 top-0 h-auto w-full"
-                  />
+                /* slide = card + the gap that shows mid-transition */
+                <div
+                  key={f.key}
+                  style={{ height: `${100 / total}%`, paddingBottom: CARD_GAP }}
+                >
+                  <div className="relative h-full overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.65)]">
+                    {/* 1100w only, eager: 2x sources decoded ~40MB of bitmaps
+                        mid-animation, which was most of the original lag */}
+                    <img
+                      ref={(el) => { imgs.current[i] = el; }}
+                      src={`/shots/${f.shot}-1100.webp`}
+                      width={s.width}
+                      height={s.height}
+                      alt={s.alt}
+                      loading="eager"
+                      decoding="async"
+                      className="absolute left-0 top-0 h-auto w-full"
+                    />
+                  </div>
                 </div>
               );
             })}
