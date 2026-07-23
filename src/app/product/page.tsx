@@ -64,6 +64,34 @@ export default function ProductPage() {
         </Container>
       </section>
 
+      {/* The two human decisions — moved here from the home page: they gate
+          phases 02 and 05 above, so they read as the pipeline's punctuation
+          rather than as a standalone story beat. Alternating alignment kept. */}
+      <section className="border-t border-line py-24 sm:py-28">
+        <Container>
+          <div className="max-w-2xl">
+            <Eyebrow>Human decision · 01</Eyebrow>
+            <Heading className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
+              It never writes code <Accent>before you approve the plan.</Accent>
+            </Heading>
+            <p className="mt-5 text-[16px] leading-relaxed text-ink-dim">
+              The bot posts an implementation plan to Jira — files, approach, risks, acceptance criteria — and
+              stops at the first human gate. One of two decisions you actually make.
+            </p>
+          </div>
+          <div className="mt-16 max-w-2xl lg:ml-auto">
+            <Eyebrow>Human decision · 02</Eyebrow>
+            <Heading className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
+              Two bots review each other. <Accent>You sign off the PR.</Accent>
+            </Heading>
+            <p className="mt-5 text-[16px] leading-relaxed text-ink-dim">
+              A peer bot with its own GitHub identity reviews the change — a real, adversarial pass — then it
+              waits for your approval before the second gate opens.
+            </p>
+          </div>
+        </Container>
+      </section>
+
       {/* Review loop showpiece */}
       <section className="border-t border-line bg-ground-2 py-24 sm:py-28">
         <Container>

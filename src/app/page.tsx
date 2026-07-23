@@ -58,29 +58,9 @@ export default function Home() {
       {/* 4 · Three eras of cost */}
       <CostErasBeat />
 
-      {/* 5 · The approval gate */}
-      <Panel side="left">
-        <Eyebrow>Human decision · 01</Eyebrow>
-        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.02]">
-          It never writes code <Accent>before you approve the plan.</Accent>
-        </Heading>
-        <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
-          The bot posts an implementation plan to Jira — files, approach, risks, acceptance criteria — and
-          stops at the first human gate. One of two decisions you actually make.
-        </p>
-      </Panel>
-
-      {/* 6 · Peer review + sign-off */}
-      <Panel side="right">
-        <Eyebrow>Human decision · 02</Eyebrow>
-        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.02]">
-          Two bots review each other. <Accent>You sign off the PR.</Accent>
-        </Heading>
-        <p className="mt-6 text-[17px] leading-relaxed text-ink-dim">
-          A peer bot with its own GitHub identity reviews the change — a real, adversarial pass — then it
-          waits for your approval before the second gate opens.
-        </p>
-      </Panel>
+      {/* The two "Human decision" panels moved to /product — they sit beside
+          the lifecycle phases they gate (plan approval, PR sign-off) instead
+          of interrupting the home narrative. */}
 
       {/* 7 · IDEA → SHIPPED SOFTWARE — the rail leads into the feature walk,
           so the reader sees the journey before the surfaces that run it. */}
