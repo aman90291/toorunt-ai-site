@@ -3,12 +3,12 @@ export const RECEIPT = [
   { value: "2h 36m", label: "idea → deployed product", sub: "one live evening" },
   { value: "3", label: "human decisions", sub: "everything else autonomous" },
   { value: "14", label: "gates per change", sub: "no exceptions" },
-  { value: "$100–200", label: "compute per merged PR", sub: "metered, on the ledger" },
+  { value: "$20–150", label: "compute per merged PR", sub: "metered, on the ledger" },
 ];
 
 export const ECON = {
-  cogsLow: 10,
-  cogsHigh: 50,
+  cogsLow: 20,
+  cogsHigh: 150,
   price: 150, // per gate-passed, complexity-normalized merged PR
   humanLow: 500,
   humanHigh: 1000,

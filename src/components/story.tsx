@@ -71,10 +71,14 @@ export function ProblemBeat() {
 }
 
 /* ── Act I · Three eras of cost ─────────────────────────────────────── */
+/* barColor is a data-viz cost ramp (red → orange → green), not a brand token:
+   the bars encode "expensive → cheap", so the winner reads instantly. The
+   brand lime can't stand in — at 1.16:1 on white it would be an invisible
+   bar; the tOOrunt row gets a legible green instead. */
 const ERAS = [
-  { label: "Manual SDLC", people: "4–6 people", time: "1–2 weeks", cost: "$500–1,000", bar: "100%", accent: false },
-  { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", accent: false },
-  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$100–200", bar: "20%", accent: true },
+  { label: "Manual SDLC", people: "4–6 people", time: "1–2 weeks", cost: "$500–1,000", bar: "100%", barColor: "#d0453b", accent: false },
+  { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", barColor: "#df7f33", accent: false },
+  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$20–150", bar: "11%", barColor: "#2f9e44", accent: true },
 ];
 export function CostErasBeat() {
   return (
@@ -130,7 +134,7 @@ export function CostErasBeat() {
                   {e.label}
                 </span>
                 <span className="h-2 flex-1 overflow-hidden rounded-full bg-ground-3">
-                  <span className={`block h-full rounded-full ${e.accent ? "bg-accent-text" : "bg-line-2"}`} style={{ width: e.bar }} />
+                  <span className="block h-full rounded-full" style={{ width: e.bar, backgroundColor: e.barColor }} />
                 </span>
                 <span className={`w-24 shrink-0 text-right font-mono text-[11px] tabular-nums ${e.accent ? "font-semibold text-accent-text" : "text-ink-dim"}`}>
                   {e.cost}
@@ -142,7 +146,7 @@ export function CostErasBeat() {
       </div>
 
       <p className="reveal mx-auto mt-6 max-w-5xl text-center text-[15px] text-ink-dim">
-        <span className="font-semibold text-ink">~80% lower cost</span> per unit of shipped, reviewed work ·{" "}
+        <span className="font-semibold text-ink">~90% lower cost</span> per unit of shipped, reviewed work ·{" "}
         <span className="font-semibold text-ink">10–20×</span> cycle-time compression — weeks become hours.
       </p>
     </Beat>
@@ -165,7 +169,7 @@ const COMPARE = {
     ["Identity", "The developer’s own", "The user’s own", "One shared org agent", "Per-bot Jira + GitHub identities"],
     ["Review", "You review your own output", "—", "Your humans review it", "Bot-to-bot adversarial review — gates the merge"],
     ["Governance", "IDE / org settings", "Folder / tool permissions", "SSO + VPC + logs", "14 gates · hash-chained audit · vault · kill switch"],
-    ["Cost model", "Per-seat subscription", "Subscription", "Usage ACUs, open-ended", "3 LLM layers · capped · $100–200/PR, to the dollar"],
+    ["Cost model", "Per-seat subscription", "Subscription", "Usage ACUs, open-ended", "3 LLM layers · capped · $20–150/PR, to the dollar"],
   ],
 };
 export function WhyUsBeat() {
