@@ -83,7 +83,7 @@ export default function PricingPage() {
                 <ul className="mt-6 flex flex-1 flex-col gap-3">
                   {t.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-[13.5px] text-ink-dim">
-                      <Doodle name="check" width={13} className="mt-[5px] shrink-0 text-teal" />
+                      <Doodle name="check" width={13} className="mt-[5px] shrink-0 text-pass" />
                       {f}
                     </li>
                   ))}

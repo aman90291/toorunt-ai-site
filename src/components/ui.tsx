@@ -123,16 +123,16 @@ export function Button({
      a marketing flourish instead of a button. */
   const base =
     "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[14px] font-medium transition-colors duration-150";
-  /* text-accent-ink, not text-white: the fill is lime, and white on lime is
-     1.16:1. accent-ink stays near-black inside .on-dark too, so the same
-     button works in the hero and the footer. */
+  /* Primary wears the logo-spectrum `.btn-ai` treatment (gradient fill +
+     animated rainbow edge), defined in globals.css. It carries its own fixed
+     dark ink, so it looks identical in the hero, footer and white sections. */
   const styles =
     variant === "primary"
-      ? "bg-accent text-accent-ink hover:brightness-95"
+      ? "btn-ai"
       : "border border-line-2 text-ink hover:bg-ground-2";
   return (
     <Link href={href} className={`${base} ${styles} ${className}`}>
-      {children}
+      {variant === "primary" ? <span className="ai-label">{children}</span> : children}
     </Link>
   );
 }

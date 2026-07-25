@@ -143,9 +143,9 @@ export function BookDemoDialog() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="mt-6 inline-flex items-center justify-center rounded-md bg-accent px-5 py-2.5 text-[14px] font-medium text-accent-ink transition-colors hover:brightness-95"
+              className="btn-ai mt-6 inline-flex items-center justify-center rounded-md px-5 py-2.5 text-[14px] font-medium"
             >
-              Done
+              <span className="ai-label">Done</span>
             </button>
           </div>
         ) : (
@@ -184,9 +184,9 @@ export function BookDemoDialog() {
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="mt-1 inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-[14px] font-medium text-accent-ink transition-colors hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                className="btn-ai mt-1 inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-[14px] font-medium disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {status === "submitting" ? "Sending…" : "Request demo"}
+                <span className="ai-label">{status === "submitting" ? "Sending…" : "Request demo"}</span>
               </button>
               <p className="text-center text-[11px] text-ink-faint">
                 Goes straight to the founders. No sales sequence.

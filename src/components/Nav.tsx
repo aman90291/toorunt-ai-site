@@ -78,12 +78,12 @@ export function Nav() {
           <button
             type="button"
             onClick={openDemo}
-            /* text-accent-ink, never white: the fill is lime and white on lime
-               is 1.16:1. accent-ink stays near-black inside .on-dark too, so
-               this stays correct while the rest of the bar inverts. */
-            className="inline-flex min-h-9 items-center rounded-md bg-accent px-4 text-[13.5px] font-semibold text-accent-ink transition-colors hover:brightness-95"
+            /* The logo-spectrum `.btn-ai` treatment (globals.css) — same in the
+               transparent-over-hero bar and the solid-below one, since it
+               carries its own fixed fill and ink rather than a page token. */
+            className="btn-ai inline-flex min-h-9 items-center rounded-md px-4 text-[13.5px] font-semibold"
           >
-            Book a demo
+            <span className="ai-label">Book a demo</span>
           </button>
         </div>
 
@@ -122,9 +122,9 @@ export function Nav() {
             <button
               type="button"
               onClick={() => { setOpen(false); openDemo(); }}
-              className="mt-2 rounded-md bg-accent px-4 py-2.5 text-center text-[15px] font-medium text-accent-ink"
+              className="btn-ai mt-2 rounded-md px-4 py-2.5 text-center text-[15px] font-medium"
             >
-              Book a demo
+              <span className="ai-label">Book a demo</span>
             </button>
           </div>
         </div>

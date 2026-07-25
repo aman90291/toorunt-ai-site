@@ -8,10 +8,10 @@
  * baked-in stroke colour.
  *
  * They are all `currentColor` + `stroke`, so placement decides the colour via a
- * normal text utility. That matters for contrast: the brand lime is 1.16:1 on
- * white and disappears as a hairline stroke, so on light sections these want
- * `text-coral`, `text-accent-text` (purple) or `text-teal` — the lime is only
- * legible as a stroke inside `.on-dark`.
+ * normal text utility. On light sections use `text-pass` or `text-accent-text`
+ * (bronze) — both text-safe on white. Avoid `text-gold` on white while the
+ * primary is warm: it measures 1.12:1 against accent-text. The bright accent
+ * fill is only used as a stroke inside `.on-dark`, where it reads.
  *
  * Every one is aria-hidden. They decorate; they never carry meaning.
  */

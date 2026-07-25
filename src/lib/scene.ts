@@ -10,9 +10,9 @@
  * Kept in sync by hand with the `.on-dark` block; there are only three.
  */
 const TOKENS: Record<string, string> = {
-  "--color-ground": "#101418",  /* hero ground — matches .on-dark */
-  "--color-line-2": "#3c454f",  /* cloud body */
-  "--color-accent": "#ccff66",  /* brand lime — reads at 15.9:1 on this ground */
+  "--color-ground": "#232528",  /* hero ground — matches .on-dark charcoal */
+  "--color-line-2": "#4c4e54",  /* cloud body */
+  "--color-accent": "#ffb742",  /* amber — cloud tint on charcoal */
 };
 
 /** WebGL clear colour, derived rather than re-typed. */

@@ -73,12 +73,19 @@ export function ProblemBeat() {
 /* ── Act I · Three eras of cost ─────────────────────────────────────── */
 /* barColor is a data-viz cost ramp (red → orange → green), not a brand token:
    the bars encode "expensive → cheap", so the winner reads instantly. The
-   brand lime can't stand in — at 1.16:1 on white it would be an invisible
-   bar; the tOOrunt row gets a legible green instead. */
+   brand accent can't stand in — as a pale fill it would be an invisible bar;
+   the tOOrunt row gets a legible green instead.
+
+   These are the base ramp lightened ~18%. They sit on the `bg-ground-3`
+   (#eceff4) track at 3.05 / 2.06 / 2.37 : 1, so only the red clears the 3:1
+   non-text contrast guideline. That is acceptable HERE specifically because
+   the bar is not the only carrier of the value — the dollar figure is printed
+   beside every row, and the rows differ in length as well as hue. Do not reuse
+   these values for a bar that has no numeric label. */
 const ERAS = [
-  { label: "Manual SDLC", people: "4–6 people", time: "1–2 weeks", cost: "$500–1,000", bar: "100%", barColor: "#d0453b", accent: false },
-  { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", barColor: "#df7f33", accent: false },
-  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$20–150", bar: "11%", barColor: "#2f9e44", accent: true },
+  { label: "Manual SDLC", people: "4–6 people", time: "1–2 weeks", cost: "$500–1,000", bar: "100%", barColor: "#d8665e", accent: false },
+  { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", barColor: "#e59658", accent: false },
+  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$20–150", bar: "11%", barColor: "#54af66", accent: true },
 ];
 export function CostErasBeat() {
   return (

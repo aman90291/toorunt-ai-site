@@ -2,7 +2,6 @@ import { Container, Eyebrow } from "@/components/ui";
 import { DemoButton } from "@/components/DemoButton";
 import { Button } from "@/components/ui";
 import { HeroBackground } from "@/components/HeroBackground";
-import { Doodle } from "@/components/Doodle";
 
 /**
  * The hero — the page's one dark band, and the only place anything moves.
@@ -42,9 +41,6 @@ export function Hero() {
               >
                 Software Development Lifecycle{" "}
                 <span className="text-accent">automation, end&nbsp;to&nbsp;end.</span>
-                {/* Lime reads at 15.9:1 here — a stroke this thin would vanish
-                    on any of the white sections. */}
-                <Doodle name="sparkle" width={30} className="ml-3 inline-block align-top text-accent" />
               </h1>
 
               <p

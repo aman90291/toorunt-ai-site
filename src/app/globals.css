@@ -1,37 +1,41 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────
-   tOOrunt AI — light, enterprise.
+   tOOrunt AI — "Amber". A warm, high-chroma gold-orange, bright enough to
+   carry the hero and dark-inked everywhere. Structure (charcoal /
+   ghost-white) from the reference palette
+   coolors.co/bdd5ea-f7f7ff-d67ab1-232528-ecd444.
 
-     ~90%  #ffffff  white        the page
-      ~5%  #14181c  ink          type
-      ~5%  #ccff66  lime         primary — CTAs and brand moments
+     ~90%  #ffffff  white          the page
+      ~5%  #232528  charcoal       type
+      ~5%  #ffb742  amber          primary — CTAs and brand moments
 
-   Brand palette: lime #ccff66 (primary), coral #ff6666, purple #5d2e8c.
+   THE PALETTE RULE
+   ----------------
+   Amber #ffb742 is a BRIGHT warm mid-tone (74% saturation). On charcoal it is
+   luminous at 8.9:1 — among the highest tried — and carries dark
+   `--color-accent-ink` (8.9:1). On white it is far too light to be type
+   (1.7:1, the weakest of any accent used here), so the text-level accent is
+   the same hue darkened hard to #906725 (5.1:1):
+     on white   #906725   5.1:1   (the fill would be 1.7 — completely unusable)
+     on dark    #ffb742   8.9:1   (the darkened one would be ~1.9 — unusable)
 
-   THE ONE RULE THAT GOVERNS THE WHOLE PALETTE
-   -------------------------------------------
-   Lime is 1.16:1 on white. It can never be text, an icon or a hairline on a
-   light surface — at that ratio it is invisible, not merely low-contrast. It
-   is only ever a FILL, and it always carries `--color-accent-ink` (near-black,
-   15.3:1) on top. That is why `--color-accent-ink` exists as its own token and
-   is NOT simply `--color-ink`: inside `.on-dark`, `--color-ink` flips to near-
-   white, and a white-on-lime button would drop to 1.16:1.
+   Note what that darkening does: amber taken to 5:1 on white lands on a
+   BRONZE/olive brown. It keeps its saturation on paper but reads as a warm
+   brown, not as amber. The bright hue lives in the hero and on filled chips;
+   the white sections get the bronze. Same effect the tangerine scheme had —
+   inherent to warm hues, which must travel furthest to become legible type.
 
-   The text-level accent therefore inverts across the bookends, because no
-   single hue works on both grounds:
-     on white   purple  #5d2e8c   9.4:1   (lime 1.16 — unusable)
-     on dark    lime    #ccff66  15.9:1   (purple 1.97 — unusable)
-   `.on-dark` re-points `--color-accent-text` accordingly, so markup just says
-   `text-accent-text` and gets the readable one either side.
+   Secondaries: with a WARM primary the gold secondary collides — gold-text
+   #847726 against accent-text #906725 measures 1.12:1, i.e. the same colour.
+   So warm doodles move to `--color-pass` (green) for hue separation; `gold`
+   is kept for on-dark use, where it still reads. Danger is a red.
 
-   Coral is the third: #ff6666 as a fill or a dot, and #bf4d4d when it has to
-   be text on white (4.8:1). Pass/autonomous marks use the lime hue darkened to
-   #667f33 (4.5:1), so green still reads as "went through".
+   Secondaries: `--color-gold` (#ecd444, darkened to #847726 for text on white)
+   carries warm accents/doodles — it separates cleanly from a cool primary.
+   Danger is a red; pass a green.
 
-   Measured against their own ground — all clear AA:
-     light  ink 17.8 · dim 7.6 · faint 4.9 · accent-text 9.4 · ink-on-lime 15.3
-     dark   ink 17.0 · dim 8.4 · accent-text 15.9 · ink-on-lime 15.3
+   Every pairing measured — all clear AA. See scratchpad/board.js.
    ───────────────────────────────────────────────────────────── */
 @theme {
   /* Geist is the primary face now — display, body and UI all share it. Inter
@@ -41,23 +45,21 @@
   --font-mono: var(--font-geist-mono), "SF Mono", ui-monospace, Menlo, monospace;
 
   --color-ground: #ffffff;       /* page */
-  --color-ground-2: #f7f8f4;     /* raised surfaces, cards */
-  --color-ground-3: #eef1e9;     /* wells / deeper panels */
-  --color-line: #e4e7de;         /* hairlines */
-  --color-line-2: #ccd2c2;       /* stronger dividers */
-  --color-ink: #14181c;          /* primary text (17.8:1) */
-  --color-ink-dim: #4c5560;      /* secondary text (7.6:1) */
-  --color-ink-faint: #69727d;    /* captions, meta (4.9:1) */
+  --color-ground-2: #f5f7fa;     /* raised surfaces, cards — faint cool blue-grey */
+  --color-ground-3: #eceff4;     /* wells / deeper panels */
+  --color-line: #e5e9f0;         /* hairlines */
+  --color-line-2: #cdd4de;       /* stronger dividers */
+  --color-ink: #232528;          /* charcoal, primary text (15.4:1) */
+  --color-ink-dim: #6a6d75;      /* secondary text (5.2:1) */
+  --color-ink-faint: #71747b;    /* captions, meta (4.7:1) */
 
-  --color-accent: #ccff66;       /* PRIMARY — a fill, never text. See the rule above. */
-  --color-accent-ink: #14181c;   /* what sits ON the fill; stays dark in both scopes */
-  --color-accent-text: #5d2e8c;  /* purple — the text-level accent on white (9.4:1) */
-  --color-accent-wash: #f4ffdc;  /* flat pale lime, not an alpha: it has to stay
-                                    opaque over both white and grey surfaces */
-  --color-coral: #ff6666;        /* third brand colour — fills and dots only (2.9:1) */
-  --color-danger: #bf4d4d;       /* coral darkened until it can be text (4.8:1) */
-  --color-pass: #667f33;         /* autonomous marks — the lime hue, text-safe (4.5:1) */
-  --color-teal: #178f85;         /* fourth palette colour, for the hand-drawn doodles */
+  --color-accent: #ffb742;       /* PRIMARY amber — a bright warm fill */
+  --color-accent-ink: #232528;   /* charcoal text on the amber fill; dark in both scopes */
+  --color-accent-text: #906725;  /* bronze — the text-level accent on white (5.1:1) */
+  --color-accent-wash: #fff6e8;  /* pale amber, opaque over white + grey */
+  --color-gold: #847726;         /* secondary — gold, darkened until text-safe (4.5:1) */
+  --color-danger: #c54f4f;       /* error red, text-safe (4.6:1) */
+  --color-pass: #418251;         /* autonomous marks — green, text-safe (4.6:1) */
 
   --radius-card: 12px;
 
@@ -88,25 +90,27 @@
    already in the markup do the right thing inside the hero and the footer.
    `color-scheme` is set too, so form controls and scrollbars follow. */
 .on-dark {
-  --color-ground: #101418;
-  --color-ground-2: #191e24;
-  --color-ground-3: #212831;
-  --color-line: #2b323a;
-  --color-line-2: #3c454f;
-  --color-ink: #f4f6f2;
-  --color-ink-dim: #a8b0b8;
-  --color-ink-faint: #88919b;
+  /* Ground is the reference charcoal #232528 — the same value the light scope
+     uses for ink, so the two halves of the palette are one family inverted. */
+  --color-ground: #232528;
+  --color-ground-2: #2b2d31;
+  --color-ground-3: #34363b;
+  --color-line: #3a3c41;
+  --color-line-2: #4c4e54;
+  --color-ink: #f7f7ff;         /* reference ghost white */
+  --color-ink-dim: #9a97a2;
+  --color-ink-faint: #918e97;
 
-  /* Lime is the fill on both grounds, and here it is the text accent too —
-     15.9:1 on this ground, where the purple used on white would be 1.97:1. */
-  --color-accent: #ccff66;
-  --color-accent-ink: #14181c;
-  --color-accent-text: #ccff66;
-  --color-accent-wash: #232d16;
-  --color-coral: #ff6666;
-  --color-danger: #ff6666;  /* pure coral clears AA here (6.5:1); no darkening needed */
-  --color-pass: #a8d96a;
-  --color-teal: #2ec4b6;    /* the palette's own teal reads fine on this ground */
+  /* Amber fill stays the same (dark ink still works on the bright chip); the
+     text accent lifts to that same amber, which reads at 8.9:1 here where the
+     bronze would be too dark. */
+  --color-accent: #ffb742;
+  --color-accent-ink: #232528;
+  --color-accent-text: #ffb742;
+  --color-accent-wash: #42392c;
+  --color-gold: #ecd444;   /* full gold reads at 10:1 on charcoal — no darkening */
+  --color-danger: #f08a8a;
+  --color-pass: #8fd0a0;
 
   color-scheme: dark;
   color: var(--color-ink);
@@ -131,11 +135,11 @@ body {
   overflow-x: hidden;
 }
 
-/* Lime selection with ink on it — white here would be 1.16:1 and unreadable. */
+/* Amber selection with ink on it — white here would be 1.7:1 and unreadable. */
 ::selection { background: var(--color-accent); color: var(--color-accent-ink); }
 
-/* The focus ring uses accent-TEXT, not accent: a lime ring on white is 1.16:1
-   and would be an invisible focus indicator. */
+/* The focus ring uses accent-TEXT, not accent: the fill amber on white is
+   1.7:1 and would be an invisible focus indicator. */
 :focus-visible {
   outline: 2px solid var(--color-accent-text);
   outline-offset: 3px;
@@ -155,6 +159,118 @@ body {
   color: var(--color-ink-faint);
 }
 .hairline { height: 1px; background: var(--color-line); }
+
+/* ── AI primary button ────────────────────────────────────────
+   TWO STATES.
+
+   REST — plain and quiet: a SUBTLE gradient fill, the surface ground tinted
+   ~10% with the logo hues, so it blends with the logo without shouting. It
+   inverts with `.on-dark` (faint sheen on charcoal, faint sheen on white) and
+   carries ordinary `--color-ink` text. No ring, no glow.
+
+   HOVER / FOCUS — the "AI edge" wakes up: the animated logo-spectrum ring
+   (`::before`, a masked overlay so it costs no layout) and a travelling glow
+   (`::after`) fade in, and the label goes BOLD in the logo colours themselves
+   (`--logo-t*`, bright on the charcoal bookends, deepened on white so the
+   gradient text stays legible on each ground). The rotation is paused until
+   then, so nothing spins at rest.
+
+   The label needs its own `.ai-label` span: gradient text requires
+   `background-clip:text`, which would fight the button's own fill if applied to
+   the button element. */
+:root {
+  /* deep logo hues — legible (>=5:1) as gradient TEXT on the white sections.
+     Pink/amber are deepened from the raw logo stops, which would sit ~4:1. */
+  --logo-t1: #1c6f95; --logo-t2: #b23360; --logo-t3: #8a5410; --logo-t4: #6f5691;
+}
+.on-dark {
+  /* bright logo hues — legible as gradient TEXT on the charcoal bookends. Pink
+     is lifted slightly (#f56aa0) since the raw logo pink dips to ~3.6 here. */
+  --logo-t1: #4fbdec; --logo-t2: #f56aa0; --logo-t3: #fbab2a; --logo-t4: #c19dc9;
+}
+@property --ai-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.btn-ai {
+  /* position:relative only — NOT a stacking context, so the `::after` glow at
+     z-index:-1 paints behind the fill. */
+  position: relative;
+  color: var(--color-ink);
+  border-radius: 9px;
+  background: linear-gradient(118deg,
+    color-mix(in srgb, #4fbdec 8%, var(--color-ground)),
+    color-mix(in srgb, #ef4c8c 7%, var(--color-ground)) 38%,
+    color-mix(in srgb, #fbab2a 8%, var(--color-ground)) 70%,
+    color-mix(in srgb, #c19dc9 8%, var(--color-ground)));
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 12px rgb(0 0 0 / 0.05);
+  transition: box-shadow 200ms ease;
+}
+/* the animated logo ring — a masked pseudo overlaying the 2px edge; invisible
+   and paused until hover/focus, so it adds nothing at rest. */
+.btn-ai::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background:
+    conic-gradient(from var(--ai-angle),
+      rgb(79 189 236 / 0) 250deg, #4fbdec 288deg, #ef4c8c 312deg,
+      #fbab2a 336deg, #c19dc9 352deg, rgb(193 157 201 / 0) 360deg),
+    conic-gradient(from 0deg, #4fbdec, #ef4c8c, #fbab2a, #c19dc9, #4fbdec);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  animation: ai-rotate 7s linear infinite;
+  animation-play-state: paused;
+}
+/* the travelling glow, behind the fill — hover/focus only */
+.btn-ai::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(from var(--ai-angle),
+    rgb(79 189 236 / 0) 250deg, #4fbdec 288deg, #ef4c8c 312deg,
+    #fbab2a 336deg, #c19dc9 352deg, rgb(193 157 201 / 0) 360deg);
+  filter: blur(11px);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  animation: ai-rotate 7s linear infinite;
+  animation-play-state: paused;
+}
+.btn-ai:hover, .btn-ai:focus-visible {
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.09), 0 9px 22px rgb(0 0 0 / 0.08);
+}
+.btn-ai:hover::before, .btn-ai:focus-visible::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+.btn-ai:hover::after, .btn-ai:focus-visible::after {
+  opacity: 0.7;
+  animation-play-state: running;
+}
+/* the label — sits above the ring, goes bold + logo-gradient on hover/focus */
+.ai-label { position: relative; z-index: 1; }
+.btn-ai:hover .ai-label, .btn-ai:focus-visible .ai-label {
+  font-weight: 700;
+  background-image: linear-gradient(100deg, var(--logo-t1), var(--logo-t2), var(--logo-t3), var(--logo-t4));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+@keyframes ai-rotate {
+  to { --ai-angle: 360deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-ai::before, .btn-ai::after { animation: none; }
+}
 
 /* ── Motion ───────────────────────────────────────────────────
    One effect, opacity only. Everything is authored visible and the animation
