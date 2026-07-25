@@ -6,6 +6,7 @@ import { FEATURES } from "@/content/features";
 import { SHOTS } from "@/lib/shots";
 import { Container } from "@/components/ui";
 import { Doodle } from "@/components/Doodle";
+import { SplitWords } from "@/components/SplitWords";
 
 /**
  * The feature walk — the Vorflux mechanic.
@@ -95,7 +96,7 @@ export function StickyFeatures() {
       const t = track.current;
       if (t) {
         const jumped = Math.abs(seg - m.lastSeg) > 1;
-        t.style.transitionDuration = jumped || reduce ? "0ms" : "550ms";
+        t.style.transitionDuration = jumped || reduce ? "0ms" : "320ms";
         t.style.transform = `translateY(-${(seg * 100) / n}%)`;
         m.lastSeg = seg;
       }
@@ -144,18 +145,20 @@ export function StickyFeatures() {
           </p>
           <h2
             id="features-heading"
-            className="mx-auto mt-6 max-w-[18ch] font-display font-semibold tracking-[-0.03em] text-ink"
+            className="reveal-words mx-auto mt-6 max-w-[18ch] font-display font-semibold tracking-[-0.03em] text-ink"
             style={{ fontSize: "var(--text-h2)", lineHeight: 1.03 }}
           >
-            Not an agent.{" "}
-            <span className="relative inline-block">
-              <span className="text-accent">An organization.</span>
-              <Doodle
-                name="underline"
-                stretch
-                className="absolute -bottom-[0.24em] left-0 h-[0.16em] w-full text-accent"
-              />
-            </span>
+            <SplitWords>
+              Not an agent.{" "}
+              <span className="relative inline-block">
+                <span className="text-accent">An organization.</span>
+                <Doodle
+                  name="underline"
+                  stretch
+                  className="absolute -bottom-[0.24em] left-0 h-[0.16em] w-full text-accent"
+                />
+              </span>
+            </SplitWords>
           </h2>
           <p className="mx-auto mt-5 max-w-[52ch] text-[var(--text-lead)] leading-relaxed text-ink-dim">
             One accountable team — each capability its own bot, its own identity, its own gate.
@@ -191,7 +194,7 @@ const CopyColumn = memo(function CopyColumn({ active, live }: { active: number; 
         <div
           key={f.key}
           aria-hidden={live && i !== active}
-          className={`absolute inset-x-0 top-0 transition-all duration-500 ease-out ${
+          className={`absolute inset-x-0 top-0 transition-all duration-300 ease-out ${
             !live || i === active
               ? "translate-y-0 opacity-100"
               : "pointer-events-none translate-y-3 opacity-0"
@@ -293,7 +296,7 @@ const Rail = memo(function Rail({ active }: { active: number }) {
       <span className="font-mono text-[12px] tabular-nums text-ink">{pad2(active + 1)}</span>
       <span className="my-3 block h-24 w-px bg-line-2">
         <span
-          className="block w-px bg-accent transition-[height] duration-500"
+          className="block w-px bg-accent transition-[height] duration-300"
           style={{ height: `${((active + 1) / total) * 100}%` }}
         />
       </span>

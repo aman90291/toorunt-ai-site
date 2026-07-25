@@ -46,7 +46,7 @@ export function ProblemBeat() {
         </Heading>
         <div className="mt-12 grid grid-cols-1 gap-10 sm:mt-16 sm:grid-cols-2">
           <div>
-            <div className="font-display text-[length:var(--text-stat)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
+            <div className="font-display text-[length:var(--text-8xl)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
               <CountUp value={75} suffix="%" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
@@ -54,7 +54,7 @@ export function ProblemBeat() {
             </p>
           </div>
           <div>
-            <div className="font-display text-[length:var(--text-stat)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
+            <div className="font-display text-[length:var(--text-8xl)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
               <CountUp value={95} suffix="%" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">

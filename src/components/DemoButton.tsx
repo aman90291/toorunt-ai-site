@@ -1,12 +1,10 @@
-"use client";
-
+import Link from "next/link";
 import type { ReactNode } from "react";
-import { openDemo } from "@/lib/demo";
 
 /**
- * A "Book a demo" trigger that opens the global BookDemoDialog. Mirrors the
- * visual variants of ui.Button, but is a <button> (opens the modal) rather than
- * a link. Usable from server components.
+ * A "Book a demo" trigger — a link to /book/, the two-column booking page.
+ * Mirrors the visual variants of ui.Button; kept as its own component so the
+ * many call sites didn't change when this stopped opening a modal.
  */
 export function DemoButton({
   children = "Book a demo",
@@ -19,13 +17,12 @@ export function DemoButton({
 }) {
   if (variant === "link") {
     return (
-      <button
-        type="button"
-        onClick={openDemo}
+      <Link
+        href="/book/"
         className={`inline-flex min-h-11 items-center text-[14px] text-ink-dim transition-colors hover:text-ink ${className}`}
       >
         {children}
-      </button>
+      </Link>
     );
   }
   /* Kept in lockstep with ui.Button — see the note there on why the hover is
@@ -37,8 +34,8 @@ export function DemoButton({
       ? "btn-ai"
       : "border border-line-2 text-ink hover:bg-ground-2";
   return (
-    <button type="button" onClick={openDemo} className={`${base} ${styles} ${className}`}>
+    <Link href="/book/" className={`${base} ${styles} ${className}`}>
       {variant === "primary" ? <span className="ai-label">{children}</span> : children}
-    </button>
+    </Link>
   );
 }

@@ -3,7 +3,7 @@ import { Geist, Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
-import { BookDemoDialog } from "@/components/BookDemoDialog";
+import { FooterGate } from "@/components/FooterGate";
 import Script from "next/script";
 
 /* Geist is the primary face — display, body and UI. Inter is kept only as a
@@ -82,8 +82,9 @@ gtag('config', '${GA_ID}');`}
 
         <Nav />
         <main>{children}</main>
-        <Footer />
-        <BookDemoDialog />
+        <FooterGate>
+          <Footer />
+        </FooterGate>
       </body>
     </html>
   );

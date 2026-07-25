@@ -19,9 +19,8 @@ export function CTASection({
     <section id={id} className="scroll-mt-24 border-t border-line py-24 sm:py-32">
       <Container className="text-center">
         <p className="eyebrow flex items-center justify-center gap-2">
-          {/* Green, not gold: the primary is warm now, and gold-on-white
-              measures 1.12:1 against accent-text — the two would read as one
-              colour beside the amber CTA directly below. */}
+          {/* Teal, not gold: sunglow is 1.4:1 on white — the gold token only
+              reads inside `.on-dark`. */}
           <Doodle name="burst" width={13} className="text-pass" />
           {eyebrow}
         </p>

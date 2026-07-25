@@ -11,7 +11,7 @@ const COLS = [
       { href: "/product/", label: "How it works" },
       { href: "/security/", label: "Security & governance" },
       { href: "/pricing/", label: "Pricing" },
-      { href: "#book-demo", label: "Book a demo" }, // opens the dialog (see render)
+      { href: "#book-demo", label: "Book a demo" }, // routes to /book (see render)
     ],
   },
   {

@@ -67,6 +67,10 @@ export function HeroBackground() {
       {/* Bottom fade into the hero ground, so the canvas meets the white body
           on a soft edge instead of a hard seam at the section boundary. */}
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-ground" />
+      {/* Text-protection scrim: the headline column sits on the left, and a
+          wave peak wandering under it costs more contrast than the grid is
+          worth. Fades to nothing by mid-screen so the right half stays live. */}
+      <div className="absolute inset-0 bg-gradient-to-r from-ground/75 via-ground/30 to-transparent" />
     </div>
   );
 }

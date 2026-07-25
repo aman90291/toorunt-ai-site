@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { SplitWords } from "@/components/SplitWords";
 
 /** Page shell — consistent max width + fluid gutter.
  *  `wide` opens up to full-bleed-ish for the stacked and pinned sections. */
@@ -60,8 +61,11 @@ export function Eyebrow({ children }: { children: ReactNode }) {
   );
 }
 
-/** Section heading. The `split` prop is gone with TextReveals — headings are
- *  plain server-rendered text now, with no per-line mask reveal. */
+/** Section heading. Every heading carries the on-scroll word reveal
+ *  (globals.css "On-scroll typography"): SplitWords wraps each word in a
+ *  mask/riser pair and the CSS view-timeline scrubs them in, staggered.
+ *  Headings already on screen at load sit at the timeline's end, i.e. they
+ *  render settled — so page-top h1s are static, as they should be. */
 export function Heading({
   children,
   as: As = "h2",
@@ -72,8 +76,8 @@ export function Heading({
   className?: string;
 }) {
   return (
-    <As className={`font-display font-semibold tracking-[-0.025em] text-balance text-ink ${className}`}>
-      {children}
+    <As className={`reveal-words font-display font-semibold tracking-[-0.025em] text-balance text-ink ${className}`}>
+      <SplitWords>{children}</SplitWords>
     </As>
   );
 }

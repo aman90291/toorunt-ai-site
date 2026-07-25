@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogoWordmark } from "./LogoWordmark";
-import { openDemo } from "@/lib/demo";
 
 const LINKS = [
   { href: "/product/", label: "Product" },
@@ -33,7 +33,12 @@ const NAV_H = 56; // h-14
 export function Nav() {
   const [open, setOpen] = useState(false);
   const [overHero, setOverHero] = useState(true);
+  const pathname = usePathname();
 
+  // Re-keyed by pathname: the bar lives in the layout and survives client-side
+  // navigation, so a mount-only check would carry the hero's dark scope onto
+  // hero-less routes (navigate from the hero to /book and the bar stayed
+  // inverted over white).
   useEffect(() => {
     const hero = document.querySelector<HTMLElement>("[data-hero]");
     // No hero on this route: the bar is over white from the first pixel.
@@ -49,7 +54,7 @@ export function Nav() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <header
@@ -75,16 +80,15 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
-          <button
-            type="button"
-            onClick={openDemo}
+          <Link
+            href="/book/"
             /* The logo-spectrum `.btn-ai` treatment (globals.css) — same in the
                transparent-over-hero bar and the solid-below one, since it
                carries its own fixed fill and ink rather than a page token. */
             className="btn-ai inline-flex min-h-9 items-center rounded-md px-4 text-[13.5px] font-semibold"
           >
             <span className="ai-label">Book a demo</span>
-          </button>
+          </Link>
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
@@ -119,13 +123,13 @@ export function Nav() {
                 {l.label}
               </Link>
             ))}
-            <button
-              type="button"
-              onClick={() => { setOpen(false); openDemo(); }}
+            <Link
+              href="/book/"
+              onClick={() => setOpen(false)}
               className="btn-ai mt-2 rounded-md px-4 py-2.5 text-center text-[15px] font-medium"
             >
               <span className="ai-label">Book a demo</span>
-            </button>
+            </Link>
           </div>
         </div>
       )}

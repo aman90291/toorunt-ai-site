@@ -8,10 +8,11 @@
  * baked-in stroke colour.
  *
  * They are all `currentColor` + `stroke`, so placement decides the colour via a
- * normal text utility. On light sections use `text-pass` or `text-accent-text`
- * (bronze) — both text-safe on white. Avoid `text-gold` on white while the
- * primary is warm: it measures 1.12:1 against accent-text. The bright accent
- * fill is only used as a stroke inside `.on-dark`, where it reads.
+ * normal text utility. On light sections use `text-pass` (teal) or
+ * `text-accent-text` (deep blue) — both text-safe on white; `text-gold` there
+ * resolves to the violet, not the sunglow, which only exists inside `.on-dark`.
+ * The bright accent fill is only used as a stroke inside `.on-dark`, where it
+ * reads.
  *
  * Every one is aria-hidden. They decorate; they never carry meaning.
  */

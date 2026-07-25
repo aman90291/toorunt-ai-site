@@ -1,32 +1,38 @@
 "use client";
 
+import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { SCENE } from "@/lib/scene";
-import { CloudField } from "./CloudField";
+import { WaveGrid } from "./WaveGrid";
 
 /**
- * The hero canvas: one fullscreen shader quad, nothing else.
+ * The hero canvas: the wave-propagation cube grid, seen from above.
  *
- * This used to be a whole scene — a scroll-scrubbed six-keyframe camera orbit,
- * a particle dust field, a drei Environment with three lightformers, and a
- * Bloom + Vignette composer — mounted globally behind every page. All of it is
- * gone. The clouds are a fragment shader on a camera-glued plane, so lights, an
- * environment and a moving camera were lighting and framing nothing; and the
- * orbit was driven by whole-document scroll, which is meaningless now that the
- * canvas only occupies the hero.
+ * This replaces the cloud-field quad (one fullscreen fragment shader), which
+ * itself replaced a scroll-scrubbed orbit scene. The grid brings real
+ * geometry back, but stays one draw call — a single InstancedMesh — plus a
+ * shadow pass; see WaveGrid for the mechanics and the perf tiers.
  *
- * Removing them dropped @react-three/drei and @react-three/postprocessing
- * entirely. What is left is three + @react-three/fiber rendering one quad.
+ * Camera values match the Codrops original (fov 40, overhead at RADIUS with
+ * a mouse tilt, driven per-frame inside WaveGrid). Tone mapping too: ACES at
+ * 1.95 exposure is where the demo's shading was tuned, and the palette
+ * colours are dark enough that the curve never pushes them off-hue.
  */
 export default function Scene3D({ reduced, lite = false }: { reduced: boolean; lite?: boolean }) {
   return (
     <Canvas
       dpr={lite ? [1, 1.25] : [1, 1.5]}
-      gl={{ antialias: !lite, powerPreference: lite ? "low-power" : "high-performance" }}
-      camera={{ position: [0, 0, 7.2], fov: 42, near: 0.1, far: 100 }}
+      shadows={!lite}
+      gl={{
+        antialias: !lite,
+        powerPreference: lite ? "low-power" : "high-performance",
+        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMappingExposure: 1.95,
+      }}
+      camera={{ position: [0, 12, 0], fov: 40, near: 0.1, far: 200 }}
     >
       <color attach="background" args={[SCENE.bg]} />
-      <CloudField reduced={reduced} lite={lite} />
+      <WaveGrid reduced={reduced} lite={lite} />
     </Canvas>
   );
 }
