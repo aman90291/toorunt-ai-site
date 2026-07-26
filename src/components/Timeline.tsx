@@ -21,7 +21,6 @@ import { Container } from "@/components/ui";
 export function Timeline() {
   return (
     <section
-
       aria-labelledby="timeline-heading"
       className="relative"
       style={{ paddingBlock: "var(--space-section)" }}
@@ -110,8 +109,11 @@ export function Timeline() {
           })}
         </ol>
 
-        <p className="mt-[clamp(40px,5vw,72px)] font-mono text-[12.5px] uppercase tracking-[0.18em] text-ink-faint">
-          {HUMAN_GATE_COUNT} human decisions · 14 gates · everything else autonomous
+        {/* Names the three decisions instead of just counting them — the
+            rail above tags WHERE they sit, this says what they are. */}
+        <p className="mt-[clamp(40px,5vw,72px)] font-mono text-[12.5px] leading-relaxed uppercase tracking-[0.15em] text-ink-faint">
+          {HUMAN_GATE_COUNT} human decisions — sign the PRD, approve the PR, unlock the merge ·
+          14 hard gates on every change · everything between them runs autonomous, on the record
         </p>
       </Container>
     </section>

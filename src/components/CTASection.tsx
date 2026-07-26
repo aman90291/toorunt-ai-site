@@ -8,12 +8,18 @@ export function CTASection({
   accent,
   sub,
   id,
+  secondaryHref = "/product/",
+  secondaryLabel = "See how it ships →",
 }: {
   eyebrow?: string;
   title: string;
   accent?: string;
   sub?: string;
   id?: string;
+  /** Where the ghost button points — pages pass their own so the product
+   *  page never links circularly to itself. */
+  secondaryHref?: string;
+  secondaryLabel?: string;
 }) {
   return (
     <section id={id} className="scroll-mt-24 border-t border-line py-24 sm:py-32">
@@ -30,8 +36,8 @@ export function CTASection({
         {sub && <p className="mx-auto mt-5 max-w-xl text-[17px] text-ink-dim">{sub}</p>}
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <DemoButton>Book a demo</DemoButton>
-          <Button href="/product/" variant="ghost">
-            See how it ships →
+          <Button href={secondaryHref} variant="ghost">
+            {secondaryLabel}
           </Button>
         </div>
       </Container>

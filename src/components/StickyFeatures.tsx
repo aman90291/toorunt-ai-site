@@ -148,10 +148,12 @@ export function StickyFeatures() {
             className="reveal-words mx-auto mt-6 max-w-[18ch] font-display font-semibold tracking-[-0.03em] text-ink"
             style={{ fontSize: "var(--text-h2)", lineHeight: 1.03 }}
           >
+            {/* Titled for its content — the four surfaces — rather than
+                restating the thesis Panel #3 already owns. */}
             <SplitWords>
-              Not an agent.{" "}
+              Four surfaces{" "}
               <span className="relative inline-block">
-                <span className="text-accent">An organization.</span>
+                <span className="text-accent">run the team.</span>
                 <Doodle
                   name="underline"
                   stretch

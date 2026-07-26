@@ -77,15 +77,24 @@ export default function Home() {
       {/* Integrations wall — dark band, logos light up with their brand colour */}
       <Integrations />
 
-      {/* The "On the record" numbers panel that used to sit here was removed —
-          the hero's receipt strip already shows the same four RECEIPT figures,
-          so this was the one place on the page saying something twice. */}
+      {/* The receipt figures live on /manifesto (§07) and /book — the home
+          hero stays copy-and-canvas only, per the founder's call. */}
 
-      {/* 12 · CTA — solid, ends the 3D */}
-      <section id="demo" className="relative scroll-mt-24 bg-ground pt-24 pb-32 sm:pt-32">
-        <Container className="text-center">
-          <Eyebrow>Get started</Eyebrow>
-          <Heading as="h2" className="mx-auto mt-6 max-w-4xl text-[length:var(--text-hero)] leading-[0.98]">
+      {/* 12 · CTA — dark, so Integrations → CTA → Footer close as ONE charcoal
+          bookend instead of a white sliver flashing between two dark slabs. */}
+      <section id="demo" className="on-dark relative scroll-mt-24 overflow-hidden bg-ground pt-28 pb-36 sm:pt-36">
+        {/* A cobalt bloom rising from below the headline — the Vorflux depth
+            move, in our palette. Pure CSS radial gradient, no canvas. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 72% 58% at 50% 82%, color-mix(in srgb, var(--color-accent) 24%, transparent) 0%, color-mix(in srgb, var(--color-accent) 8%, transparent) 34%, transparent 68%)",
+          }}
+        />
+        <Container className="relative z-10 text-center">
+          <Heading as="h2" className="mx-auto max-w-4xl text-[length:var(--text-hero)] leading-[0.98]">
             Every company will employ engineers that aren&rsquo;t people.{" "}
             <Hot>We make them accountable.</Hot>
           </Heading>

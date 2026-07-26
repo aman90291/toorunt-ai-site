@@ -46,7 +46,7 @@ export function ProblemBeat() {
         </Heading>
         <div className="mt-12 grid grid-cols-1 gap-10 sm:mt-16 sm:grid-cols-2">
           <div>
-            <div className="font-display text-[length:var(--text-8xl)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
+            <div className="font-display text-[length:clamp(52px,7.5vw,96px)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
               <CountUp value={75} suffix="%" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
@@ -54,7 +54,7 @@ export function ProblemBeat() {
             </p>
           </div>
           <div>
-            <div className="font-display text-[length:var(--text-8xl)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
+            <div className="font-display text-[length:clamp(52px,7.5vw,96px)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
               <CountUp value={95} suffix="%" />
             </div>
             <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
@@ -62,7 +62,12 @@ export function ProblemBeat() {
             </p>
           </div>
         </div>
-        <p className="mt-12 font-mono text-[12px] uppercase tracking-[0.18em] text-ink-faint">
+        {/* Sources travel with the numbers — for an audit-trail product,
+            uncited statistics undercut the whole brand promise. */}
+        <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+          Google, Q3 2025 earnings call · MIT NANDA, 2025
+        </p>
+        <p className="mt-10 font-mono text-[12px] uppercase tracking-[0.18em] text-ink-faint">
           The bottleneck moved from writing code to governing it.
         </p>
       </div>
@@ -71,21 +76,18 @@ export function ProblemBeat() {
 }
 
 /* ── Act I · Three eras of cost ─────────────────────────────────────── */
-/* barColor is a data-viz cost ramp (red → orange → green), not a brand token:
-   the bars encode "expensive → cheap", so the winner reads instantly. The
-   brand accent can't stand in — as a pale fill it would be an invisible bar;
-   the tOOrunt row gets a legible green instead.
-
-   These are the base ramp lightened ~18%. They sit on the `bg-ground-3`
-   (#eceff4) track at 3.05 / 2.06 / 2.37 : 1, so only the red clears the 3:1
-   non-text contrast guideline. That is acceptable HERE specifically because
-   the bar is not the only carrier of the value — the dollar figure is printed
-   beside every row, and the rows differ in length as well as hue. Do not reuse
-   these values for a bar that has no numeric label. */
+/* barColor is a data-viz cost ramp (expensive → cheap), not a brand token —
+   except the winner: the tOOrunt row rides `--color-pass`, the same teal that
+   marks "autonomous/verified" everywhere else, so "good" is ONE hue site-wide
+   rather than two competing greens. Red stays for the manual era; the copilot
+   row is a darkened amber. All three now clear the 3:1 non-text guideline on
+   the `bg-ground-3` (#eceff4) track (3.05 / 3.69 / 4.87 : 1), and the dollar
+   figure is still printed beside every row, so the bar never carries the
+   value alone. */
 const ERAS = [
   { label: "Manual SDLC", people: "4–6 people", time: "1–2 weeks", cost: "$500–1,000", bar: "100%", barColor: "#d8665e", accent: false },
-  { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", barColor: "#e59658", accent: false },
-  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$20–150", bar: "11%", barColor: "#54af66", accent: true },
+  { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", barColor: "#b06a2a", accent: false },
+  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$20–150", bar: "11%", barColor: "var(--color-pass)", accent: true },
 ];
 export function CostErasBeat() {
   return (
@@ -188,7 +190,9 @@ export function WhyUsBeat() {
         </Heading>
       </div>
       <Glass className="reveal mt-8 max-w-5xl overflow-x-auto">
-        <table className="w-full border-collapse text-left">
+        {/* min-w matters: a w-full table shrinks to fit, so overflow-x-auto
+            never engaged and five columns compressed into slivers on phones */}
+        <table className="w-full min-w-[760px] border-collapse text-left">
           <thead>
             <tr>
               <th className="w-[14%]" />

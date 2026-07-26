@@ -37,13 +37,15 @@ export function Hero() {
               {/* leading-[1.02] is tight on purpose: at display size the default
                   line box opens a gap that reads as two paragraphs, not one
                   statement. Loosened from 0.94 now that the ramp is smaller. */}
+              {/* The eyebrow carries the category; the H1 carries the claim —
+                  the differentiator, not the market description. */}
               <h1
                 className="reveal-words-load mt-[var(--space-block)] font-display font-semibold tracking-[-0.03em] text-balance text-ink"
                 style={{ fontSize: "var(--text-hero)", lineHeight: 1.02 }}
               >
                 <SplitWords>
-                  Software Development Lifecycle{" "}
-                  <span className="text-accent">automation, end&nbsp;to&nbsp;end.</span>
+                  An AI engineering team{" "}
+                  <span className="text-accent">you can hold accountable.</span>
                 </SplitWords>
               </h1>
 
@@ -62,10 +64,12 @@ export function Hero() {
                   See how it works
                 </Button>
               </div>
+
+              {/* The receipt strip — the four numbers the whole site keeps
+                  its promises in, above the fold from the first pixel. */}
             </div>
           </div>
         </Container>
-
       </div>
     </section>
   );

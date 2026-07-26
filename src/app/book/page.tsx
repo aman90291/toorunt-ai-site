@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Heading } from "@/components/ui";
 import { DemoForm } from "@/components/DemoForm";
-import { HeroBackground } from "@/components/HeroBackground";
+import { ParticleBackground } from "@/components/ParticleBackground";
 import { RECEIPT, LINES } from "@/lib/stats";
 
 export const metadata: Metadata = {
@@ -48,7 +48,7 @@ export default function BookPage() {
       {/* ── hero echo ────────────────────────────────────────── */}
       <aside className="px-[var(--gutter)] pb-8 lg:h-full lg:min-h-0 lg:py-4 lg:pl-0 lg:pr-4">
         <div className="on-dark relative flex h-full min-h-[480px] flex-col justify-end overflow-hidden rounded-[calc(var(--radius-card)+12px)] bg-ground p-7 sm:p-10">
-          <HeroBackground />
+          <ParticleBackground />
           <div className="relative z-10">
             <blockquote className="max-w-[20ch] font-display text-[clamp(26px,2.6vw,38px)] font-semibold leading-[1.1] tracking-[-0.02em] text-ink">
               {LINES.worstCase}
@@ -59,11 +59,11 @@ export default function BookPage() {
             </p>
             <dl className="mt-9 grid grid-cols-2 gap-x-6 gap-y-7 border-t border-line pt-7">
               {RECEIPT.map((r) => (
-                <div key={r.label}>
+                <div key={r.label} className="flex flex-col-reverse">
+                  <dt className="mt-1 text-[12.5px] leading-snug text-ink-dim">{r.label}</dt>
                   <dd className="font-display text-[clamp(22px,2vw,30px)] font-semibold tabular-nums tracking-[-0.02em] text-accent-text">
                     {r.value}
                   </dd>
-                  <dt className="mt-1 text-[12.5px] leading-snug text-ink-dim">{r.label}</dt>
                 </div>
               ))}
             </dl>
