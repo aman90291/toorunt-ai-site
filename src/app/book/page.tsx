@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Heading } from "@/components/ui";
 import { DemoForm } from "@/components/DemoForm";
-import { ParticleBackground } from "@/components/ParticleBackground";
-import { RECEIPT, LINES } from "@/lib/stats";
+import { DemoFlow } from "@/components/book/DemoFlow";
 
 export const metadata: Metadata = {
   title: "Book a demo",
@@ -15,10 +14,11 @@ export const metadata: Metadata = {
  * "Book a demo" CTA routes here instead of opening an overlay, so the form
  * gets a real URL (linkable, back-button-able, measurable in analytics).
  *
- * Two columns: the form on the left, and a hero-echo panel on the right —
- * the wave-grid canvas under the receipt numbers, inset and rounded rather
- * than full-bleed so the fixed nav keeps sitting on white. On mobile the
- * form comes first; the panel follows as a closing proof block.
+ * Two columns: the form on the left, and a proof panel on the right — the
+ * DemoFlow infographic (the ticket's journey through the live session) on an
+ * inset, rounded dark card with a cobalt bloom, so the fixed nav keeps
+ * sitting on white. On mobile the form comes first; the panel follows as a
+ * closing proof block.
  *
  * An app-like screen, not a page: on desktop it is EXACTLY one viewport —
  * no footer (FooterGate) and no document scroll. The form column scrolls
@@ -38,35 +38,33 @@ export default function BookPage() {
             A live run on a repo you choose.
           </Heading>
           <p className="mt-4 text-[15px] leading-relaxed text-ink-dim">
-            Tell us where to reach you. We&rsquo;ll set up a working session on your
-            backlog — real tickets, real gates, the ledger on screen.
+            Thirty minutes on a repo you choose — a real ticket from your backlog
+            carried to a merged PR, every gate and decision on screen. No slides.
           </p>
           <DemoForm className="mt-8" />
         </div>
       </div>
 
-      {/* ── hero echo ────────────────────────────────────────── */}
+      {/* ── proof panel ──────────────────────────────────────── */}
       <aside className="px-[var(--gutter)] pb-8 lg:h-full lg:min-h-0 lg:py-4 lg:pl-0 lg:pr-4">
-        <div className="on-dark relative flex h-full min-h-[480px] flex-col justify-end overflow-hidden rounded-[calc(var(--radius-card)+12px)] bg-ground p-7 sm:p-10">
-          <ParticleBackground />
+        <div className="on-dark relative flex h-full min-h-[480px] flex-col justify-center overflow-hidden rounded-[calc(var(--radius-card)+12px)] bg-ground p-7 sm:p-10">
+          {/* cobalt bloom, in-palette — the depth move without a canvas */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 90% 60% at 80% 8%, color-mix(in srgb, var(--color-accent) 20%, transparent) 0%, transparent 60%)",
+            }}
+          />
           <div className="relative z-10">
-            <blockquote className="max-w-[20ch] font-display text-[clamp(26px,2.6vw,38px)] font-semibold leading-[1.1] tracking-[-0.02em] text-ink">
-              {LINES.worstCase}
+            <p className="eyebrow">In a live session</p>
+            <blockquote className="mt-4 max-w-[18ch] font-display text-[clamp(24px,2.3vw,32px)] font-semibold leading-[1.12] tracking-[-0.02em] text-ink">
+              Watch a ticket become a merged&nbsp;PR.
             </blockquote>
-            <p className="mt-4 max-w-[46ch] text-[14px] leading-relaxed text-ink-dim">
-              Every change waits behind fourteen hard gates, and nothing merges
-              without a decision you can replay from the audit trail.
-            </p>
-            <dl className="mt-9 grid grid-cols-2 gap-x-6 gap-y-7 border-t border-line pt-7">
-              {RECEIPT.map((r) => (
-                <div key={r.label} className="flex flex-col-reverse">
-                  <dt className="mt-1 text-[12.5px] leading-snug text-ink-dim">{r.label}</dt>
-                  <dd className="font-display text-[clamp(22px,2vw,30px)] font-semibold tabular-nums tracking-[-0.02em] text-accent-text">
-                    {r.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <div className="mt-8">
+              <DemoFlow />
+            </div>
           </div>
         </div>
       </aside>
