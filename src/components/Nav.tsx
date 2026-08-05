@@ -17,15 +17,10 @@ const NAV_H = 56; // h-14
 /**
  * The header.
  *
- * It overlays rather than sits in flow, and it is transparent — so on the home
- * page the dark hero shows straight through it, and on every other page the
- * white body does. That creates the one problem this component has to solve:
- * the bar's own ink has to invert depending on what is underneath it.
- *
- * `overHero` tracks exactly that — whether the hero still occupies the strip
- * the bar covers — and toggles `.on-dark`, which re-points the colour tokens so
- * the links, the logo type and the CTA all flip together. Off the hero the bar
- * picks up a translucent ground so text stays legible over scrolling content.
+ * It overlays rather than sits in flow. The site is dark end to end, so the
+ * bar never inverts — `overHero` only decides whether it carries a ground:
+ * transparent over the hero so the globe reads edge to edge, translucent
+ * with a hairline past it so type stays legible over scrolling content.
  *
  * The blur runs on a 56px-tall strip, not a fullscreen layer, which is why it
  * is affordable here even over the hero's live canvas.
@@ -35,13 +30,21 @@ export function Nav() {
   const [overHero, setOverHero] = useState(true);
   const pathname = usePathname();
 
-  // Re-keyed by pathname: the bar lives in the layout and survives client-side
-  // navigation, so a mount-only check would carry the hero's dark scope onto
-  // hero-less routes (navigate from the hero to /book and the bar stayed
-  // inverted over white).
+  /* The page is dark throughout, so the bar's INK never changes — only
+     whether it carries a ground. Over the hero it is fully transparent so the
+     globe reads edge to edge; past it, it takes a translucent ground and a
+     hairline so type stays legible over scrolling content.
+
+     (An earlier revision tracked every `data-dark` band because the content
+     sections were light and the bar had to invert against each one. Those
+     bands are gone; tracking them now would be a listener computing a
+     constant.)
+
+     Re-keyed by pathname — the bar lives in the layout and survives
+     client-side navigation, so a mount-only pass carries one route's answer
+     onto the next. */
   useEffect(() => {
     const hero = document.querySelector<HTMLElement>("[data-hero]");
-    // No hero on this route: the bar is over white from the first pixel.
     if (!hero) {
       setOverHero(false);
       return;
@@ -58,12 +61,12 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 backdrop-blur-md transition-colors duration-200 ${
-        overHero ? "on-dark bg-transparent" : "bg-ground/80"
-      }`}
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4"
     >
       <nav
-        className="mx-auto flex h-14 max-w-[1240px] items-center justify-between"
+        className={`nav-shell pointer-events-auto mx-auto flex h-12 max-w-[1180px] items-center justify-between rounded-full border px-1.5 transition-all duration-300 ${
+          overHero ? "border-line/70 bg-ground/55" : "border-line-2 bg-ground/88 shadow-[0_16px_40px_-24px_rgb(0_0_0/0.9)]"
+        }`}
         style={{ paddingInline: "var(--gutter)" }}
       >
         <a href="/" aria-label="tOOrunt AI home" className="-my-2 inline-flex min-h-11 items-center py-2">
@@ -85,7 +88,7 @@ export function Nav() {
             /* The logo-spectrum `.btn-ai` treatment (globals.css) — same in the
                transparent-over-hero bar and the solid-below one, since it
                carries its own fixed fill and ink rather than a page token. */
-            className="btn-ai inline-flex min-h-9 items-center rounded-md px-4 text-[13.5px] font-semibold"
+            className="btn-ai inline-flex min-h-9 items-center rounded-full px-4 text-[13.5px] font-semibold"
           >
             <span className="ai-label">Book a demo</span>
           </Link>
@@ -107,11 +110,24 @@ export function Nav() {
         </div>
       </nav>
 
+      {/* Reading progress. Driven by the document's own scroll timeline in CSS
+          (globals.css, "Nav scroll progress") rather than a scroll listener —
+          it scrubs on the compositor, costs no JS, and where `scroll()` is
+          unsupported it simply never appears. Hidden over the hero, where
+          progress is by definition zero and the bar would just be a stray
+          line across the artwork. */}
+      <span
+        aria-hidden="true"
+        className={`nav-progress absolute inset-x-0 bottom-0 h-px bg-accent-text transition-opacity duration-300 ${
+          overHero ? "opacity-0" : "opacity-100"
+        }`}
+      />
+
       {open && (
         /* Opaque so the page never shows through it. It sits inside the
            header, so it follows `overHero` and inverts along with the bar —
            which is what you want: the panel matches whatever the bar is. */
-        <div className="border-t border-line bg-ground md:hidden">
+        <div className="pointer-events-auto mx-auto mt-2 max-w-[1180px] overflow-hidden rounded-2xl border border-line bg-ground/95 shadow-2xl backdrop-blur-xl md:hidden">
           <div className="flex flex-col gap-1 px-6 py-4">
             {LINKS.map((l) => (
               <Link
@@ -126,7 +142,7 @@ export function Nav() {
             <Link
               href="/book/"
               onClick={() => setOpen(false)}
-              className="btn-ai mt-2 rounded-md px-4 py-2.5 text-center text-[15px] font-medium"
+              className="btn-ai mt-2 rounded-full px-4 py-2.5 text-center text-[15px] font-medium"
             >
               <span className="ai-label">Book a demo</span>
             </Link>

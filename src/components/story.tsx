@@ -1,77 +1,79 @@
-import { Container, Heading, Accent } from "@/components/ui";
+import { Heading, Accent, SectionFrame } from "@/components/ui";
 import { CountUp } from "@/components/CountUp";
+import { Surface } from "@/components/Surface";
 import type { ReactNode } from "react";
 
 /**
- * A story beat.
+ * The beats all sit on the shared `<SectionFrame>` spine now (see ui.tsx).
  *
- * Was `min-h-screen` with vertically centred content — every section its own
- * full viewport, text floating in the middle. That is the single biggest reason
- * the page read as the old site: a stack of identical full-height slides has no
- * rhythm, because nothing is ever longer or shorter than anything else.
+ * They used to be bare `<section>`s with centred text and nothing but
+ * `--space-section` between them, which read as a document rather than as a
+ * designed page: no bounds, no index, nothing for the content to align to on
+ * a wide screen, and every gap indistinguishable from a mistake.
  *
- * Now on the shared `--space-section` interval, so beats size to their content
- * and the page has a cadence. `side` still feeds the 3D model-avoidance.
+ * Two consequences worth knowing when editing these:
+ *   • Content is LEFT-ALIGNED inside the frame. Centring it again fights the
+ *     rail — the whole point of the left edge is that everything shares it.
+ *   • Each beat owns its index and label. They are passed in rather than
+ *     derived, because the order on the page is a narrative decision that
+ *     lives in app/page.tsx, not something these components should guess.
  */
-function Beat({ side = "left", id, children }: { side?: "left" | "right" | "center"; id?: string; children: ReactNode }) {
-  return (
-    <section
-      data-side={side}
-      id={id}
-      className="relative"
-      style={{ paddingBlock: "var(--space-section)" }}
-    >
-      <Container>{children}</Container>
-    </section>
-  );
-}
 
-/** A legible card for dense beats sitting over the live 3D. Near-opaque (no
- *  backdrop-blur — blurring an animated WebGL backdrop every frame is a GPU sink). */
+/** The dense-beat card. Now the shared `<Surface>` (components/Surface.tsx)
+ *  plus this section's padding, rather than its own copy of the border /
+ *  ground / shadow triple — that copy had already drifted from the one on
+ *  /pricing and /security by a shadow and a radius. */
 function Glass({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-[var(--radius-card)] border border-line bg-ground-2 p-6 shadow-[0_10px_30px_-16px_rgba(20,24,28,0.14)] sm:p-8 ${className}`}>
+    <Surface sheen className={`p-6 sm:p-8 ${className}`}>
       {children}
-    </div>
+    </Surface>
   );
 }
 
 /* ── Act I · The problem ────────────────────────────────────────────── */
 export function ProblemBeat() {
   return (
-    <Beat side="center">
-      <div className="reveal mx-auto max-w-4xl text-center">
-        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.06]">
+    <SectionFrame index="01" label="The problem">
+      <div data-fx="rise">
+        <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.06]">
           The code is already written by AI. <Accent>Nobody owns accountability for it.</Accent>
         </Heading>
-        <div className="mt-12 grid grid-cols-1 gap-10 sm:mt-16 sm:grid-cols-2">
-          <div>
-            <div className="font-display text-[length:clamp(52px,7.5vw,96px)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
-              <CountUp value={75} suffix="%" />
+
+        {/* Two figures on one rule rather than two centred blocks floating in
+            white space. The divider is what makes them read as a comparison
+            — and the source sits with its own number instead of as a single
+            shared footnote nobody can map back. */}
+        <dl className="mt-[var(--space-block)] grid grid-cols-1 border-t border-line sm:grid-cols-2 sm:divide-x sm:divide-line">
+          {[
+            {
+              v: 75,
+              d: "of Google's new code is AI-generated — and still approved by engineers.",
+              s: "Google · Q3 2025 earnings call",
+            },
+            {
+              v: 95,
+              d: "of enterprise GenAI pilots deliver no measurable P&L impact.",
+              s: "MIT NANDA · 2025",
+            },
+          ].map((f, i) => (
+            <div key={f.v} className={`py-8 ${i === 0 ? "sm:pr-10" : "border-t border-line pt-8 sm:border-t-0 sm:pl-10"}`}>
+              <dt className="font-display text-[length:clamp(52px,7vw,92px)] font-bold leading-[0.86] tracking-[-0.04em] text-accent-text">
+                <CountUp value={f.v} suffix="%" />
+              </dt>
+              <dd className="mt-4 max-w-[34ch] text-[15px] leading-relaxed text-ink-dim">{f.d}</dd>
+              {/* Sources travel with the numbers — for an audit-trail product,
+                  an uncited statistic undercuts the whole brand promise. */}
+              <dd className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">{f.s}</dd>
             </div>
-            <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
-              of Google&rsquo;s new code is AI-generated — and still approved by engineers.
-            </p>
-          </div>
-          <div>
-            <div className="font-display text-[length:clamp(52px,7.5vw,96px)] font-bold leading-[0.9] tracking-[-0.03em] text-accent-text">
-              <CountUp value={95} suffix="%" />
-            </div>
-            <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-ink-dim">
-              of enterprise GenAI pilots deliver no measurable P&amp;L impact.
-            </p>
-          </div>
-        </div>
-        {/* Sources travel with the numbers — for an audit-trail product,
-            uncited statistics undercut the whole brand promise. */}
-        <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
-          Google, Q3 2025 earnings call · MIT NANDA, 2025
-        </p>
-        <p className="mt-10 font-mono text-[12px] uppercase tracking-[0.18em] text-ink-faint">
+          ))}
+        </dl>
+
+        <p className="mt-8 border-t border-line pt-6 font-mono text-[12px] uppercase tracking-[0.18em] text-accent-text">
           The bottleneck moved from writing code to governing it.
         </p>
       </div>
-    </Beat>
+    </SectionFrame>
   );
 }
 
@@ -91,9 +93,9 @@ const ERAS = [
 ];
 export function CostErasBeat() {
   return (
-    <Beat side="center">
-      <div className="reveal mx-auto max-w-3xl text-center">
-        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.03]">
+    <SectionFrame index="03" label="The economics">
+      <div data-fx="rise" className="max-w-3xl">
+        <Heading className="text-[length:var(--text-h2)] leading-[1.03]">
           Same ticket. <Accent>Three eras of cost.</Accent>
         </Heading>
       </div>
@@ -104,9 +106,9 @@ export function CostErasBeat() {
           below. Padding lives on the sections, not the card, so the dividers
           run edge to edge. */}
       {/* Not <Glass>: its baked-in p-6/p-8 would inset the column dividers,
-          and overriding it needs an important-modifier arms race. Same shell,
-          zero padding — the sections pad themselves. */}
-      <div className="reveal mx-auto mt-10 max-w-5xl overflow-hidden rounded-[var(--radius-card)] border border-line bg-ground-2 shadow-[0_10px_30px_-16px_rgba(20,24,28,0.14)]">
+          and overriding it needs an important-modifier arms race. Same shell
+          via <Surface>, zero padding — the sections pad themselves. */}
+      <Surface data-fx="rise" className="mt-10 overflow-hidden">
         <div className="grid grid-cols-1 divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {ERAS.map((e) => (
             <div key={e.label} className={`p-6 sm:p-8 ${e.accent ? "bg-accent-wash" : ""}`}>
@@ -152,13 +154,13 @@ export function CostErasBeat() {
             ))}
           </div>
         </div>
-      </div>
+      </Surface>
 
-      <p className="reveal mx-auto mt-6 max-w-5xl text-center text-[15px] text-ink-dim">
+      <p data-fx="rise" className="mt-6 text-[15px] text-ink-dim">
         <span className="font-semibold text-ink">~90% lower cost</span> per unit of shipped, reviewed work ·{" "}
         <span className="font-semibold text-ink">10–20×</span> cycle-time compression — weeks become hours.
       </p>
-    </Beat>
+    </SectionFrame>
   );
 }
 
@@ -183,13 +185,13 @@ const COMPARE = {
 };
 export function WhyUsBeat() {
   return (
-    <Beat side="left">
-      <div className="reveal max-w-3xl">
-        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.04]">
+    <SectionFrame index="08" label="Why us">
+      <div data-fx="rise" className="max-w-3xl">
+        <Heading className="text-[length:var(--text-h2)] leading-[1.04]">
           Everyone sells an agent. <Accent>Nobody sells an accountable team.</Accent>
         </Heading>
       </div>
-      <Glass className="reveal mt-8 max-w-5xl overflow-x-auto">
+      <Glass data-fx="rise" className="mt-8 overflow-x-auto">
         {/* min-w matters: a w-full table shrinks to fit, so overflow-x-auto
             never engaged and five columns compressed into slivers on phones */}
         <table className="w-full min-w-[760px] border-collapse text-left">
@@ -236,10 +238,10 @@ export function WhyUsBeat() {
           </tbody>
         </table>
       </Glass>
-      <p className="reveal mt-6 max-w-3xl text-[14px] italic text-ink-dim">
+      <p data-fx="rise" className="mt-6 max-w-[62ch] text-[14px] italic text-ink-dim">
         Neither can tell your auditor who approved the merge. We&rsquo;re the only one whose product is the answer to that question.
       </p>
-    </Beat>
+    </SectionFrame>
   );
 }
 
@@ -252,13 +254,13 @@ const STAGES = [
 ];
 export function ProvenFixesBeat() {
   return (
-    <Beat side="right">
-      <div className="reveal ml-auto max-w-3xl text-right">
-        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.03]">
+    <SectionFrame index="06" label="Proven fixes">
+      <div data-fx="rise" className="max-w-3xl">
+        <Heading className="text-[length:var(--text-h2)] leading-[1.03]">
           Anyone can generate code. <Accent>We land proven fixes.</Accent>
         </Heading>
       </div>
-      <Glass className="reveal mt-8 ml-auto max-w-4xl">
+      <Glass data-fx="rise" className="mt-8">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {STAGES.map((s, i) => (
             <div key={s.name} className={`rounded-lg border p-4 ${i === 3 ? "border-accent-text/40 bg-accent-wash" : "border-line bg-ground-2"}`}>
@@ -273,13 +275,13 @@ export function ProvenFixesBeat() {
           <span className="text-[12px] text-ink-dim">Ungrounded, unproven, or unvalidated → reject &amp; retry. Never silently promoted.</span>
         </div>
       </Glass>
-      <p className="reveal mt-6 ml-auto flex max-w-4xl items-baseline justify-end gap-3 text-[15px] text-ink-dim">
+      <p data-fx="rise" className="mt-6 flex items-baseline gap-3 text-[15px] text-ink-dim">
         <span className="font-display text-[length:var(--text-h2)] font-semibold text-accent-text">
           <CountUp value={76} prefix="~" suffix="%" />
         </span>
         true resolution on SWE-bench Lite — the defensible half nobody else gates on.
       </p>
-    </Beat>
+    </SectionFrame>
   );
 }
 
@@ -292,13 +294,13 @@ const GUARANTEES = [
 ];
 export function TrustScreenBeat() {
   return (
-    <Beat side="left">
-      <div className="reveal max-w-3xl">
-        <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.03]">
+    <SectionFrame index="07" label="Trust">
+      <div data-fx="rise" className="max-w-3xl">
+        <Heading className="text-[length:var(--text-h2)] leading-[1.03]">
           Trust is a screen, <Accent>not a promise.</Accent>
         </Heading>
       </div>
-      <div className="reveal mt-8 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2">
+      <div data-fx="rise" className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {GUARANTEES.map((g) => (
           <Glass key={g.title} className="!p-5">
             <span className="inline-block rounded bg-accent-wash px-2 py-0.5 font-mono text-[11px] text-accent-text">{g.tag}</span>
@@ -307,9 +309,9 @@ export function TrustScreenBeat() {
           </Glass>
         ))}
       </div>
-      <p className="reveal mt-6 max-w-3xl text-[14px] italic text-ink-dim">
+      <p data-fx="rise" className="mt-6 max-w-[62ch] text-[14px] italic text-ink-dim">
         A jailbreak can&rsquo;t talk its way past a gate that&rsquo;s code, not conversation.
       </p>
-    </Beat>
+    </SectionFrame>
   );
 }

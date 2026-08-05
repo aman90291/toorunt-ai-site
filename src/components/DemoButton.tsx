@@ -28,7 +28,7 @@ export function DemoButton({
   /* Kept in lockstep with ui.Button — see the note there on why the hover is
      a single colour change. */
   const base =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[14px] font-medium transition-colors duration-150";
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors duration-150";
   const styles =
     variant === "primary"
       ? "btn-ai"

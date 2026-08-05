@@ -30,12 +30,20 @@ export const metadata: Metadata = {
  * components/manifesto/figures.tsx for the shared grammar), numbers render in
  * monospace, and the page closes on an image rather than a sales CTA.
  *
- * Band rhythm: light (01–03, the problem) → one continuous charcoal act
- * (04–06 — the reader steps inside the machine) → light again (07–09, the
- * proof happens in daylight) → dark closing bookend under the particle
- * globe. The crimson human-square mark recurs through FIG 4 → the gate rail
- * → the Timeline's human nodes → FIG 9: four drawings of the same three
- * decisions.
+ * DELIBERATELY NOT REBUILT in the instrument language every other page now
+ * uses (components/system/*). Those pages are panels because the product is a
+ * console and the reader is evaluating it. A manifesto is an argument, and an
+ * argument is read in prose — measured column, long lines, a drop cap, one
+ * drawing per idea. Wrapping this essay in mono channel labels and status
+ * dots would make it look like telemetry and read like none.
+ *
+ * The one thing that changed with the dark-first palette: the old band rhythm
+ * (light problem → charcoal machine → light proof) is gone, because there is
+ * no light scope left to alternate against. The acts now separate by depth —
+ * `--ground` vs `.on-dark` — and by the figures themselves.
+ *
+ * The human-decision mark still recurs through FIG 4 → the gate rail → the
+ * Timeline's human nodes → FIG 9: four drawings of the same three decisions.
  */
 
 const PROSE =
@@ -43,7 +51,7 @@ const PROSE =
 
 function SectionHead({ index, children }: { index: string; children: React.ReactNode }) {
   return (
-    <h2 className="reveal-words mb-8 font-display text-[length:var(--text-figure)] font-semibold leading-[1.15] tracking-[-0.02em] text-ink">
+    <h2 data-fx="words" className="mb-8 font-display text-[length:var(--text-figure)] font-semibold leading-[1.15] tracking-[-0.02em] text-ink">
       <span className="mr-4 font-mono text-[13px] font-normal tracking-[0.2em] text-ink-faint align-middle">
         {index}
       </span>
@@ -67,7 +75,7 @@ export default function ManifestoPage() {
       <section className="pt-32 pb-4 sm:pt-40">
         <Container className="max-w-[720px]">
           <p className="eyebrow">Manifesto</p>
-          <h1 className="reveal-words mt-6 font-display text-[clamp(36px,5.5vw,58px)] font-medium leading-[1.08] tracking-[-0.01em] text-balance">
+          <h1 data-fx="words" className="mt-6 font-display text-[clamp(36px,5.5vw,58px)] font-medium leading-[1.08] tracking-[-0.01em] text-balance">
             <SplitWords>
               The bottleneck moved. <span className="text-accent-text">Most people haven&rsquo;t noticed.</span>
             </SplitWords>

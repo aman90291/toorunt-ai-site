@@ -145,7 +145,7 @@ export function StickyFeatures() {
           </p>
           <h2
             id="features-heading"
-            className="reveal-words mx-auto mt-6 max-w-[18ch] font-display font-semibold tracking-[-0.03em] text-ink"
+            data-fx="words" className="mx-auto mt-6 max-w-[18ch] font-display font-semibold tracking-[-0.03em] text-ink"
             style={{ fontSize: "var(--text-h2)", lineHeight: 1.03 }}
           >
             {/* Titled for its content — the four surfaces — rather than

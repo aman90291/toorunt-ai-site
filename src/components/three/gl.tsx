@@ -8,14 +8,23 @@ import { Component, useEffect, useState, type ReactNode, type RefObject } from "
  * Extracted from HeroBackground when the second canvas arrived.
  */
 
-/** If WebGL throws at runtime, fall back to the flat dark ground. */
-export class GLBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+/**
+ * If WebGL throws at runtime, show `fallback` — or nothing, which is the
+ * right answer for a canvas that only adds texture to a ground that already
+ * stands on its own (the wave-grid hero), and the wrong one for a canvas the
+ * layout is built around (the globe). Hence the opt-in prop rather than a
+ * hardcoded `null`.
+ */
+export class GLBoundary extends Component<
+  { children: ReactNode; fallback?: ReactNode },
+  { failed: boolean }
+> {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
   }
   render() {
-    return this.state.failed ? null : this.props.children;
+    return this.state.failed ? (this.props.fallback ?? null) : this.props.children;
   }
 }
 

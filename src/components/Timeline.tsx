@@ -20,9 +20,15 @@ import { Container } from "@/components/ui";
  */
 export function Timeline() {
   return (
+    /* Full-bleed rather than on the numbered rail: the rail's 128px column
+       would eat the width this seven-node row needs to breathe, and the row
+       IS the section — there is no second column of copy to align to it.
+       It still takes the hairline top rule so it bounds like everything else,
+       and it names its own index in the eyebrow so the spine doesn't just
+       skip a number. */
     <section
       aria-labelledby="timeline-heading"
-      className="relative"
+      className="on-dark relative border-t border-line bg-ground"
       style={{ paddingBlock: "var(--space-section)" }}
     >
       <Container wide>
@@ -30,7 +36,12 @@ export function Timeline() {
           From idea to shipped software
         </h2>
 
-        <p className="eyebrow mb-[clamp(48px,7vw,96px)] text-ink-faint">{TIMELINE_EYEBROW}</p>
+        {/* The old bottom margin was up to 96px of nothing between a one-line
+            label and the row it labels. */}
+        <p className="eyebrow mb-[clamp(32px,4vw,56px)] flex items-baseline gap-3 text-ink-faint">
+          <span className="tabular-nums text-accent-text">04</span>
+          {TIMELINE_EYEBROW}
+        </p>
 
         {/* An ordered list, not a row of divs: the sequence is the meaning, and
             it has to survive with the animation off. */}

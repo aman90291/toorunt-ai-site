@@ -4,6 +4,8 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { FooterGate } from "@/components/FooterGate";
+import { MotionRoot } from "@/components/system/MotionRoot";
+import { PageTransition } from "@/components/system/PageTransition";
 import Script from "next/script";
 
 /* Geist is the primary face — display, body and UI. Inter is kept only as a
@@ -79,6 +81,11 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${GA_ID}');`}
         </Script>
+
+        {/* One IntersectionObserver for the whole document — see
+            components/system/MotionRoot.tsx. Renders nothing. */}
+        <MotionRoot />
+        <PageTransition />
 
         <Nav />
         <main>{children}</main>

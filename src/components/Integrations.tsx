@@ -15,8 +15,14 @@ import { Container } from "@/components/ui";
  *     hover on this ground — any hex under 3:1 against the band is lifted to
  *     ink at generation time.
  *
- * The hover colour rides a per-cell custom property (--brand) so the markup
- * stays one template; note the v4 var syntax (text-(--brand)), not v3's
+ * Logos now carry their brand colour AT REST at 55% opacity, rising to full
+ * with a glow on hover. They were previously grey until hovered, which meant
+ * the single most colourful thing on the site — sixteen brand marks — sat
+ * there rendering as grey furniture. On a page criticised for being
+ * monochrome, that was a lot of colour switched off by default.
+ *
+ * The colour rides a per-cell custom property (--brand) so the markup stays
+ * one template; note the v4 var syntax (text-(--brand)), not v3's
  * text-[color:var(--brand)].
  */
 
@@ -43,7 +49,7 @@ const ICONS: { title: string; hover: string; d: string }[] = [
 
 export function Integrations() {
   return (
-    <section aria-labelledby="integrations-heading" className="on-dark bg-ground">
+    <section data-dark aria-labelledby="integrations-heading" className="integrations-section on-dark bg-ground">
       <Container>
         <div className="pt-[var(--space-section)] pb-[var(--space-block)] text-center">
           <p className="eyebrow inline-flex items-center gap-3">
@@ -66,33 +72,39 @@ export function Integrations() {
 
       <Container>
         <div className="pb-[var(--space-section)]">
-          {/* gap-px over a line-coloured ground: the gap IS the hairline, so
-              the grid needs no per-cell border juggling at the edges */}
-          <ul className="grid grid-cols-3 gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line md:grid-cols-6">
-            {ICONS.map((icon) => (
-              <li
-                key={icon.title}
-                className="group relative flex aspect-[7/6] items-center justify-center bg-ground"
-                style={{ "--brand": icon.hover } as React.CSSProperties}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="h-8 w-8 text-ink-faint/60 transition-colors duration-200 group-hover:text-(--brand) sm:h-9 sm:w-9"
-                  fill="currentColor"
-                  role="img"
-                  aria-label={icon.title}
+          <div className="integrations-console">
+            <div className="integrations-console-bar">
+              <span>connected system graph</span>
+              <span className="flex items-center gap-2"><i aria-hidden="true" />{ICONS.length} interfaces ready</span>
+            </div>
+            {/* gap-px over a line-coloured ground: the gap IS the hairline,
+                so the grid needs no per-cell border juggling at the edges */}
+            <ul className="grid grid-cols-3 gap-px bg-line md:grid-cols-6">
+              {ICONS.map((icon) => (
+                <li
+                  key={icon.title}
+                  className="group relative flex aspect-[7/6] items-center justify-center bg-ground"
+                  style={{ "--brand": icon.hover } as React.CSSProperties}
                 >
-                  <path d={icon.d} />
-                </svg>
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute bottom-3 left-0 right-0 text-center font-mono text-[9px] uppercase tracking-[0.18em] text-ink-faint opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                >
-                  {icon.title}
-                </span>
-              </li>
-            ))}
-          </ul>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-8 w-8 text-(--brand) opacity-55 transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_0_10px_var(--brand)] sm:h-9 sm:w-9"
+                    fill="currentColor"
+                    role="img"
+                    aria-label={icon.title}
+                  >
+                    <path d={icon.d} />
+                  </svg>
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute bottom-3 left-0 right-0 text-center font-mono text-[9px] uppercase tracking-[0.18em] text-ink-faint opacity-60 transition-opacity duration-200 group-hover:opacity-100"
+                  >
+                    {icon.title}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Container>
     </section>

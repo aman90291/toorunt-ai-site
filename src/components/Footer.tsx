@@ -28,7 +28,7 @@ export function Footer() {
   return (
     /* The page's closing dark bookend. `.on-dark` re-points the tokens for the
        subtree, so every utility below resolves to its dark value unchanged. */
-    <footer className="on-dark relative bg-ground">
+    <footer data-dark className="on-dark relative bg-ground">
       <div className="mx-auto max-w-[1200px] px-6 py-16 sm:px-8">
         <div className="flex flex-col gap-12 md:flex-row md:justify-between">
           <div className="max-w-xs">

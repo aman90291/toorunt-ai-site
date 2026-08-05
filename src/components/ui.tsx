@@ -52,6 +52,102 @@ export function Section({
   );
 }
 
+/**
+ * The page's spine.
+ *
+ * Every major band sits in one of these: a hairline top rule, and a sticky
+ * mono index + label in a narrow left column that holds while the section's
+ * content scrolls past it.
+ *
+ * This is the single change that stopped the page reading as a document. The
+ * sections used to be centred text blocks separated by nothing but ~110px of
+ * air, which gives the eye no way to tell "new section" from "paragraph
+ * break" and makes every gap look like a mistake. A numbered rail does three
+ * things at once: it bounds each section, it tells you where you are, and it
+ * puts a hard left edge on the page so the content has something to align to
+ * instead of floating in the middle of a very wide screen.
+ *
+ * The rail collapses above the content below `lg` — a 152px column on a phone
+ * would eat half the line length.
+ */
+/** The five brand hues, in the order sections cycle through them. */
+const HUES = ["hue-1", "hue-2", "hue-3", "hue-4", "hue-5"] as const;
+const MOTIONS = ["rise", "split", "dock", "sequence", "orbit", "reconcile", "scan", "conversation", "dial", "spread", "meter", "stack", "hash"] as const;
+
+export function SectionFrame({
+  index,
+  label,
+  children,
+  className = "",
+  id,
+  wide = false,
+  hue,
+  motion = "rise",
+  backdrop,
+}: {
+  index: string;
+  label: string;
+  children: ReactNode;
+  className?: string;
+  id?: string;
+  wide?: boolean;
+  /** Overrides the automatic cycle. Use when a section's meaning has a hue —
+   *  the gate chain is teal because teal means "the machine cleared it". */
+  hue?: (typeof HUES)[number];
+  /** The section's entrance grammar. It describes how the content works:
+   *  screens dock, gates sequence, ledgers reconcile, records scan. */
+  motion?: (typeof MOTIONS)[number];
+  /** Optional oversized environmental copy. Homepage scenes use this behind
+   *  their instrument instead of treating every chapter as a document band. */
+  backdrop?: readonly [string, string?];
+}) {
+  // Derived from the index so the page cycles through all five without every
+  // call site having to pick one, and without two adjacent sections colliding.
+  const n = parseInt(index, 10);
+  const hueClass = hue ?? HUES[(n - 1 + HUES.length) % HUES.length];
+
+  return (
+    <section
+      id={id}
+      data-stage={index}
+      data-motion={motion}
+      className={`${hueClass} section-frame relative overflow-hidden border-t border-line bg-ground ${className}`}
+      style={{ paddingBlock: "var(--space-section)" }}
+    >
+      {backdrop && (
+        <div className="section-frame-backdrop" aria-hidden="true">
+          <span>{backdrop[0]}</span>
+          {backdrop[1] && <span>{backdrop[1]}</span>}
+        </div>
+      )}
+      <Container wide={wide}>
+        <div className="section-frame-grid grid gap-x-10 gap-y-6 lg:grid-cols-[128px_minmax(0,1fr)]">
+          {/* Index STACKED above the label, not beside it. Side by side,
+              "03  THE ECONOMICS" needs ~150px of mono at this tracking and
+              wraps inside a 128px column — and a wrapped label in a rail
+              looks like a bug. Stacked it never wraps at any label length,
+              and it reads more like a plate than a breadcrumb. */}
+          <div className="section-frame-rail lg:sticky lg:top-24 lg:self-start">
+            <p className="flex items-baseline gap-3 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint lg:block">
+              <span className="tabular-nums text-(--hue)">{index}</span>
+              <span className="lg:mt-2 lg:block">{label}</span>
+              {/* A short rule in the section's hue, drawn on entry. It is the
+                  cheapest possible way to give the rail chromatic rhythm down
+                  the page without colouring any actual content. */}
+              <span
+                data-fx="draw"
+                aria-hidden="true"
+                className="mt-4 hidden h-px w-10 bg-(--hue) lg:block"
+              />
+            </p>
+          </div>
+          <div className="section-frame-content">{children}</div>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
     <p className="eyebrow flex items-center gap-3">
@@ -76,7 +172,7 @@ export function Heading({
   className?: string;
 }) {
   return (
-    <As className={`reveal-words font-display font-semibold tracking-[-0.025em] text-balance text-ink ${className}`}>
+    <As data-fx="words" className={`text-display font-display font-semibold tracking-[-0.025em] text-balance ${className}`}>
       <SplitWords>{children}</SplitWords>
     </As>
   );
@@ -93,7 +189,7 @@ export function Heading({
  * Use `<Hot>` where crimson genuinely belongs — see below.
  */
 export function Accent({ children }: { children: ReactNode }) {
-  return <span className="font-bold text-ink">{children}</span>;
+  return <span className="text-display font-bold">{children}</span>;
 }
 
 /**
@@ -126,7 +222,7 @@ export function Button({
      pull that dragged the element toward the cursor — which is why it read as
      a marketing flourish instead of a button. */
   const base =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[14px] font-medium transition-colors duration-150";
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors duration-150";
   /* Primary wears the logo-spectrum `.btn-ai` treatment (gradient fill +
      animated rainbow edge), defined in globals.css. It carries its own fixed
      dark ink, so it looks identical in the hero, footer and white sections. */

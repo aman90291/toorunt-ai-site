@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Container, Heading, Accent, Eyebrow, SectionRule } from "@/components/ui";
+import { SectionFrame, Heading, Accent } from "@/components/ui";
 import { GATES } from "@/lib/gates";
 import { AuditTrailTicker } from "@/components/AuditTrailTicker";
-import { BrowserFrame } from "@/components/BrowserFrame";
-import { MediaReveal } from "@/components/MediaReveal";
 import { CTASection } from "@/components/CTASection";
+import { PageHead } from "@/components/system/PageHead";
+import { Panel, StatusDot } from "@/components/system/Panel";
+import { GateChain } from "@/components/system/GateChain";
 
 export const metadata: Metadata = {
   title: "Security & governance",
@@ -13,109 +14,136 @@ export const metadata: Metadata = {
   openGraph: { images: ["/og/security.png"] },
 };
 
+/**
+ * /security — rebuilt in the instrument language (components/system/*).
+ *
+ * This page has the best claim to that language of any on the site: a CISO
+ * reading it is not looking for prose, they are looking for controls, and a
+ * control either exists or it does not. So each one is a row with a state
+ * dot, and the fourteen gates are the same `<GateChain>` the home page uses —
+ * one component, one source of truth, and a reader who saw it on the home
+ * page recognises it here rather than having to re-learn a second rendering
+ * of the same fourteen facts.
+ *
+ * Copy is unchanged from the previous version of this page.
+ */
+
 const CONTROLS = [
-  { t: "Secrets can't leak", d: "The vault is the only writer of secret values — 0600 files outside the checkout, shredded on rotation. Tokens never touch Jira, logs, or commits. The secret-scan gate blocks committed credentials; it has refused a reviewer's request to hardcode an API key, live." },
-  { t: "Prompt injection, neutralized", d: "An ingress firewall screens every inbound human or web reply — pasted secrets are quarantined and injection patterns neutralized before any model sees them. Gate verdicts are deterministic code an injected prompt cannot vote on." },
-  { t: "Blast radius = a rejected PR", d: "No direct-to-main, ever. Everything ships through PRs behind branch protection, peer review, and the gate chain. Per-bot least-privilege tokens scope each bot to its repos. One click on the kill switch stops the fleet." },
-  { t: "Database safe-fail", d: "Deep-verify blocks irreversible migrations before they ship; risky changes must carry a reversibility plan or they don't merge. In a live run, a seed script containing DROP TABLE was held for human sign-off." },
-  { t: "Attributable & replayable", d: "Every action is hash-chained with the actor's identity — which bot, which gate, which approval. Alter one record and every hash after it breaks. Incident forensics and SOC 2 evidence are the same artifact." },
-  { t: "Isolation & escalation", d: "Per-tenant state, policy, keys, and kill switch. Control-plane API keys are stored hash-only. Money-moving, irreversible, or cross-team actions hit a hard escalation contract — a human signs, or it doesn't happen." },
+  {
+    t: "Secrets can't leak",
+    d: "The vault is the only writer of secret values — 0600 files outside the checkout, shredded on rotation. Tokens never touch Jira, logs, or commits. The secret-scan gate blocks committed credentials; it has refused a reviewer's request to hardcode an API key, live.",
+    tag: "vault",
+  },
+  {
+    t: "Prompt injection, neutralized",
+    d: "An ingress firewall screens every inbound human or web reply — pasted secrets are quarantined and injection patterns neutralized before any model sees them. Gate verdicts are deterministic code an injected prompt cannot vote on.",
+    tag: "ingress",
+  },
+  {
+    t: "Blast radius = a rejected PR",
+    d: "No direct-to-main, ever. Everything ships through PRs behind branch protection, peer review, and the gate chain. Per-bot least-privilege tokens scope each bot to its repos. One click on the kill switch stops the fleet.",
+    tag: "blast radius",
+  },
+  {
+    t: "Database safe-fail",
+    d: "Deep-verify blocks irreversible migrations before they ship; risky changes must carry a reversibility plan or they don't merge. In a live run, a seed script containing DROP TABLE was held for human sign-off.",
+    tag: "migrations",
+  },
+  {
+    t: "Attributable & replayable",
+    d: "Every action is hash-chained with the actor's identity — which bot, which gate, which approval. Alter one record and every hash after it breaks. Incident forensics and SOC 2 evidence are the same artifact.",
+    tag: "audit",
+  },
+  {
+    t: "Isolation & escalation",
+    d: "Per-tenant state, policy, keys, and kill switch. Control-plane API keys are stored hash-only. Money-moving, irreversible, or cross-team actions hit a hard escalation contract — a human signs, or it doesn't happen.",
+    tag: "tenancy",
+  },
 ];
 
 export default function SecurityPage() {
+  const humans = GATES.filter((g) => g.actor === "human").length;
+
   return (
     <>
-      <section className="pt-32 pb-16 sm:pt-40">
-        <Container>
-          <Eyebrow>Security & governance</Eyebrow>
-          <Heading as="h1" className="mt-6 max-w-3xl text-[clamp(36px,5.5vw,60px)] leading-[1.06]">
-            Worst case is <Accent>a rejected pull request.</Accent>
+      <PageHead
+        flavor="security"
+        label="Security & governance"
+        title="Worst case is"
+        accent="a rejected pull request."
+        lead="Governance isn't a slide here — it's the first thing that was built, and every other subsystem runs inside it. Built for the question a CISO actually asks: what's the worst that can happen?"
+        readouts={[
+          ["gates per change", String(GATES.length)],
+          ["human signatures", String(humans)],
+          ["direct to main", "0"],
+          ["kill switch", "1 click"],
+        ]}
+      />
+
+      <SectionFrame index="01" label="The controls" motion="scan" className="mt-[var(--space-section)]">
+        <div data-fx="rise">
+          <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
+            Six controls. <Accent>Each one either exists or it doesn&rsquo;t.</Accent>
           </Heading>
-          <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">
-            Governance isn&rsquo;t a slide here — it&rsquo;s the first thing that was built, and every other subsystem runs
-            inside it. Built for the question a CISO actually asks: what&rsquo;s the worst that can happen?
-          </p>
-        </Container>
-      </section>
-
-      {/* Controls grid */}
-      <section className="pb-24 sm:pb-28">
-        <Container>
-          <SectionRule label="The controls" />
-          <div className="reveal mt-10 grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line sm:grid-cols-2">
-            {CONTROLS.map((c) => (
-              <div key={c.t} className="bg-ground-2 p-6 sm:p-7">
-                <h2 className="text-[17px] font-semibold text-ink">{c.t}</h2>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-ink-dim">{c.d}</p>
-              </div>
-            ))}
+          <div className="mt-[var(--space-block)]">
+            <Panel label="enforced controls" status="6 active" tone="auto" flush>
+              <ul data-fx="seq" className="grid grid-cols-1 md:grid-cols-2">
+                {CONTROLS.map((c, i) => (
+                  <li
+                    key={c.t}
+                    style={{ ["--i" as string]: i }}
+                    className="border-b border-line p-5 sm:p-6 md:[&:nth-child(odd)]:border-r"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <StatusDot tone="auto" />
+                      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+                        {c.tag}
+                      </span>
+                    </div>
+                    <h2 className="mt-3 text-[17px] font-semibold text-ink">{c.t}</h2>
+                    <p className="mt-2 text-[14px] leading-relaxed text-ink-dim">{c.d}</p>
+                  </li>
+                ))}
+              </ul>
+            </Panel>
           </div>
-        </Container>
-      </section>
+        </div>
+      </SectionFrame>
 
-      {/* Audit trail */}
-      <section className="border-y border-line bg-ground-2 py-24 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <SectionRule label="Tamper-evident audit" />
-              <Heading className="mt-6 text-[clamp(26px,4vw,40px)] leading-[1.1]">
-                Every action, <Accent>hash-chained.</Accent>
-              </Heading>
-              <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
-                Each record commits to the one before it. Change any past decision and every subsequent hash breaks —
-                so the log is either intact or provably altered. Optionally HMAC-signed, and exportable for SOC 2.
-              </p>
-            </div>
-            <AuditTrailTicker />
-          </div>
-        </Container>
-      </section>
-
-      {/* The 14 gates */}
-      <section className="py-24 sm:py-28">
-        <Container>
-          <SectionRule label="The 14 gates" />
-          <Heading className="mt-6 max-w-2xl text-[clamp(26px,4vw,40px)] leading-[1.1]">
+      <SectionFrame index="02" label="The chain" motion="sequence">
+        <div data-fx="rise">
+          <Heading className="max-w-[22ch] text-[length:var(--text-h2)] leading-[1.05]">
             What every change passes <Accent>before it can merge.</Accent>
           </Heading>
-          <div className="reveal mt-10 grid gap-x-10 gap-y-0 sm:grid-cols-2">
-            {GATES.map((g, i) => (
-              <div key={g.name} className="flex items-start gap-4 border-t border-line py-4">
-                <span className="mt-0.5 font-mono text-[11px] tabular-nums text-ink-faint">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: g.actor === "human" ? "var(--color-accent-text)" : "var(--color-pass)" }} />
-                <div>
-                  <p className="flex items-center gap-2 text-[15px] font-medium text-ink">
-                    {g.name}
-                    {g.actor === "human" && (
-                      <span className="rounded-sm bg-accent-wash px-1.5 py-px font-mono text-[9px] uppercase tracking-wider text-accent-text">
-                        human
-                      </span>
-                    )}
-                  </p>
-                  <p className="mt-0.5 text-[13px] leading-snug text-ink-faint">{g.evidence}</p>
-                </div>
+          <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
+            Every ticket carries its own chain — pass, waiting, or skip, each with evidence a
+            non-expert can read. Nothing merges around it.
+          </p>
+          <div className="mt-[var(--space-block)]">
+            <GateChain />
+          </div>
+        </div>
+      </SectionFrame>
+
+      <SectionFrame index="03" label="The record" motion="hash">
+        <div data-fx="rise">
+          <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
+            Every action, <Accent>hash-chained.</Accent>
+          </Heading>
+          <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
+            Each record commits to the one before it. Change any past decision and every subsequent
+            hash breaks — so the log is either intact or provably altered. Optionally HMAC-signed,
+            and exportable for SOC 2.
+          </p>
+          <div className="mt-[var(--space-block)]">
+            <Panel label="audit trail" status="append-only" tone="live" flush>
+              <div className="p-5 sm:p-6">
+                <AuditTrailTicker />
               </div>
-            ))}
+            </Panel>
           </div>
-          <div className="mt-16 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14">
-            <div>
-              <Heading className="text-[clamp(24px,3.5vw,34px)] leading-[1.12]">
-                See it on a real ticket.
-              </Heading>
-              <p className="mt-4 max-w-md text-[16px] leading-relaxed text-ink-dim">
-                Every ticket carries its own chain — pass, waiting, or skip, each with the evidence a non-expert can
-                read. Nothing merges around it.
-              </p>
-            </div>
-            <MediaReveal>
-              <BrowserFrame shot="gatechain" url="app.toorunt.ai/tickets/SCRUM-307" />
-            </MediaReveal>
-          </div>
-        </Container>
-      </section>
+        </div>
+      </SectionFrame>
 
       <CTASection
         eyebrow="For security teams"

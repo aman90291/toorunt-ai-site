@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { Container, Heading, Accent, Eyebrow, SectionRule, Button } from "@/components/ui";
-import { BrowserFrame } from "@/components/BrowserFrame";
-import { MediaReveal } from "@/components/MediaReveal";
+import { SectionFrame, Heading, Accent, Button } from "@/components/ui";
 import { ReviewLoop } from "@/components/ReviewLoop";
 import { AutonomyDial } from "@/components/AutonomyDial";
 import { CTASection } from "@/components/CTASection";
 import { DemoButton } from "@/components/DemoButton";
+import { Timeline } from "@/components/Timeline";
 import { GATES } from "@/lib/gates";
+import { PageHead } from "@/components/system/PageHead";
+import { Panel, StatusDot } from "@/components/system/Panel";
+import { ControlPlane } from "@/components/system/ControlPlane";
+import { Signatures } from "@/components/system/blocks";
 
 export const metadata: Metadata = {
   title: "Product — how it works",
@@ -15,9 +18,22 @@ export const metadata: Metadata = {
   openGraph: { images: ["/og/product.png"] },
 };
 
-/* Each phase carries the 1-indexed gates it clears (from lib/gates.ts), so
-   the walkthrough can show the chain instead of just claiming it. Three
-   phases are human-gated — matching gates 04 / 12 / 13 exactly. */
+/**
+ * /product — rebuilt in the instrument language (components/system/*).
+ *
+ * The page's job is to answer "what actually happens to my ticket", so it is
+ * ordered as the ticket experiences it: the rail (where am I), the phases
+ * (what runs), the surfaces (where I watch it), my three signatures, then the
+ * two things people ask about most once they believe the rest — how it
+ * handles review pushback, and how much rope they can give it.
+ *
+ * `<ControlPlane>` and `<Signatures>` are the same components the home page
+ * uses. That is deliberate: a reader arriving here from home should recognise
+ * the instrument, not meet a second rendering of the same four surfaces.
+ */
+
+/* Each phase carries the 1-indexed gates it clears (from lib/gates.ts), so the
+   walkthrough shows the chain rather than claiming it. Copy unchanged. */
 const PHASES: { n: string; t: string; d: string; human?: boolean; gates: number[] }[] = [
   { n: "01", t: "Ingest & scope", d: "It watches your board, picks up the ticket, and resolves the right GitHub repo — from a curated registry or a semantic match. Ambiguous requirements get a clarifying question, never a guess.", gates: [1, 2, 3] },
   { n: "02", t: "Plan & approval gate", d: "It posts an implementation plan to Jira — files, approach, risks, acceptance criteria — and stops. It never writes code before a human sees the plan.", human: true, gates: [4, 5] },
@@ -30,198 +46,175 @@ const PHASES: { n: string; t: string; d: string; human?: boolean; gates: number[
 /* Short gate names for the chips, keyed by 1-indexed gate number. */
 const GATE_SHORT = ["right repo", "requirements", "dependencies", "plan approved", "novelty", "rework", "tests green", "quality", "coverage", "no secrets", "risk cap", "review signed", "merged", "watched"];
 
-/* The three human decisions — one card each, named the way the home timeline
-   names them. Copy adds information beyond the phase rows above. */
-const DECISIONS = [
-  {
-    n: "01",
-    t: "Sign the PRD",
-    d: "The plan waits in Jira until you reply /approve — or /reject with a reason it has to answer. In auto-with-veto mode this becomes a timed window: it proceeds unless you object.",
-    gate: "gate 04",
-  },
-  {
-    n: "02",
-    t: "Approve the PR",
-    d: "By the time it reaches you, a peer bot with its own GitHub identity has already torn the change apart once. Your review is the second signature, not the first line of defense.",
-    gate: "gate 12",
-  },
-  {
-    n: "03",
-    t: "Unlock the merge",
-    d: "The merge button only arms on verified-green: tests, CI, zero conflicts, review approval. Your click is the last gate — and the watch that follows it is automatic.",
-    gate: "gate 13",
-  },
+const FLEET = [
+  ["Atomic claims", "A ticket is claimed exactly once — two bots can race for it, one wins, the other moves on."],
+  ["File-claim locks", "Every bot declares the files it will touch before it starts; overlapping claims queue instead of colliding."],
+  ["Park & failover", "Blocked on a dependency, a bot parks the ticket with its state intact — any peer can resume it from the record."],
+  ["Escalation ladder", "Who to contact is deterministic — CODEOWNERS, git blame, Jira roles, on-call — and the ladder is bounded, so it always terminates."],
 ];
 
 export default function ProductPage() {
   return (
     <>
-      <section className="pt-32 pb-16 sm:pt-40">
-        <Container>
-          <Eyebrow>How it works</Eyebrow>
-          <Heading as="h1" className="mt-6 max-w-3xl text-[length:var(--text-hero)] leading-[1.06]">
-            From ticket to merged PR — <Accent>every step gated.</Accent>
-          </Heading>
-          <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-ink-dim">
-            The same five-phase pipeline runs whether you hand tOOrunt AI a one-line product idea or a ticket off your
-            existing backlog. A human decides three things; everything else runs inside the gates.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+      <PageHead
+        flavor="product"
+        label="How it works"
+        title="From ticket to merged PR —"
+        accent="every step gated."
+        lead="The same five-phase pipeline runs whether you hand tOOrunt AI a one-line product idea or a ticket off your existing backlog. A human decides three things; everything else runs inside the gates."
+        readouts={[
+          ["phases", "5"],
+          ["gates cleared", String(GATES.length)],
+          ["your signatures", "3"],
+          ["cycle", "hours"],
+        ]}
+        actions={
+          <>
             <DemoButton>Book a demo</DemoButton>
-            <Button href="/security/" variant="ghost">
-              See the 14 gates →
-            </Button>
-          </div>
-          {/* Proof before prose: the product's own Mission Control, first. */}
-          <div className="mt-14">
-            <MediaReveal>
-              <BrowserFrame shot="overview" priority url="app.toorunt.ai" />
-            </MediaReveal>
-          </div>
-        </Container>
-      </section>
+            <Button href="/security/" variant="ghost">See the 14 gates →</Button>
+          </>
+        }
+      />
 
-      {/* Lifecycle walkthrough — each phase shows the gates it clears */}
-      <section className="pb-24 sm:pb-28">
-        <Container>
-          <div className="border-t border-line">
-            {PHASES.map((p) => (
-              <div key={p.n} className="reveal grid gap-4 border-b border-line py-8 sm:grid-cols-[120px_1fr] sm:gap-10">
-                <div className="flex items-baseline gap-3">
-                  <span className="font-display text-[40px] leading-none text-accent-text/80 tabular-nums">{p.n}</span>
-                </div>
-                <div>
-                  <h2 className="flex items-center gap-3 font-display text-[length:var(--text-h3)] text-ink">
-                    {p.t}
-                    {p.human && (
-                      <span className="rounded-sm bg-accent-wash px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent-text">
-                        human decision
-                      </span>
-                    )}
-                  </h2>
-                  <p className="mt-2 max-w-2xl text-[16px] leading-relaxed text-ink-dim">{p.d}</p>
-                  {p.gates.length > 0 && (
-                    <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10.5px] uppercase tracking-[0.1em]">
-                      {p.gates.map((g) => {
-                        const human = GATES[g - 1].actor === "human";
-                        return (
-                          <span key={g} className={human ? "font-semibold text-accent-text" : "text-ink-faint"}>
-                            <span className="tabular-nums">{String(g).padStart(2, "0")}</span> {GATE_SHORT[g - 1]}
-                            {/* colour+weight alone isn't a cue AT can hear */}
-                            {human && <span className="sr-only"> (human gate)</span>}
+      {/* The rail — overview before detail. */}
+      <Timeline />
+
+      <SectionFrame index="01" label="The pipeline" motion="sequence">
+        <div data-fx="rise">
+          <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
+            Five phases. <Accent>Each one clears its gates or stops.</Accent>
+          </Heading>
+          <div className="mt-[var(--space-block)]">
+            <Panel label="lifecycle" status="5 phases" tone="live" flush>
+              <ol data-fx="seq">
+                {PHASES.map((p, i) => (
+                  <li
+                    key={p.n}
+                    style={{ ["--i" as string]: i }}
+                    className="grid gap-3 border-b border-line p-5 last:border-b-0 sm:grid-cols-[64px_1fr] sm:gap-6 sm:px-6"
+                  >
+                    <span className="font-display text-[30px] leading-none tabular-nums text-accent-text/70">
+                      {p.n}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="flex flex-wrap items-center gap-2.5 font-display text-[19px] font-semibold text-ink">
+                        {p.t}
+                        {p.human && (
+                          <span className="flex items-center gap-1.5 rounded-sm border border-accent-text/40 px-1.5 py-px font-mono text-[9px] uppercase tracking-[0.12em] text-accent-text">
+                            <StatusDot tone="human" />
+                            human
                           </span>
-                        );
-                      })}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* The three human decisions — the pipeline's punctuation, beside the
-          inbox where they actually happen. */}
-      <section className="border-t border-line py-24 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
-            <div>
-              <SectionRule label="Human decisions" />
-              <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.08]">
-                Three decisions. <Accent>All yours, only yours.</Accent>
-              </Heading>
-              <ol role="list" className="mt-9 list-none space-y-7">
-                {DECISIONS.map((d) => (
-                  <li key={d.n} className="border-l-2 border-accent-text pl-5">
-                    <h3 className="flex items-baseline gap-3 font-display text-[18px] font-semibold text-ink">
-                      {d.t}
-                      <span className="font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-ink-faint">
-                        {d.gate}
-                      </span>
-                    </h3>
-                    <p className="mt-1.5 max-w-[52ch] text-[14.5px] leading-relaxed text-ink-dim">{d.d}</p>
+                        )}
+                      </h3>
+                      <p className="mt-2 max-w-[62ch] text-[14.5px] leading-relaxed text-ink-dim">{p.d}</p>
+                      {p.gates.length > 0 && (
+                        <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 font-mono text-[10px] uppercase tracking-[0.1em]">
+                          {p.gates.map((g) => {
+                            const human = GATES[g - 1].actor === "human";
+                            return (
+                              <span key={g} className={human ? "font-semibold text-accent-text" : "text-ink-faint"}>
+                                <span className="tabular-nums">{String(g).padStart(2, "0")}</span>{" "}
+                                {GATE_SHORT[g - 1]}
+                                {/* colour + weight alone is not a cue AT can hear */}
+                                {human && <span className="sr-only"> (human gate)</span>}
+                              </span>
+                            );
+                          })}
+                        </p>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ol>
-            </div>
-            <MediaReveal>
-              <BrowserFrame shot="approvals" url="app.toorunt.ai/approvals" />
-            </MediaReveal>
+            </Panel>
           </div>
-        </Container>
-      </section>
+        </div>
+      </SectionFrame>
 
-      {/* Review loop showpiece */}
-      <section className="border-t border-line bg-ground-2 py-24 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
-            <div>
-              <SectionRule label="Review" />
-              <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.08]">
-                It answers review like <Accent>an engineer, not a bot.</Accent>
-              </Heading>
-              <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-dim">
-                Every comment gets one of four honest responses — fix it, disagree with a reason, ask when the intent
-                is unclear, or refuse when it&rsquo;s unsafe. The last one is the point.
-              </p>
-            </div>
-            <ReviewLoop />
+      <SectionFrame index="02" label="The surfaces" motion="dock">
+        <div data-fx="rise">
+          <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
+            Where you watch it <Accent>actually happen.</Accent>
+          </Heading>
+          <div className="mt-[var(--space-block)]">
+            <ControlPlane />
           </div>
-          {/* The page's proof peak earns its own quiet ask. */}
-          <div className="mt-14 flex flex-wrap items-center gap-5 border-t border-line pt-8">
+        </div>
+      </SectionFrame>
+
+      <SectionFrame index="03" label="Your seat" motion="orbit">
+        <div data-fx="rise">
+          <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
+            Three decisions. <Accent>All yours, only yours.</Accent>
+          </Heading>
+          <div className="mt-[var(--space-block)]">
+            <Signatures />
+          </div>
+        </div>
+      </SectionFrame>
+
+      <SectionFrame index="04" label="Review" motion="conversation">
+        <div data-fx="rise">
+          <Heading className="max-w-[22ch] text-[length:var(--text-h2)] leading-[1.05]">
+            It answers review like <Accent>an engineer, not a bot.</Accent>
+          </Heading>
+          <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
+            Every comment gets one of four honest responses — fix it, disagree with a reason, ask
+            when the intent is unclear, or refuse when it&rsquo;s unsafe. The last one is the point.
+          </p>
+          <div className="mt-[var(--space-block)]">
+            <Panel label="review loop" status="4 responses" tone="auto">
+              <ReviewLoop />
+            </Panel>
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-5">
             <p className="text-[15px] text-ink-dim">Watch it answer review on your own repo.</p>
             <DemoButton>Book a demo</DemoButton>
           </div>
-        </Container>
-      </section>
+        </div>
+      </SectionFrame>
 
-      {/* Autonomy dial */}
-      <section className="py-24 sm:py-28">
-        <Container>
-          <SectionRule label="Autonomy" />
-          <Heading className="mt-6 max-w-2xl text-[length:var(--text-h2)] leading-[1.08]">
+      <SectionFrame index="05" label="Autonomy" motion="dial">
+        <div data-fx="rise">
+          <Heading className="max-w-[22ch] text-[length:var(--text-h2)] leading-[1.05]">
             You choose how much rope. <Accent>It&rsquo;s a config, not a rebuild.</Accent>
           </Heading>
-          <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-dim">
-            Start with a human on every plan and PR. Earn your way to full autonomy as the track record builds — the
-            envelope widens on post-merge evidence and snaps back on a single regression.
+          <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
+            Start with a human on every plan and PR. Earn your way to full autonomy as the track
+            record builds — the envelope widens on post-merge evidence and snaps back on a single
+            regression.
           </p>
-          <div className="mt-10">
-            <AutonomyDial />
+          <div className="mt-[var(--space-block)]">
+            <Panel label="autonomy envelope" status="config" tone="human">
+              <AutonomyDial />
+            </Panel>
           </div>
-        </Container>
-      </section>
+        </div>
+      </SectionFrame>
 
-      {/* Fleet — the deep cut, not the home-page card again */}
-      <section className="border-t border-line py-24 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14">
-            <div>
-              <SectionRule label="The fleet" />
-              <Heading className="mt-6 text-[length:var(--text-h2)] leading-[1.08]">
-                Ten bots, <Accent>zero collisions.</Accent>
-              </Heading>
-              <dl className="mt-8 space-y-5">
-                {[
-                  ["Atomic claims", "A ticket is claimed exactly once — two bots can race for it, one wins, the other moves on."],
-                  ["File-claim locks", "Every bot declares the files it will touch before it starts; overlapping claims queue instead of colliding."],
-                  ["Park & failover", "Blocked on a dependency, a bot parks the ticket with its state intact — any peer can resume it from the record."],
-                  ["Escalation ladder", "Who to contact is deterministic — CODEOWNERS, git blame, Jira roles, on-call — and the ladder is bounded, so it always terminates."],
-                ].map(([t, d]) => (
-                  <div key={t}>
-                    <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-accent-text">{t}</dt>
-                    <dd className="mt-1 max-w-md text-[14.5px] leading-relaxed text-ink-dim">{d}</dd>
+      <SectionFrame index="06" label="The fleet" motion="spread">
+        <div data-fx="rise">
+          <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
+            Ten bots, <Accent>zero collisions.</Accent>
+          </Heading>
+          <div className="mt-[var(--space-block)]">
+            <Panel label="fleet coordination" status="deterministic" tone="auto" flush>
+              <dl data-fx="seq" className="grid grid-cols-1 md:grid-cols-2">
+                {FLEET.map(([t, d], i) => (
+                  <div
+                    key={t}
+                    style={{ ["--i" as string]: i }}
+                    className="border-b border-line p-5 sm:p-6 md:[&:nth-child(odd)]:border-r"
+                  >
+                    <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent-text">{t}</dt>
+                    <dd className="mt-2.5 text-[14px] leading-relaxed text-ink-dim">{d}</dd>
                   </div>
                 ))}
               </dl>
-            </div>
-            <MediaReveal>
-              <BrowserFrame shot="teamsync" url="app.toorunt.ai/team" />
-            </MediaReveal>
+            </Panel>
           </div>
-        </Container>
-      </section>
+        </div>
+      </SectionFrame>
 
       <CTASection
         title="Point it at your backlog."
