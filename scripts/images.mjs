@@ -1,10 +1,10 @@
 /**
  * tOOrunt AI site image pipeline — privacy-critical.
  *
- * Reads the Retina dashboard screenshots from ~/Downloads (filenames contain a
- * U+202F narrow-no-break-space, so we glob and match on the time token — never
- * hardcode a path), crops off ALL browser chrome + the personal bookmarks bar,
- * and emits web assets into public/shots/. Originals never enter the repo.
+ * Reads the Retina product screenshots from the external deck-screenshots
+ * folder (filenames contain a U+202F narrow-no-break-space, so we glob and
+ * match on the time token), crops off ALL Chrome and Claude Artifact UI, and
+ * emits web assets into public/shots/. Originals never enter the repo.
  *
  * Also generates: src/lib/shots.ts (typed manifest w/ LQIP), OG images, icons.
  *
@@ -18,34 +18,39 @@ import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const DOWNLOADS = join(process.env.HOME, "Downloads");
+const SCREENSHOTS = process.env.TOORUNT_SCREENSHOTS
+  ?? join(process.env.HOME, "Desktop", "toorunt-deck-screenshots");
 const SHOTS_OUT = join(ROOT, "public", "shots");
 const OG_OUT = join(ROOT, "public", "og");
 mkdirSync(SHOTS_OUT, { recursive: true });
 mkdirSync(OG_OUT, { recursive: true });
 
-const dl = readdirSync(DOWNLOADS).filter((f) => /^Screenshot 2026-07-11/.test(f));
+const captures = readdirSync(SCREENSHOTS).filter((f) => /^Screenshot 2026-07-29/.test(f));
 const findByTime = (tok) => {
-  const hit = dl.find((f) => f.includes(tok));
+  const hit = captures.find((f) => f.includes(tok));
   if (!hit) throw new Error(`no screenshot matching time token ${tok}`);
-  return join(DOWNLOADS, hit);
+  return join(SCREENSHOTS, hit);
 };
 
-// Per-image crops. `top:356` clears the 3420×2224 full-chrome shots' bookmarks
-// bar (bottom at ~337px) with margin. The gate modal is cropped tight to the card.
+// All July 29 captures are 2940×1912 Retina PNGs. The actual product begins at
+// y=314; everything above it is either Chrome or Claude Artifact chrome. Keep
+// the full product canvas — including its own sidebar and navigation — because
+// those are part of the interface being demonstrated.
+const PRODUCT_CROP = { left: 0, top: 314, width: 2940, height: 1598 };
+
 const MANIFEST = [
-  { name: "overview", tok: "3.30.00", crop: { left: 0, top: 356, width: 3420, height: 1868 },
-    alt: "tOOrunt AI Mission Control overview — autonomy rate, PRs merged, value delivered, live lifecycle and fleet activity" },
-  { name: "approvals", tok: "1.05.38", crop: { left: 0, top: 0, width: 3402, height: 1894 },
-    alt: "tOOrunt AI Approvals inbox — every human decision (plans, PRs, infra, keys) in one place" },
-  { name: "governance", tok: "3.06.32", crop: { left: 0, top: 356, width: 3420, height: 1868 },
-    alt: "tOOrunt AI Governance — tamper-evident hash-chained audit trail beside enforced guardrails" },
-  { name: "members", tok: "3.06.58", crop: { left: 0, top: 356, width: 3420, height: 1868 },
-    alt: "tOOrunt AI Members & Bots — a dedicated bot per teammate with its own credentials and scoped access" },
-  { name: "teamsync", tok: "3.39.28", crop: { left: 0, top: 356, width: 3420, height: 1868 },
-    alt: "tOOrunt AI Team Sync — live standup and deterministic contact routing across the fleet" },
-  { name: "gatechain", tok: "3.53.21", crop: { left: 1000, top: 300, width: 1400, height: 1724 },
-    alt: "tOOrunt AI gate chain — the 14 checks a change passes before it can merge, each with its evidence" },
+  { name: "overview", tok: "10.07.46", crop: PRODUCT_CROP,
+    alt: "tOOrunt AI Studio overview showing a live product, founder attention queue, product theatre and autonomous status" },
+  { name: "approvals", tok: "10.08.10", crop: PRODUCT_CROP,
+    alt: "tOOrunt AI signed product plan showing the approved PRD, human signature and product screens" },
+  { name: "governance", tok: "10.09.00", crop: PRODUCT_CROP,
+    alt: "tOOrunt AI tamper-evident record showing human and autonomous decisions linked in a verified hash chain" },
+  { name: "members", tok: "10.09.08", crop: PRODUCT_CROP,
+    alt: "tOOrunt AI team and spend dashboard showing a live watch squad, its agent and current compute spend" },
+  { name: "teamsync", tok: "10.08.33", crop: PRODUCT_CROP,
+    alt: "tOOrunt AI build dashboard showing eight completed product scenes and the evidence attached to each shipped scene" },
+  { name: "gatechain", tok: "10.08.33", crop: PRODUCT_CROP,
+    alt: "tOOrunt AI build verification chain showing eight completed scenes, proof checks and merged live work" },
 ];
 
 const WIDTHS = [2200, 1100];

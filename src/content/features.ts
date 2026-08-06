@@ -48,7 +48,7 @@ export const FEATURES: readonly Feature[] = [
     body:
       "Per-bot Jira and GitHub identities, with least-privilege tokens scoping each bot to its repos. A peer bot with its own GitHub identity reviews the change — a real, adversarial pass — so review is bot-to-bot, and it gates the merge.",
     shot: "members",
-    url: "app.toorunt.ai/members",
+    url: "app.toorunt.ai/team",
     readouts: [
       ["identity", "jira + github, per bot"],
       ["token scope", "least privilege"],
@@ -65,7 +65,7 @@ export const FEATURES: readonly Feature[] = [
     body:
       "The bot posts an implementation plan to Jira — files, approach, risks, acceptance criteria — and stops at the first human gate. Plans, PRs, infra and keys all queue in one inbox, so the three decisions that are actually yours are never buried in a feed.",
     shot: "approvals",
-    url: "app.toorunt.ai/approvals",
+    url: "app.toorunt.ai/plan",
     readouts: [
       ["gate 04", "plan approved"],
       ["gate 12", "review signed"],
@@ -82,7 +82,7 @@ export const FEATURES: readonly Feature[] = [
     body:
       "Each record commits to the one before it. Change any past decision and every subsequent hash breaks. Incident forensics and SOC 2 evidence are the same artifact — optionally HMAC-signed, and exportable.",
     shot: "governance",
-    url: "app.toorunt.ai/governance",
+    url: "app.toorunt.ai/record",
     readouts: [
       ["chain", "hash-linked records"],
       ["signing", "hmac, optional"],
@@ -99,7 +99,7 @@ export const FEATURES: readonly Feature[] = [
     body:
       "Bots claim tickets atomically, hold file-claim locks so two never touch the same surface, park when blocked, and hand off on failover. Escalation follows CODEOWNERS, git blame, Jira roles and on-call — a bounded ladder that always terminates.",
     shot: "teamsync",
-    url: "app.toorunt.ai/team",
+    url: "app.toorunt.ai/building",
     readouts: [
       ["ticket claims", "atomic, exactly once"],
       ["file locks", "declared up front"],

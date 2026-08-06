@@ -3,45 +3,45 @@ export type Shot = { name: string; width: number; height: number; alt: string; l
 export const SHOTS = {
   "overview": {
     "name": "overview",
-    "width": 3420,
-    "height": 1868,
-    "alt": "tOOrunt AI Mission Control overview — autonomy rate, PRs merged, value delivered, live lifecycle and fleet activity",
-    "lqip": "data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAADQAgCdASoYAA0APu1iqU2ppaOiMAgBMB2JaQAAe/QAAP7wrDAag8JeAAA="
+    "width": 2940,
+    "height": 1598,
+    "alt": "tOOrunt AI Studio overview showing a live product, founder attention queue, product theatre and autonomous status",
+    "lqip": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAgCdASoYAA0ALrV2u12jqampiYC0SygFh2K4TgrfkAD+8nqxsfDotzaxMj9q1GprV6T6YMUAAA=="
   },
   "approvals": {
     "name": "approvals",
-    "width": 3402,
-    "height": 1894,
-    "alt": "tOOrunt AI Approvals inbox — every human decision (plans, PRs, infra, keys) in one place",
-    "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADQAgCdASoYAA0APu1iqU2ppaQiMAgBMB2JaQAAe/QAAP7wgGp4ffe4nNTps4qgAAA="
+    "width": 2940,
+    "height": 1598,
+    "alt": "tOOrunt AI signed product plan showing the approved PRD, human signature and product screens",
+    "lqip": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAwCdASoYAA0APu1iqU2ppaOiMAgBMB2JZwC+SBuc0cRlH9k0z0AA/u6eWIhdk2nMzzgYTAc3K+lx2YWZdBl1ul5BUcmso5gzvWgA"
   },
   "governance": {
     "name": "governance",
-    "width": 3420,
-    "height": 1868,
-    "alt": "tOOrunt AI Governance — tamper-evident hash-chained audit trail beside enforced guardrails",
-    "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAAAQAwCdASoYAA0APu1mqk2ppaQiMAgBMB2JaQAAetDtFgAA/vCWjnnKuTjNmX7wgAA="
+    "width": 2940,
+    "height": 1598,
+    "alt": "tOOrunt AI tamper-evident record showing human and autonomous decisions linked in a verified hash chain",
+    "lqip": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADwAgCdASoYAA0ALrV2u12kqampiYC0SzgFp0K4STBqAAD+8jdIIjAs6bThxUQYeauSoQ/6wAA="
   },
   "members": {
     "name": "members",
-    "width": 3420,
-    "height": 1868,
-    "alt": "tOOrunt AI Members & Bots — a dedicated bot per teammate with its own credentials and scoped access",
-    "lqip": "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAADQAgCdASoYAA0APu1iqU2ppaQiMAgBMB2JaQAAe/QAAP7wgEx5WQGZac7IxwAA"
+    "width": 2940,
+    "height": 1598,
+    "alt": "tOOrunt AI team and spend dashboard showing a live watch squad, its agent and current compute spend",
+    "lqip": "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAACwAQCdASoYAA0ABIBaJZwAA7wUQTlIAP7y+uF8XQjEdqN1N7Aw6cV2sgAAAA=="
   },
   "teamsync": {
     "name": "teamsync",
-    "width": 3420,
-    "height": 1868,
-    "alt": "tOOrunt AI Team Sync — live standup and deterministic contact routing across the fleet",
-    "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAAAwAwCdASoYAA0APu1iqk2tJaQiMAgBoB2JaQAAetEOg0AAAP7wgS4ayKVoJa65AAA="
+    "width": 2940,
+    "height": 1598,
+    "alt": "tOOrunt AI build dashboard showing eight completed product scenes and the evidence attached to each shipped scene",
+    "lqip": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADwAgCdASoYAA0ALrV2u12pKampiYC0SygFh2K4SFUAwAD+8fUZ1mE2LCPU8K3YBBNBgAAA"
   },
   "gatechain": {
     "name": "gatechain",
-    "width": 1400,
-    "height": 1724,
-    "alt": "tOOrunt AI gate chain — the 14 checks a change passes before it can merge, each with its evidence",
-    "lqip": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAABwBACdASoYAB4APu1yrVGppyQiqAqpMB2JaQABH07q+27kofYfMaLYAyjTgAD+6J5XhwewkDRaevNPIL0k6G1/eK2NWT8c4px1WWUYZKBHHAAA"
+    "width": 2940,
+    "height": 1598,
+    "alt": "tOOrunt AI build verification chain showing eight completed scenes, proof checks and merged live work",
+    "lqip": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADwAgCdASoYAA0ALrV2u12pKampiYC0SygFh2K4SFUAwAD+8fUZ1mE2LCPU8K3YBBNBgAAA"
   }
 } as const satisfies Record<string, Shot>;
 export type ShotName = keyof typeof SHOTS;
