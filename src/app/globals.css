@@ -487,6 +487,202 @@ html.js [data-fx="label"]:not([data-in]) { clip-path: inset(0 100% 0 0); opacity
   to   { transform: translateY(-100%); }
 }
 
+/* ── Initial brand film (BrandLoader.tsx) ──────────────────────
+   One animated bitmap plus compositor-only dust and aura rings. The real
+   homepage globe remains the only WebGL simulation, so loading does not make
+   two particle canvases fight for the GPU. */
+html.brand-loader-open,
+html.brand-loader-open body {
+  overflow: hidden;
+}
+.brand-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  opacity: 1;
+  visibility: visible;
+  background:
+    radial-gradient(circle at 50% 50%, rgb(23 74 145 / 0.18), transparent 34%),
+    radial-gradient(ellipse 78% 70% at 50% 50%, #071225 0%, #030914 58%, #01040a 100%);
+  transition:
+    opacity 680ms cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 680ms step-end;
+}
+.brand-loader[data-exiting="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.brand-loader::before,
+.brand-loader::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+}
+.brand-loader::before {
+  z-index: -2;
+  opacity: 0.42;
+  background:
+    radial-gradient(circle at 50% 50%, rgb(63 145 244 / 0.16), transparent 26%),
+    conic-gradient(from 30deg at 50% 50%, transparent, rgb(73 168 255 / 0.055), transparent 32%, rgb(123 200 255 / 0.045), transparent 72%);
+  animation: loader-environment-drift 8s linear infinite;
+}
+.brand-loader::after {
+  z-index: 4;
+  opacity: 0.22;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.17'/%3E%3C/svg%3E");
+}
+
+.brand-loader-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.brand-loader-particles i {
+  position: absolute;
+  left: var(--loader-x);
+  top: var(--loader-y);
+  width: var(--loader-size);
+  height: var(--loader-size);
+  border-radius: 999px;
+  opacity: 0.28;
+  background: #9bd9ff;
+  box-shadow:
+    0 0 5px rgb(83 165 255 / 0.9),
+    0 0 12px rgb(63 145 244 / 0.56);
+  will-change: transform, opacity;
+  animation: loader-particle-idle 1.2s ease-in-out infinite alternate;
+}
+.brand-loader[data-ready="true"] .brand-loader-particles i {
+  animation: loader-particle-converge var(--loader-duration) cubic-bezier(0.55, 0.04, 0.22, 1) var(--loader-delay) both;
+}
+
+.brand-loader-stage {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: min(76vw, 430px);
+  aspect-ratio: 1;
+  place-items: center;
+}
+.brand-loader-globe {
+  position: relative;
+  z-index: 3;
+  display: block;
+  width: min(78%, 336px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(18px) brightness(0.75);
+  transform: scale(0.58) rotate(-7deg);
+  mix-blend-mode: screen;
+  will-change: transform, filter, opacity;
+}
+.brand-loader-globe img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.brand-loader[data-ready="true"] .brand-loader-globe {
+  animation: loader-globe-form 2550ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.brand-loader-aura {
+  position: absolute;
+  z-index: 0;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 48% 52% 45% 55%;
+  opacity: 0;
+  background: radial-gradient(circle, rgb(111 202 255 / 0.24), rgb(50 139 255 / 0.08) 42%, transparent 69%);
+  filter: blur(22px);
+  transform: scale(0.48) rotate(0deg);
+}
+.brand-loader[data-ready="true"] .brand-loader-aura {
+  animation: loader-aura-release 1900ms cubic-bezier(0.16, 1, 0.3, 1) 2480ms both;
+}
+.brand-loader-wave {
+  position: absolute;
+  z-index: 1;
+  width: 34%;
+  aspect-ratio: 1;
+  border: 1px solid rgb(124 208 255 / 0.74);
+  border-radius: 47% 53% 51% 49%;
+  opacity: 0;
+  filter: drop-shadow(0 0 7px rgb(57 145 255 / 0.6));
+  transform: scale(0.5) rotate(0deg);
+  will-change: transform, opacity, border-radius;
+}
+.brand-loader[data-ready="true"] .brand-loader-wave {
+  animation: loader-energy-wave 1450ms cubic-bezier(0.13, 0.76, 0.25, 1) both;
+}
+.brand-loader[data-ready="true"] .brand-loader-wave-1 { animation-delay: 2540ms; }
+.brand-loader[data-ready="true"] .brand-loader-wave-2 { animation-delay: 2730ms; }
+.brand-loader[data-ready="true"] .brand-loader-wave-3 { animation-delay: 2920ms; }
+.brand-loader[data-ready="true"] .brand-loader-wave-4 { animation-delay: 3110ms; }
+
+@keyframes loader-particle-idle {
+  from { opacity: 0.16; transform: scale(0.7); }
+  to { opacity: 0.75; transform: scale(1.35); }
+}
+@keyframes loader-particle-converge {
+  0% { opacity: 0.18; transform: translate3d(0, 0, 0) scale(0.65); }
+  24% { opacity: 1; }
+  76% { opacity: 0.86; }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--loader-dx), var(--loader-dy), 0) scale(0.08);
+  }
+}
+@keyframes loader-globe-form {
+  0% { opacity: 0; filter: blur(18px) brightness(0.72); transform: scale(0.58) rotate(-7deg); }
+  26% { opacity: 0.22; }
+  68% { opacity: 0.9; filter: blur(2.5px) brightness(1.08); }
+  100% { opacity: 1; filter: blur(0) brightness(1.08); transform: scale(1) rotate(0deg); }
+}
+@keyframes loader-aura-release {
+  0% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  20% { opacity: 0.88; }
+  100% { opacity: 0; transform: scale(4.6) rotate(38deg); }
+}
+@keyframes loader-energy-wave {
+  0% { opacity: 0; border-radius: 47% 53% 51% 49%; transform: scale(0.5) rotate(0deg); }
+  12% { opacity: 0.9; }
+  54% { opacity: 0.46; border-radius: 54% 46% 44% 56%; }
+  100% { opacity: 0; border-radius: 50%; transform: scale(6.2) rotate(24deg); }
+}
+@keyframes loader-environment-drift {
+  to { transform: rotate(360deg) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-loader-particles,
+  .brand-loader-wave,
+  .brand-loader-aura,
+  .brand-loader::before { display: none; }
+  .brand-loader-globe,
+  .brand-loader[data-ready="true"] .brand-loader-globe {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    animation: none;
+  }
+  .brand-loader { transition-duration: 240ms; }
+}
+
+@media (max-width: 640px) {
+  .brand-loader-stage { width: min(88vw, 390px); }
+  .brand-loader-globe { width: 74%; }
+  .brand-loader-wave { width: 38%; }
+}
+
 /* ── On-scroll typography ─────────────────────────────────────
    The Codrops OnScrollTypographyAnimations mechanics (masked riser inside an
    overflow-clipped wrap, scrubbed to scroll, staggered per unit — their fx2 +
@@ -1056,7 +1252,7 @@ html.js [data-fx="label"]:not([data-in]) { clip-path: inset(0 100% 0 0); opacity
 }
 
 /* The thesis now shares the viewport with the globe instead of stacking
-   above it. The orbit label turns the canvas into a product reading. */
+   above it. The readout turns the canvas into a product reading. */
 .hero-layout::before {
   content: "ACCOUNTABILITY / 01";
   position: absolute;
@@ -1067,19 +1263,6 @@ html.js [data-fx="label"]:not([data-in]) { clip-path: inset(0 100% 0 0); opacity
   font-size: 9px;
   letter-spacing: 0.2em;
   opacity: 0.55;
-}
-.hero-globe-stage::before,
-.hero-globe-stage::after {
-  content: "";
-  position: absolute;
-  inset: 8%;
-  border: 1px solid color-mix(in srgb, var(--color-accent) 14%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-.hero-globe-stage::after {
-  inset: 18%;
-  border-color: color-mix(in srgb, var(--color-ink) 7%, transparent);
 }
 .hero-orbit-label {
   position: absolute;

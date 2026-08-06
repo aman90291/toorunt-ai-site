@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { FooterGate } from "@/components/FooterGate";
 import { MotionRoot } from "@/components/system/MotionRoot";
 import { PageTransition } from "@/components/system/PageTransition";
+import { BrandLoader } from "@/components/BrandLoader";
 import Script from "next/script";
 
 /* Geist is the primary face — display, body and UI. Inter is kept only as a
@@ -86,6 +87,7 @@ gtag('config', '${GA_ID}');`}
             components/system/MotionRoot.tsx. Renders nothing. */}
         <MotionRoot />
         <PageTransition />
+        <BrandLoader />
 
         <Nav />
         <main>{children}</main>

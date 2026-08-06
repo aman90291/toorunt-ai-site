@@ -26,28 +26,17 @@ export const SCENE = { bg: TOKENS["--color-ground"] };
 /**
  * The particle globe's two emission colours.
  *
- * DELIBERATELY VERY DARK — these are not "the colour of the globe", they are
- * what ONE grain of dust contributes, and the globe's actual colour is what
- * hundreds of them sum to under additive blending. The reference ships
- * `#1c2631`, near-black, for exactly this reason: a lone particle is almost
- * invisible, the limb glows because thousands overlap along the line of
- * sight, and the core blows out to white where the flow field piles them up.
- *
- * These are that idea moved onto the site's sage/eucalyptus light rather than
- * the reference's slate, and lifted slightly because our sphere is ~300px in the
- * hero, not full-screen, so it accumulates fewer particles per pixel than the
- * original does.
- *
- * Raising these to a "nice blue" is the obvious change and it destroys the
- * effect: every particle becomes individually visible, the density gradient
- * flattens, and the globe turns into uniform speckle. If it looks too dim in
- * isolation, that is correct — check it composited, not as a swatch.
+ * These values change emission colour only. Particle count, size, simulation,
+ * assembly and interaction remain untouched. The saturated electric cobalt is
+ * sampled from the supplied globe reference, while the cool-white hot colour
+ * lets dense convergence points bloom without turning the field uniformly
+ * bright under additive blending.
  */
 export const GLOBE_COLORS = {
   /** The ordinary grain — the vast majority of the field. */
-  base: "#7fadde",
+  base: "#3f91f4",
   /** The heavier grain on ~1.6% of particles; near-white, so the scattered
    *  larger points read as highlights inside the dust and the densest
    *  convergences blow out to white rather than to pale blue. */
-  hot: "#eaf3ff",
+  hot: "#d9f3ff",
 };

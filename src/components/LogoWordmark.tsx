@@ -1,17 +1,18 @@
 /**
- * Brand lockup: the knot mark and the "tOOrunt AI" wordmark, side by side.
+ * Brand lockup: the particle-globe mark and the "tOOrunt AI" wordmark.
  *
- * The two halves ship as separate <svg>s rather than one, so the mark can stand
- * alone (favicons, tight mobile headers) and so the wordmark's letterforms can
- * inherit the surrounding text colour — they are filled with currentColor, not
- * a hard-coded white. Only the knot and the "OO" ligature carry the gradient.
+ * The mark is a compact animated WebP derived from the supplied globe capture;
+ * reduced-motion visitors get its still frame. The wordmark remains vector so
+ * its white letterforms stay sharp at every size. Only the "OO" ligature uses
+ * colour, now a restrained electric-cobalt spectrum shared with the globe.
  *
  * Gradient coordinates are userSpaceOnUse and still resolve against the original
  * 80.8 x 80.09 artboard, which is why each viewBox is an offset crop of it
  * rather than a translated path set.
  */
 
-export function LogoMark({ className = "" }: { className?: string }) {
+/** Previous knot emblem, kept exportable for legacy artwork only. */
+export function LegacyLogoMark({ className = "" }: { className?: string }) {
   return (
     <svg
       viewBox="9.817 0 64.761 64.721"
@@ -47,6 +48,23 @@ export function LogoMark({ className = "" }: { className?: string }) {
   );
 }
 
+export function LogoMark({ className = "" }: { className?: string }) {
+  return (
+    <picture className={`block shrink-0 ${className}`} aria-hidden="true">
+      <source media="(prefers-reduced-motion: reduce)" srcSet="/brand/globe-mark-still.webp" />
+      <img
+        src="/brand/globe-mark.webp"
+        alt=""
+        width="96"
+        height="96"
+        decoding="async"
+        draggable={false}
+        className="block h-full w-full rounded-full mix-blend-screen"
+      />
+    </picture>
+  );
+}
+
 export function LogoType({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -58,10 +76,9 @@ export function LogoType({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient id="trw-23" x1="7.37" y1="74.52" x2="26.71" y2="74.52" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#4fbdec" />
-          <stop offset=".32" stopColor="#ef4c8c" />
-          <stop offset=".66" stopColor="#fbab2a" />
-          <stop offset="1" stopColor="#c19dc9" />
+          <stop offset="0" stopColor="#3f91f4" />
+          <stop offset=".48" stopColor="#7bc8ff" />
+          <stop offset="1" stopColor="#d9f3ff" />
         </linearGradient>
       </defs>
       <path fill="currentColor" d="M5.07,77.33c-.14.05-.3.09-.49.12-.19.02-.37.04-.54.04-.35,0-.62-.07-.81-.19-.19-.13-.29-.34-.29-.65v-2.64h1.58c.31,0,.55-.09.73-.27.18-.18.27-.47.27-.88,0-.24-.03-.45-.09-.64-.07-.19-.13-.35-.21-.48h-2.28v-1.12c0-.58-.14-.96-.43-1.14s-.69-.27-1.2-.27c-.27,0-.52.02-.76.06-.24.04-.42.08-.55.11v7.48c0,1.05.28,1.8.83,2.27.56.46,1.34.7,2.37.7.84,0,1.42-.14,1.75-.42.33-.28.5-.64.5-1.09,0-.22-.04-.41-.11-.57-.08-.16-.17-.3-.27-.43Z" />
@@ -85,7 +102,7 @@ export function LogoWordmark({
 }) {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <LogoMark className="h-[30px] w-auto shrink-0" />
+      <LogoMark className="h-[32px] w-[32px]" />
       {showText && <LogoType className="h-[15px] w-auto shrink-0 text-ink" />}
     </span>
   );
