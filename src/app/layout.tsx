@@ -39,7 +39,10 @@ export const metadata: Metadata = {
     images: [{ url: "/og/home.png", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image", images: ["/og/home.png"] },
-  icons: { icon: "/icon.svg", apple: "/apple-icon.png" },
+  icons: {
+    icon: { url: "/brand/globe-favicon.png", type: "image/png", sizes: "192x192" },
+    apple: { url: "/brand/globe-apple.png", type: "image/png", sizes: "180x180" },
+  },
 };
 
 const jsonLd = {
