@@ -1,126 +1,183 @@
 import type { Metadata } from "next";
-import { SectionFrame, Heading, Accent, Button } from "@/components/ui";
-import { Doodle } from "@/components/Doodle";
-import { PricingCalculator } from "@/components/PricingCalculator";
+import { Accent, Button, Heading, SectionFrame } from "@/components/ui";
 import { CTASection } from "@/components/CTASection";
 import { DemoButton } from "@/components/DemoButton";
-import { ECON } from "@/lib/stats";
-import { CONTACT_MAILTO } from "@/lib/contact";
-import { FAQ } from "@/content/faq";
+import { Doodle } from "@/components/Doodle";
 import { PageHead } from "@/components/system/PageHead";
 import { Panel, StatusDot } from "@/components/system/Panel";
-import { Ledger } from "@/components/system/blocks";
+import { CONTACT_MAILTO } from "@/lib/contact";
+import { FAQ } from "@/content/faq";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Priced per gate-passed merged PR — a fraction of what a human PR costs, with your compute COGS on the ledger. Per-seat for high-volume teams; enterprise with BYO vault and SSO.",
+    "Four product-development tiers: Launch at $9/month, Build at $99/month, Scale at $999/month, and Enterprise from $9,999/month.",
   openGraph: { images: ["/og/pricing.png"] },
 };
 
-/**
- * /pricing — rebuilt in the instrument language (components/system/*).
- *
- * The questions at the bottom now come from `content/faq.ts` rather than from
- * a local array. That array was a near-duplicate of six entries already in
- * the FAQ set — same claims, slightly different wording — which is exactly
- * how a site ends up quoting two different compute costs. Filtering the
- * shared set to `category === "Pricing"` means the hero's question field and
- * this page can never disagree, and adding an answer in one place adds it to
- * both.
- */
-
 const TIERS = [
   {
-    name: "Per merged PR",
-    price: `$${ECON.price}`,
-    unit: "/ gate-passed PR",
-    tagline: "Pay for shipped, reviewed, gated work.",
+    gate: "Gate 01 · Self-serve",
+    name: "Launch",
+    price: "$9",
+    unit: "/mo",
+    status: "test the idea",
+    tagline: "The fastest way to see if this idea is real.",
+    forWhom: "Solo builders, students, and first-time founders testing an idea before spending real money.",
     features: [
-      "Complexity-normalized — small PRs price small",
-      "Per-ticket cost caps enforced in-product",
-      "A rejected PR costs nothing",
-      "Full audit trail included",
+      "Prompt-to-app deployment — no repository required",
+      "Shared infrastructure and one project slot",
+      "Community help centre",
     ],
+    upgrade: "Move up when the idea gets traction or needs real functionality beyond a live demo.",
+    accent: false,
+  },
+  {
+    gate: "Gate 02 · Founding mode",
+    name: "Build",
+    price: "$99",
+    unit: "/mo",
+    status: "run the business",
+    tagline: "A founding engineer’s judgement, without the hire.",
+    forWhom: "Solo founders or teams of 2–5 running a real product without an engineering hire.",
+    features: [
+      "Full app and site — authentication, payments, and database",
+      "Research → brief → critique pass",
+      "Email support and multiple projects",
+    ],
+    upgrade: "Move up when the team grows or a customer or investor needs reviewed work before it ships.",
+    accent: false,
+  },
+  {
+    gate: "Gate 03 · SDLC mode",
+    name: "Scale",
+    price: "$999",
+    unit: "/mo",
+    status: "ship with control",
+    tagline: "Ships a merged PR under policy — not a diff handed back to a human.",
+    forWhom: "Funded startups and teams of 5–30 engineers. Built for CTOs and Heads of Engineering.",
+    features: [
+      "Works in your GitHub and Jira",
+      "Supervised or bounded-autonomous operation",
+      "Governance core and full audit trail",
+      "Dedicated Slack and priority support",
+    ],
+    upgrade: "Move up when procurement requires SSO, SOC 2, dedicated infrastructure, or an on-call SLA.",
     accent: true,
   },
   {
-    name: "Per seat",
-    price: "Custom",
-    unit: "/ bot / month",
-    tagline: "For high-volume teams that dislike per-unit metering.",
-    features: [
-      "Flat per-bot pricing with usage caps",
-      "Priced against a $100K+ engineer",
-      "Volume commitments",
-      "Priority support",
-    ],
-  },
-  {
+    gate: "Gate 04 · Trust layer",
     name: "Enterprise",
-    price: "Let's talk",
-    unit: "",
-    tagline: "Your infra, your keys, your isolation.",
+    price: "$9,999+",
+    unit: "/mo",
+    status: "procurement ready",
+    tagline: "Built for the CISO who signs — not only the engineer who tries it.",
+    forWhom: "Engineering organisations of 100+ people, often regulated. Built for VPs of Engineering and CISOs.",
     features: [
-      "Bring-your-own Vault / SSO / SCIM",
-      "Isolated per-tenant deployment",
-      "SOC 2 evidence export",
-      "Security review & custom guardrails",
+      "SSO / SAML / SCIM and RBAC",
+      "Dedicated tenant or customer VPC",
+      "On-call support and named CSM",
+      "Custom engineering and compliance runway",
     ],
+    upgrade: "Custom-scoped by design, so growth becomes a renegotiation rather than a forced tier.",
+    accent: false,
   },
-];
+] as const;
+
+const TIER_QUESTIONS = [
+  ["01 · $9", "Does my idea work?", "Prompt-to-app. No repository required."],
+  ["02 · $99", "Can I run a business on this, alone?", "Founding mode, without a governance layer yet."],
+  ["03 · $999", "Can my team ship faster, accountably?", "Governance, audit trail, and work in real repositories."],
+  ["04 · $9,999+", "Can procurement sign off on this?", "Identity, compliance, isolation, and custom scope."],
+] as const;
 
 export default function PricingPage() {
-  const questions = FAQ.filter((f) => f.category === "Pricing");
+  const questions = FAQ.filter((item) => item.category === "Pricing");
 
   return (
     <>
       <PageHead
         flavor="pricing"
         label="Pricing"
-        title="Priced like labor,"
-        accent="not like seats."
-        lead="A merged PR is a resolved ticket is clear value. So that's the unit — and because we meter our own compute, the margin is on the dashboard, not in a pitch."
+        title="Four tiers of engineering."
+        accent="One accountable ladder."
+        lead="Each step is a different product, not merely a bigger invoice. Choose how much of the engineering organisation toorunt AI should become — and how much Trust Layer you need switched on."
         readouts={[
-          ["per merged pr", `$${ECON.price}`],
-          ["our compute", `$${ECON.cogsLow}–${ECON.cogsHigh}`],
-          ["a rejected pr", "$0"],
-          ["human baseline", `$${ECON.humanLow}–${ECON.humanHigh}`],
+          ["launch", "$9/mo"],
+          ["build", "$99/mo"],
+          ["scale", "$999/mo"],
+          ["enterprise", "$9,999+/mo"],
         ]}
       />
 
-      <SectionFrame index="01" label="Plans" motion="spread" className="mt-[var(--space-section)]">
-        {/* seq, not rise: the three tiers should arrive one after another —
-            they are a comparison, and a stagger is what makes the eye read
-            them left to right instead of as one block. */}
-        <div data-fx="seq" className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {TIERS.map((t, i) => (
-            <div key={t.name} style={{ ["--i" as string]: i }}>
+      <SectionFrame index="01" label="The engineering ladder" motion="spread" className="mt-[var(--space-section)]" hue="hue-2">
+        <div data-fx="rise">
+          <p className="eyebrow text-pass">Self-serve → managed</p>
+          <Heading className="mt-4 max-w-[21ch] text-[length:var(--text-h2)] leading-[1.05]">
+            Buy the product you need <Accent>at the stage you are in.</Accent>
+          </Heading>
+          <p className="mt-5 max-w-[66ch] text-[16.5px] leading-relaxed text-ink-dim">
+            Start by testing an idea. Add the founding engineer, the governed delivery system, and finally the
+            enterprise trust layer only when the work demands them.
+          </p>
+        </div>
+
+        <div data-fx="seq" className="mt-[var(--space-block)] grid grid-cols-1 gap-4 xl:grid-cols-2">
+          {TIERS.map((tier, index) => (
+            <div key={tier.name} style={{ ["--i" as string]: index }}>
               <Panel
-                label={t.name}
-                status={t.accent ? "recommended" : undefined}
-                tone={t.accent ? "human" : "none"}
-                className={`h-full ${t.accent ? "!border-accent-text/40" : ""}`}
+                label={tier.gate}
+                status={tier.status}
+                tone={tier.accent ? "human" : "none"}
+                className={`h-full ${tier.accent ? "!border-accent-text/50" : ""}`}
               >
                 <div className="flex h-full flex-col">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="font-display text-[40px] leading-none tabular-nums text-ink">{t.price}</span>
-                    {t.unit && <span className="font-mono text-[11px] text-ink-faint">{t.unit}</span>}
+                  <div className="flex flex-wrap items-end justify-between gap-4">
+                    <div>
+                      <h2 className="font-display text-[30px] font-semibold leading-none text-ink">{tier.name}</h2>
+                      <p className="mt-3 max-w-[34ch] font-display text-[17px] italic leading-snug text-ink-dim">
+                        “{tier.tagline}”
+                      </p>
+                    </div>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className={`font-display text-[44px] leading-none tabular-nums ${tier.accent ? "text-pass" : "text-ink"}`}>
+                        {tier.price}
+                      </span>
+                      <span className="font-mono text-[11px] text-ink-faint">{tier.unit}</span>
+                    </div>
                   </div>
-                  <p className="mt-3 text-[14px] text-ink-dim">{t.tagline}</p>
-                  <ul className="mt-6 flex flex-1 flex-col gap-3">
-                    {t.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2.5 text-[13.5px] text-ink-dim">
-                        <Doodle name="check" width={13} className="mt-[5px] shrink-0 text-pass" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
+
+                  <div className="mt-7 grid flex-1 gap-6 border-t border-line pt-6 md:grid-cols-2">
+                    <div>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-accent-text">What’s included</p>
+                      <ul className="mt-4 flex flex-col gap-3">
+                        {tier.features.map((feature) => (
+                          <li key={feature} className="flex items-start gap-2.5 text-[13.5px] leading-relaxed text-ink-dim">
+                            <Doodle name="check" width={13} className="mt-[5px] shrink-0 text-pass" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-accent-text">Who it’s for</p>
+                      <p className="mt-4 text-[13.5px] leading-relaxed text-ink-dim">{tier.forWhom}</p>
+                      <div className="mt-5 border-l border-accent-text/40 pl-4">
+                        <p className="font-mono text-[8px] uppercase tracking-[0.14em] text-ink-faint">
+                          {tier.name === "Enterprise" ? "Stays because" : "Upgrades when"}
+                        </p>
+                        <p className="mt-2 text-[12.5px] leading-relaxed text-ink-faint">{tier.upgrade}</p>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="mt-7">
-                    {t.accent ? (
-                      <DemoButton className="w-full">Book a demo</DemoButton>
-                    ) : (
+                    {tier.name === "Enterprise" ? (
                       <Button href={CONTACT_MAILTO} variant="ghost" className="w-full">Talk to us</Button>
+                    ) : (
+                      <DemoButton variant={tier.accent ? "primary" : "ghost"} className="w-full">
+                        {tier.name === "Launch" ? "Start with Launch" : `Talk through ${tier.name}`}
+                      </DemoButton>
                     )}
                   </div>
                 </div>
@@ -130,35 +187,24 @@ export default function PricingPage() {
         </div>
       </SectionFrame>
 
-      <SectionFrame index="02" label="The ledger" motion="reconcile">
+      <SectionFrame index="02" label="Choose by outcome" motion="reconcile">
         <div data-fx="rise">
-          <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
-            Same ticket. <Accent>Three eras of cost.</Accent>
+          <Heading className="max-w-[21ch] text-[length:var(--text-h2)] leading-[1.05]">
+            The question <Accent>each tier answers.</Accent>
           </Heading>
-          <div className="mt-[var(--space-block)]">
-            <Ledger />
+          <div data-fx="seq" className="mt-[var(--space-block)] grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line md:grid-cols-2 xl:grid-cols-4">
+            {TIER_QUESTIONS.map(([label, question, answer], index) => (
+              <article key={label} style={{ ["--i" as string]: index }} className="min-h-[190px] bg-ground-2 p-6">
+                <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-pass">{label}</p>
+                <h3 className="mt-6 font-display text-[20px] font-semibold leading-tight text-ink">{question}</h3>
+                <p className="mt-4 text-[13px] leading-relaxed text-ink-dim">{answer}</p>
+              </article>
+            ))}
           </div>
         </div>
       </SectionFrame>
 
-      <SectionFrame index="03" label="Do the math" motion="meter">
-        <div data-fx="rise">
-          <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
-            What it saves you, <Accent>per month.</Accent>
-          </Heading>
-          <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
-            Drag the slider to your merged-PR volume. The human column is loaded engineer cost at
-            ${ECON.humanLow}&ndash;${ECON.humanHigh} per PR — the comparison that actually matters.
-          </p>
-          <div className="mt-[var(--space-block)]">
-            <Panel label="savings model" status="your volume" tone="live">
-              <PricingCalculator />
-            </Panel>
-          </div>
-        </div>
-      </SectionFrame>
-
-      <SectionFrame index="04" label="Questions" motion="stack">
+      <SectionFrame index="03" label="Questions" motion="stack">
         <div data-fx="rise">
           <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
             The ones <Accent>that decide it.</Accent>
@@ -166,23 +212,14 @@ export default function PricingPage() {
           <div className="mt-[var(--space-block)]">
             <Panel label="pricing questions" status={`${questions.length} answered`} tone="none" flush>
               <div data-fx="seq">
-                {questions.map((f, i) => (
-                  <details
-                    key={f.id}
-                    style={{ ["--i" as string]: i }}
-                    className="group border-b border-line last:border-b-0"
-                  >
+                {questions.map((item, index) => (
+                  <details key={item.id} style={{ ["--i" as string]: index }} className="group border-b border-line last:border-b-0">
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-[16px] font-medium text-ink sm:px-6">
-                      <span className="flex items-center gap-3">
-                        <StatusDot tone="auto" />
-                        {f.q}
-                      </span>
-                      <span className="shrink-0 text-accent-text transition-transform duration-200 group-open:rotate-45">
-                        +
-                      </span>
+                      <span className="flex items-center gap-3"><StatusDot tone="auto" />{item.q}</span>
+                      <span className="shrink-0 text-accent-text transition-transform duration-200 group-open:rotate-45">+</span>
                     </summary>
                     <p className="max-w-[70ch] px-5 pb-5 pl-[38px] text-[14.5px] leading-relaxed text-ink-dim sm:px-6 sm:pl-[46px]">
-                      {f.a}
+                      {item.a}
                     </p>
                   </details>
                 ))}
@@ -193,9 +230,9 @@ export default function PricingPage() {
       </SectionFrame>
 
       <CTASection
-        title="Clear the backlog."
-        accent="Watch the ledger."
-        sub="A live demo on a repo you choose — see the cost per PR for yourself."
+        title="Choose the product you need now."
+        accent="Keep the next gate visible."
+        sub="Start at $9/month or talk to us about a governed deployment for your team."
       />
     </>
   );

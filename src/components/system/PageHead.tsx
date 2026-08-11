@@ -12,7 +12,7 @@ import { Container, Heading, Accent } from "@/components/ui";
  *
  * `readouts` is what makes it feel like an instrument rather than a title.
  * Each inner page states its own key numbers up front — 14 gates, 3
- * decisions, $150/PR — so the page has substance above the fold even before
+ * decisions and the four-tier engineering ladder — so the page has substance above the fold even before
  * anything below it has loaded or been scrolled to.
  */
 export function PageHead({
@@ -78,12 +78,13 @@ function PageSignal({ flavor }: { flavor: "product" | "pricing" | "security" }) 
   if (flavor === "pricing") {
     return (
       <div data-fx="meter" className="page-signal page-signal-pricing" aria-hidden="true">
-        <div className="page-signal-meta"><span>unit economics</span><span>live ledger</span></div>
-        <div className="page-price-orbit"><span>$150</span><small>merged PR</small></div>
+        <div className="page-signal-meta"><span>engineering ladder</span><span>4 tiers</span></div>
+        <div className="page-price-orbit"><span>$9</span><small>launch / month</small></div>
         <div className="page-price-bars">
-          <span className="meter-fill" style={{ ["--i" as string]: 0, width: "100%" }} />
-          <span className="meter-fill" style={{ ["--i" as string]: 1, width: "76%" }} />
-          <span className="meter-fill is-pass" style={{ ["--i" as string]: 2, width: "14%" }} />
+          <span className="meter-fill" style={{ ["--i" as string]: 0, width: "18%" }} />
+          <span className="meter-fill" style={{ ["--i" as string]: 1, width: "42%" }} />
+          <span className="meter-fill is-pass" style={{ ["--i" as string]: 2, width: "72%" }} />
+          <span className="meter-fill is-pass" style={{ ["--i" as string]: 3, width: "100%" }} />
         </div>
       </div>
     );
