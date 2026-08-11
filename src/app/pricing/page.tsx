@@ -68,7 +68,7 @@ const TIERS = [
   {
     gate: "Gate 04 · Trust layer",
     name: "Enterprise",
-    price: "$9,999+",
+    price: "Talk to us",
     unit: "/mo",
     status: "procurement ready",
     tagline: "Built for the CISO who signs — not only the engineer who tries it.",
@@ -88,7 +88,7 @@ const TIER_QUESTIONS = [
   ["01 · $9", "Does my idea work?", "Prompt-to-app. No repository required."],
   ["02 · $99", "Can I run a business on this, alone?", "Founding mode, without a governance layer yet."],
   ["03 · $999", "Can my team ship faster, accountably?", "Governance, audit trail, and work in real repositories."],
-  ["04 · $9,999+", "Can procurement sign off on this?", "Identity, compliance, isolation, and custom scope."],
+  ["04 · Enterprise", "Can procurement sign off on this?", "Identity, compliance, isolation, and custom scope."],
 ] as const;
 
 export default function PricingPage() {
@@ -106,7 +106,7 @@ export default function PricingPage() {
           ["launch", "$9/mo"],
           ["build", "$99/mo"],
           ["scale", "$999/mo"],
-          ["enterprise", "$9,999+/mo"],
+          ["enterprise", "talk to us"],
         ]}
       />
 
