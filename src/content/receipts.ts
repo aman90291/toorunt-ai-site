@@ -40,7 +40,7 @@ export const RECEIPTS: readonly Receipt[] = [
   {
     kind: "moment",
     value: "It refused a reviewer who asked it to hardcode an API key.",
-    label: "The secret-scan gate does not negotiate — and this happened live, not in a test.",
+    label: "The secret scan gate does not negotiate, and this happened live, not in a test.",
     source: "Security · control 01",
   },
   {
@@ -51,27 +51,27 @@ export const RECEIPTS: readonly Receipt[] = [
   },
   {
     kind: "moment",
-    value: "A seed script containing DROP TABLE was held for human sign-off.",
-    label: "Deep-verify blocks irreversible migrations before they ship.",
-    source: "Security · database safe-fail",
+    value: "A seed script containing DROP TABLE was held for human sign off.",
+    label: "Deep verify blocks irreversible migrations before they ship.",
+    source: "Security · database safe fail",
   },
   {
     kind: "figure",
     value: "~76%",
-    label: "True resolution on SWE-bench Lite — the defensible half nobody else gates on.",
-    source: "Proven fixes · red→green required",
+    label: "True resolution on SWE Bench Lite, the defensible half nobody else gates on.",
+    source: "Proven fixes · red to green required",
   },
   {
     kind: "figure",
-    value: `$${ECON.cogsLow}–${ECON.cogsHigh}`,
-    label: "Compute per merged PR, metered on an append-only ledger you can read.",
+    value: `$${ECON.cogsLow} to ${ECON.cogsHigh}`,
+    label: "Compute per merged PR, metered on an append only ledger you can read.",
     source: "Pricing · unit economics",
   },
   {
     kind: "moment",
     value: "Change one past decision and every hash after it breaks.",
     label: "The log is either intact or provably altered. Incident forensics and SOC 2 evidence are the same artifact.",
-    source: "Security · tamper-evident audit",
+    source: "Security · tamper evident audit",
     hot: true,
   },
   {
@@ -83,7 +83,7 @@ export const RECEIPTS: readonly Receipt[] = [
   {
     kind: "figure",
     value: "75%",
-    label: "Of Google's new code is AI-generated — and still approved by engineers.",
+    label: "Of Google's new code is AI generated and still approved by engineers.",
     source: "Google · Q3 2025 earnings call",
   },
   {
@@ -95,14 +95,14 @@ export const RECEIPTS: readonly Receipt[] = [
   {
     kind: "moment",
     value: "Worst case is a rejected pull request.",
-    label: "No direct-to-main, ever. Per-bot least-privilege tokens, branch protection, and a kill switch.",
+    label: "No direct to main, ever. Per bot least privilege tokens, branch protection, and a kill switch.",
     source: "Security · blast radius",
     hot: true,
   },
   {
     kind: "figure",
-    value: "10–20×",
-    label: "Cycle-time compression against a manual SDLC. Weeks become hours.",
+    value: "10 to 20×",
+    label: "Cycle time compression against a manual SDLC. Weeks become hours.",
     source: "Home · three eras of cost",
   },
   {
@@ -115,7 +115,7 @@ export const RECEIPTS: readonly Receipt[] = [
     kind: "figure",
     value: "~90%",
     label: "Lower cost per unit of shipped, reviewed work.",
-    source: `vs. $${ECON.humanLow}–${ECON.humanHigh} loaded engineer cost per PR`,
+    source: `vs. $${ECON.humanLow} to ${ECON.humanHigh} loaded engineer cost per PR`,
   },
 ];
 

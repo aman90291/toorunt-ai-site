@@ -41,7 +41,7 @@ export const TIMELINE: readonly TimelineNode[] = [
     label: "Idea",
     actor: "auto",
     detail:
-      "The same five-phase pipeline runs whether you hand tOOrunt AI a one-line product idea or a ticket off your existing backlog.",
+      "The same five phase pipeline runs whether you hand tOOrunt AI a one line product idea or a ticket off your existing backlog.",
     gates: [1],
   },
   {
@@ -49,7 +49,7 @@ export const TIMELINE: readonly TimelineNode[] = [
     label: "PRD signed",
     actor: "human",
     detail:
-      "It posts an implementation plan to Jira — files, approach, risks, acceptance criteria — and stops. It never writes code before a human sees the plan.",
+      "It posts an implementation plan to Jira: files, approach, risks, and acceptance criteria, then stops. It never writes code before a human sees the plan.",
     // 5 (novelty calibration) sits here too: it is decided at planning time —
     // "routine work ships; unfamiliar territory forces extra deliberation and a
     // human merge".
@@ -60,7 +60,7 @@ export const TIMELINE: readonly TimelineNode[] = [
     label: "Backlog",
     actor: "auto",
     detail:
-      "It watches your board, picks up the ticket, and resolves the right GitHub repo — from a curated registry or a semantic match. Ambiguous requirements get a clarifying question, never a guess.",
+      "It watches your board, picks up the ticket, and resolves the right GitHub repo from a curated registry or a semantic match. Ambiguous requirements get a clarifying question, never a guess.",
     gates: [2, 3],
   },
   {
@@ -68,7 +68,7 @@ export const TIMELINE: readonly TimelineNode[] = [
     label: "Build + tests",
     actor: "auto",
     detail:
-      "It implements the change and writes tests until green. For a bug, it writes a reproduction test that is RED before the fix and GREEN after — proof the fix actually fixes the bug.",
+      "It implements the change and writes tests until green. For a bug, it writes a reproduction test that is RED before the fix and GREEN after. This proves the fix actually fixes the bug.",
     gates: [6, 7, 9],
   },
   {
@@ -76,7 +76,7 @@ export const TIMELINE: readonly TimelineNode[] = [
     label: "Peer review",
     actor: "auto",
     detail:
-      "A second agent reviews a seven-point checklist; a peer bot with a distinct identity reviews the PR. Human comments are handled one by one — fixed, politely rebutted, or asked about.",
+      "A second agent reviews a seven point checklist; a peer bot with a distinct identity reviews the PR. Human comments are handled one by one: fixed, politely rebutted, or asked about.",
     gates: [8, 10, 11],
   },
   {
@@ -84,7 +84,7 @@ export const TIMELINE: readonly TimelineNode[] = [
     label: "PR approve",
     actor: "human",
     detail:
-      "A peer bot with its own GitHub identity reviews the change — a real, adversarial pass — then it waits for your approval before the second gate opens.",
+      "A peer bot with its own GitHub identity reviews the change in a real, adversarial pass, then waits for your approval before the second gate opens.",
     gates: [12],
   },
   {
@@ -92,7 +92,7 @@ export const TIMELINE: readonly TimelineNode[] = [
     label: "Merge + watch",
     actor: "human",
     detail:
-      "It merges only on verified-green tests, CI, no conflicts, and review approval — then watches CI and production, raising a revert alert if the change regresses.",
+      "It merges only on verified green tests, CI, no conflicts, and review approval, then watches CI and production, raising a revert alert if the change regresses.",
     gates: [13, 14],
   },
 ] as const;

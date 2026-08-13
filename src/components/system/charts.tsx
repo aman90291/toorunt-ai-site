@@ -72,7 +72,7 @@ export function Meter({
         className="relative mt-6 h-2.5 w-full overflow-hidden rounded-full"
         style={{ background: "color-mix(in srgb, var(--hue) 16%, transparent)" }}
         role="img"
-        aria-label={`${value}% — ${label}`}
+        aria-label={`${value}%: ${label}`}
       >
         <span
           className="meter-fill absolute inset-y-0 left-0 rounded-full"

@@ -38,7 +38,7 @@ export function Receipts() {
           </h2>
           <p className="mx-auto mt-5 max-w-[52ch] leading-relaxed text-ink-dim" style={{ fontSize: "var(--text-lead)" }}>
             We sell an audit trail. It would be a strange product to market with numbers you
-            can&rsquo;t check — so here they are, with where each one comes from.
+            can&rsquo;t check. Here they are, with where each one comes from.
           </p>
         </div>
       </Container>

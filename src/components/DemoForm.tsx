@@ -45,7 +45,7 @@ export function DemoForm({ className = "" }: { className?: string }) {
           organisation: form.organisation,
           location: form.location,
           phone: form.phone,
-          _subject: "tOOrunt AI — new demo request",
+          _subject: "tOOrunt AI new demo request",
           _cc: FORMSUBMIT_CC,
           _template: "table",
           _captcha: "false",
@@ -74,7 +74,7 @@ export function DemoForm({ className = "" }: { className?: string }) {
         </div>
         <h2 className="mt-5 font-display text-[24px] font-semibold text-ink">Request received.</h2>
         <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-ink-dim">
-          Thanks — we&rsquo;ll be in touch shortly to line up your demo.
+          Thanks. We&rsquo;ll be in touch shortly to line up your demo.
         </p>
       </div>
     );

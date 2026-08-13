@@ -22,8 +22,8 @@ export function Figures() {
           <Meter
             value={75}
             hue="var(--hue-1)"
-            label="of Google's new code is AI-generated"
-            caption="— and still approved by engineers."
+            label="of Google's new code is AI generated"
+            caption="and still approved by engineers."
             source="Google · Q3 2025 earnings call"
           />
         </div>
@@ -79,9 +79,9 @@ export function Signatures() {
    site-wide rather than two competing greens. The dollar figure is printed
    beside every bar, so the bar never carries the value alone. */
 const ERAS = [
-  { label: "Manual SDLC", team: "4–6 people", cycle: "1–2 weeks", cost: "$500–1,000", bar: 100, color: "#d8665e" },
-  { label: "+ AI copilots", team: "4–6 · faster typing", cycle: "~1 week", cost: "$400–800", bar: 78, color: "#c07f33" },
-  { label: "tOOrunt AI", team: "0–1 · approvals only", cycle: "Hours · 2h 36m", cost: `$${ECON.cogsLow}–${ECON.cogsHigh}`, bar: 11, color: "var(--color-pass)", win: true },
+  { label: "Manual SDLC", team: "4 to 6 people", cycle: "1 to 2 weeks", cost: "$500 to 1,000", bar: 100, color: "#d8665e" },
+  { label: "+ AI copilots", team: "4 to 6 · faster typing", cycle: "~1 week", cost: "$400 to 800", bar: 78, color: "#c07f33" },
+  { label: "tOOrunt AI", team: "0 to 1 · approvals only", cycle: "Hours · 2h 36m", cost: `$${ECON.cogsLow} to ${ECON.cogsHigh}`, bar: 11, color: "var(--color-pass)", win: true },
 ];
 
 /* Plotted values are the midpoints of the ranges printed above; the tip
@@ -89,12 +89,12 @@ const ERAS = [
    the source does not have. Cycle: 1–2 weeks and ~1 week as working days
    (×24h), and the founding run's 2h 36m. */
 const COST: BarDatum[] = [
-  { label: "Manual SDLC", value: 750, display: "$500–1,000" },
-  { label: "+ AI copilots", value: 600, display: "$400–800" },
-  { label: "tOOrunt AI", value: 85, display: "$20–150", emphasis: true },
+  { label: "Manual SDLC", value: 750, display: "$500 to 1,000" },
+  { label: "+ AI copilots", value: 600, display: "$400 to 800" },
+  { label: "tOOrunt AI", value: 85, display: "$20 to 150", emphasis: true },
 ];
 const CYCLE: BarDatum[] = [
-  { label: "Manual SDLC", value: 252, display: "1–2 weeks" },
+  { label: "Manual SDLC", value: 252, display: "1 to 2 weeks" },
   { label: "+ AI copilots", value: 168, display: "~1 week" },
   { label: "tOOrunt AI", value: 2.6, display: "2h 36m", emphasis: true },
 ];
@@ -143,7 +143,7 @@ export function Ledger() {
       <p className="flex flex-wrap items-center gap-x-2 border-t border-line px-5 py-4 text-[13.5px] text-ink-dim sm:px-6">
         <span className="font-semibold text-ink">~90% lower cost</span> per unit of shipped, reviewed work
         <span className="text-ink-faint">·</span>
-        <span className="font-semibold text-ink">10–20×</span> cycle-time compression
+        <span className="font-semibold text-ink">10 to 20×</span> cycle time compression
       </p>
     </Panel>
   );

@@ -123,7 +123,7 @@ export function Timeline() {
         {/* Names the three decisions instead of just counting them — the
             rail above tags WHERE they sit, this says what they are. */}
         <p className="mt-[clamp(40px,5vw,72px)] font-mono text-[12.5px] leading-relaxed uppercase tracking-[0.15em] text-ink-faint">
-          {HUMAN_GATE_COUNT} human decisions — sign the PRD, approve the PR, unlock the merge ·
+          {HUMAN_GATE_COUNT} human decisions: sign the PRD, approve the PR, unlock the merge ·
           14 hard gates on every change · everything between them runs autonomous, on the record
         </p>
       </Container>

@@ -54,7 +54,7 @@ export function Hero() {
                 style={{ fontSize: "var(--text-lead)" }}
               >
                 A governed team of AI engineers that carries every ticket from your Jira board to a
-                reviewed, tested, merged pull request — behind fourteen hard gates, with a human on
+                reviewed, tested, merged pull request, behind fourteen hard gates with a human on
                 every decision that counts.
               </p>
 

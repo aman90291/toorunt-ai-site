@@ -74,7 +74,7 @@ export function GlobeHero() {
               className="hero-in mt-6 max-w-[56ch] text-[clamp(15px,1.25vw,18px)] leading-relaxed text-ink-dim"
               style={{ "--d": "1500ms" } as React.CSSProperties}
             >
-              tOOrunt AI is the engineering organization around the model — one bot per teammate,
+              tOOrunt AI is the engineering organization around the model, with one bot per teammate,
               fourteen hard gates, three human decisions, and every action on the record.
             </p>
 
@@ -82,7 +82,7 @@ export function GlobeHero() {
               className="hero-in mt-5 flex flex-wrap items-center gap-y-1 font-mono text-[10px] uppercase tracking-[0.15em] text-ink-faint sm:text-[10.5px]"
               style={{ "--d": "1750ms" } as React.CSSProperties}
             >
-              {["14 gates", "3 decisions", "0 direct-to-main"].map((t, i, a) => (
+              {["14 gates", "3 decisions", "0 direct to main"].map((t, i, a) => (
                 <span key={t} className={i < a.length - 1 ? "after:px-3 after:text-ink-faint/40 after:content-['/']" : undefined}>{t}</span>
               ))}
             </p>

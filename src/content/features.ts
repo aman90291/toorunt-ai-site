@@ -46,13 +46,13 @@ export const FEATURES: readonly Feature[] = [
     title: "One bot per teammate",
     lead: "Every action has an owner.",
     body:
-      "Per-bot Jira and GitHub identities, with least-privilege tokens scoping each bot to its repos. A peer bot with its own GitHub identity reviews the change — a real, adversarial pass — so review is bot-to-bot, and it gates the merge.",
+      "Per bot Jira and GitHub identities, with least privilege tokens scoping each bot to its repos. A peer bot with its own GitHub identity reviews the change in a real, adversarial pass, so review is bot to bot and it gates the merge.",
     shot: "members",
     url: "app.toorunt.ai/team",
     readouts: [
       ["identity", "jira + github, per bot"],
       ["token scope", "least privilege"],
-      ["review", "bot-to-bot, gates merge"],
+      ["review", "bot to bot, gates merge"],
     ],
     source: "home · Act III comparison; security · control 03",
   },
@@ -63,7 +63,7 @@ export const FEATURES: readonly Feature[] = [
     title: "Every decision in one place",
     lead: "It never writes code before you approve the plan.",
     body:
-      "The bot posts an implementation plan to Jira — files, approach, risks, acceptance criteria — and stops at the first human gate. Plans, PRs, infra and keys all queue in one inbox, so the three decisions that are actually yours are never buried in a feed.",
+      "The bot posts an implementation plan to Jira: files, approach, risks, and acceptance criteria, then stops at the first human gate. Plans, PRs, infra and keys all queue in one inbox, so the three decisions that are actually yours are never buried in a feed.",
     shot: "approvals",
     url: "app.toorunt.ai/plan",
     readouts: [
@@ -77,18 +77,18 @@ export const FEATURES: readonly Feature[] = [
     key: "governance",
     index: "03",
     tab: "Audit",
-    title: "Every action, hash-chained",
+    title: "Every action, hash chained",
     lead: "The log is either intact or provably altered.",
     body:
-      "Each record commits to the one before it. Change any past decision and every subsequent hash breaks. Incident forensics and SOC 2 evidence are the same artifact — optionally HMAC-signed, and exportable.",
+      "Each record commits to the one before it. Change any past decision and every subsequent hash breaks. Incident forensics and SOC 2 evidence are the same artifact, optionally HMAC signed and exportable.",
     shot: "governance",
     url: "app.toorunt.ai/record",
     readouts: [
-      ["chain", "hash-linked records"],
+      ["chain", "hash linked records"],
       ["signing", "hmac, optional"],
       ["export", "soc 2 evidence"],
     ],
-    source: "security · tamper-evident audit",
+    source: "security · tamper evident audit",
   },
   {
     key: "fleet",
@@ -97,7 +97,7 @@ export const FEATURES: readonly Feature[] = [
     title: "A team that routes itself",
     lead: "Who to contact is deterministic.",
     body:
-      "Bots claim tickets atomically, hold file-claim locks so two never touch the same surface, park when blocked, and hand off on failover. Escalation follows CODEOWNERS, git blame, Jira roles and on-call — a bounded ladder that always terminates.",
+      "Bots claim tickets atomically, hold file claim locks so two never touch the same surface, park when blocked, and hand off on failover. Escalation follows CODEOWNERS, git blame, Jira roles and on call. It is a bounded ladder that always terminates.",
     shot: "teamsync",
     url: "app.toorunt.ai/building",
     readouts: [

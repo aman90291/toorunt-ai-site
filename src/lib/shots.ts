@@ -19,7 +19,7 @@ export const SHOTS = {
     "name": "governance",
     "width": 2940,
     "height": 1598,
-    "alt": "tOOrunt AI tamper-evident record showing human and autonomous decisions linked in a verified hash chain",
+    "alt": "tOOrunt AI tamper evident record showing human and autonomous decisions linked in a verified hash chain",
     "lqip": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADwAgCdASoYAA0ALrV2u12kqampiYC0SzgFp0K4STBqAAD+8jdIIjAs6bThxUQYeauSoQ/6wAA="
   },
   "members": {

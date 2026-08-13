@@ -11,21 +11,21 @@ import { FAQ } from "@/content/faq";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Four product-development tiers: Launch at $9/month, Build at $99/month, Scale at $999/month, and Enterprise from $9,999/month.",
+    "Four product development tiers: Launch at $9/month, Build at $99/month, Scale at $999/month, and Enterprise on request.",
   openGraph: { images: ["/og/pricing.png"] },
 };
 
 const TIERS = [
   {
-    gate: "Gate 01 · Self-serve",
+    gate: "Gate 01 · Self serve",
     name: "Launch",
     price: "$9",
     unit: "/mo",
     status: "test the idea",
     tagline: "The fastest way to see if this idea is real.",
-    forWhom: "Solo builders, students, and first-time founders testing an idea before spending real money.",
+    forWhom: "Solo builders, students, and first time founders testing an idea before spending real money.",
     features: [
-      "Prompt-to-app deployment — no repository required",
+      "Prompt to app deployment. No repository required",
       "Shared infrastructure and one project slot",
       "Community help centre",
     ],
@@ -39,10 +39,10 @@ const TIERS = [
     unit: "/mo",
     status: "run the business",
     tagline: "A founding engineer’s judgement, without the hire.",
-    forWhom: "Solo founders or teams of 2–5 running a real product without an engineering hire.",
+    forWhom: "Solo founders or teams of 2 to 5 running a real product without an engineering hire.",
     features: [
-      "Full app and site — authentication, payments, and database",
-      "Research → brief → critique pass",
+      "Full app and site: authentication, payments, and database",
+      "Research, brief, and critique pass",
       "Email support and multiple projects",
     ],
     upgrade: "Move up when the team grows or a customer or investor needs reviewed work before it ships.",
@@ -54,15 +54,15 @@ const TIERS = [
     price: "$999",
     unit: "/mo",
     status: "ship with control",
-    tagline: "Ships a merged PR under policy — not a diff handed back to a human.",
-    forWhom: "Funded startups and teams of 5–30 engineers. Built for CTOs and Heads of Engineering.",
+    tagline: "Ships a merged PR under policy, not a diff handed back to a human.",
+    forWhom: "Funded startups and teams of 5 to 30 engineers. Built for CTOs and Heads of Engineering.",
     features: [
       "Works in your GitHub and Jira",
-      "Supervised or bounded-autonomous operation",
+      "Supervised or bounded autonomous operation",
       "Governance core and full audit trail",
       "Dedicated Slack and priority support",
     ],
-    upgrade: "Move up when procurement requires SSO, SOC 2, dedicated infrastructure, or an on-call SLA.",
+    upgrade: "Move up when procurement requires SSO, SOC 2, dedicated infrastructure, or an on call SLA.",
     accent: true,
   },
   {
@@ -71,21 +71,21 @@ const TIERS = [
     price: "Talk to us",
     unit: "/mo",
     status: "procurement ready",
-    tagline: "Built for the CISO who signs — not only the engineer who tries it.",
+    tagline: "Built for the CISO who signs, not only the engineer who tries it.",
     forWhom: "Engineering organisations of 100+ people, often regulated. Built for VPs of Engineering and CISOs.",
     features: [
       "SSO / SAML / SCIM and RBAC",
       "Dedicated tenant or customer VPC",
-      "On-call support and named CSM",
+      "On call support and named CSM",
       "Custom engineering and compliance runway",
     ],
-    upgrade: "Custom-scoped by design, so growth becomes a renegotiation rather than a forced tier.",
+    upgrade: "Custom scoped by design, so growth becomes a renegotiation rather than a forced tier.",
     accent: false,
   },
 ] as const;
 
 const TIER_QUESTIONS = [
-  ["01 · $9", "Does my idea work?", "Prompt-to-app. No repository required."],
+  ["01 · $9", "Does my idea work?", "Prompt to app. No repository required."],
   ["02 · $99", "Can I run a business on this, alone?", "Founding mode, without a governance layer yet."],
   ["03 · $999", "Can my team ship faster, accountably?", "Governance, audit trail, and work in real repositories."],
   ["04 · Enterprise", "Can procurement sign off on this?", "Identity, compliance, isolation, and custom scope."],
@@ -101,7 +101,7 @@ export default function PricingPage() {
         label="Pricing"
         title="Four tiers of engineering."
         accent="One accountable ladder."
-        lead="Each step is a different product, not merely a bigger invoice. Choose how much of the engineering organisation toorunt AI should become — and how much Trust Layer you need switched on."
+        lead="Each step is a different product, not merely a bigger invoice. Choose how much of the engineering organisation toorunt AI should become and how much Trust Layer you need switched on."
         readouts={[
           ["launch", "$9/mo"],
           ["build", "$99/mo"],
@@ -112,7 +112,7 @@ export default function PricingPage() {
 
       <SectionFrame index="01" label="The engineering ladder" motion="spread" className="mt-[var(--space-section)]" hue="hue-2">
         <div data-fx="rise">
-          <p className="eyebrow text-pass">Self-serve → managed</p>
+          <p className="eyebrow text-pass">Self serve to managed</p>
           <Heading className="mt-4 max-w-[21ch] text-[length:var(--text-h2)] leading-[1.05]">
             Buy the product you need <Accent>at the stage you are in.</Accent>
           </Heading>

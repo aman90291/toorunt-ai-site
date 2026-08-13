@@ -20,7 +20,7 @@ import {
 export const metadata: Metadata = {
   title: "Manifesto",
   description:
-    "Writing code stopped being the bottleneck. Accountability is the bottleneck now — and it's why 95% of enterprise AI pilots show no P&L impact. This is what a governed AI engineering team looks like.",
+    "Writing code stopped being the bottleneck. Accountability is the bottleneck now, and it's why 95% of enterprise AI pilots show no P&L impact. This is what a governed AI engineering team looks like.",
   openGraph: { images: ["/og/manifesto.png"] },
 };
 
@@ -84,16 +84,16 @@ export default function ManifestoPage() {
           <div className={`mt-12 ${PROSE}`}>
             <p className="first-letter:float-left first-letter:mr-3 first-letter:font-display first-letter:text-[68px] first-letter:leading-[0.8] first-letter:text-accent-text">
               For fifty years the scarce thing in software was a person who could write it. Whole industries
-              organized around that scarcity — the hiring funnel, the sprint ritual, the seniority ladder. That
-              constraint is gone. AI writes three-quarters of the new code at Google now, and it writes it well.
+              organized around that scarcity: the hiring funnel, the sprint ritual, the seniority ladder. That
+              constraint is gone. AI writes three quarters of the new code at Google now, and it writes it well.
             </p>
             <p>
               We felt it ourselves. The first time an agent implemented a change faster and cleaner than we would
-              have, the honest reaction wasn&rsquo;t fear. It was relief — followed by a question nobody had a good
+              have, the honest reaction wasn&rsquo;t fear. It was relief, followed by a question nobody had a good
               answer to. Fine, it wrote the code. <strong>Who answers for it?</strong>
             </p>
             <p>
-              The bottleneck didn&rsquo;t disappear. It moved — from writing the code to being accountable for it.
+              The bottleneck didn&rsquo;t disappear. It moved from writing the code to being accountable for it.
               Most of the industry is still optimizing the part that&rsquo;s already solved.
             </p>
           </div>
@@ -107,11 +107,11 @@ export default function ManifestoPage() {
       {/* ── 02 · ninety-five percent ──────────────────────────── */}
       <section className="py-14">
         <Container className="max-w-[720px]">
-          <SectionHead index="02">Ninety-five percent</SectionHead>
+          <SectionHead index="02">Ninety five percent</SectionHead>
           <div className={PROSE}>
             <p>
-              If code were still the constraint, the numbers would show it — everything ten times faster, ten times
-              cheaper. Instead, <strong>ninety-five percent of enterprise AI pilots show no measurable P&amp;L
+              If code were still the constraint, the numbers would show it: everything ten times faster, ten times
+              cheaper. Instead, <strong>ninety five percent of enterprise AI pilots show no measurable P&amp;L
               impact.</strong> The models can code. The pilots still die.
             </p>
           </div>
@@ -119,7 +119,7 @@ export default function ManifestoPage() {
           <div className={PROSE}>
             <p>
               They die at a predictable spot. The demo ships beautifully on a clean repo. Then someone in the real
-              organization asks the only question that matters — <em>who approved this?</em> — and there is no
+              organization asks the only question that matters: <em>who approved this?</em> There is no
               answer. No owner, no chain of approval, no record that survives an audit.
             </p>
           </div>
@@ -134,13 +134,13 @@ export default function ManifestoPage() {
           <SectionHead index="03">The babysitting moved up a level</SectionHead>
           <div className={PROSE}>
             <p>
-              A copilot makes one engineer faster. A task-agent takes a ticket and returns a pull request. Both are
+              A copilot makes one engineer faster. A task agent takes a ticket and returns a pull request. Both are
               real progress, and both share a failure mode: every line they produce still funnels through one human
               who must read it, understand it, and stake their name on it.
             </p>
             <p>
               Scale the agents and you scale the queue, not the throughput. Ten agents filing pull requests at one
-              reviewer is not a faster team — <strong>it is a slower human.</strong> The babysitting didn&rsquo;t go
+              reviewer is not a faster team. <strong>It is a slower human.</strong> The babysitting didn&rsquo;t go
               away. It moved up a level, and it concentrated.
             </p>
           </div>
@@ -156,9 +156,9 @@ export default function ManifestoPage() {
             <div className={PROSE}>
               <p>
                 Accountability is not a feeling of trust in the model. It is a structure you can point at. An
-                identity, so every action has an owner. Gates, so nothing ships unproven. A tamper-evident record, so
+                identity, so every action has an owner. Gates, so nothing ships unproven. A tamper evident record, so
                 the history is either intact or provably altered. A boundary, so a human decides exactly the things a
-                human must decide — with a kill switch one click away.
+                human must decide, with a kill switch one click away.
               </p>
             </div>
             <FigBoundary />
@@ -172,13 +172,13 @@ export default function ManifestoPage() {
             <div className={PROSE}>
               <p>
                 Every change tOOrunt AI ships crosses the same fourteen gates, in order, no exceptions. Eleven are
-                machine-cleared: right repository, requirements understood, tests green, zero quality findings, no
+                machine cleared: right repository, requirements understood, tests green, zero quality findings, no
                 secrets in the code, risk scored against a cap. Three are human: the plan is approved before any code
                 is written, the pull request is signed by a reviewer, and the merge happens only on verified green.
               </p>
               <p>
                 That is the entire human job. <strong>Three decisions per change,</strong> placed exactly where
-                judgment matters — and nowhere else.
+                judgment matters and nowhere else.
               </p>
             </div>
             <GateRail />
@@ -191,12 +191,12 @@ export default function ManifestoPage() {
             <div className={PROSE}>
               <p>
                 Each audit record commits to the hash of the one before it. Alter any past decision and every
-                subsequent hash breaks — visibly, provably. There is no third state between intact and tampered.
+                subsequent hash breaks visibly and provably. There is no third state between intact and tampered.
                 Incident forensics and SOC&nbsp;2 evidence stop being two documents; they are the same artifact,
-                HMAC-signed, exportable.
+                HMAC signed and exportable.
               </p>
               <p>
-                We hold ourselves to it. The founding run in the next section lives on that chain — we could not have
+                We hold ourselves to it. The founding run in the next section lives on that chain. We could not have
                 faked it after the fact if we had wanted to.
               </p>
             </div>
@@ -211,12 +211,12 @@ export default function ManifestoPage() {
       {/* ── 07 · the proof, in daylight ───────────────────────── */}
       <section className="pt-24 pb-4">
         <Container className="max-w-[720px]">
-          <SectionHead index="07">Two hours, thirty-six minutes</SectionHead>
+          <SectionHead index="07">Two hours, thirty six minutes</SectionHead>
           <div className={PROSE}>
             <p>
-              One evening in July, a one-line product idea went in. Two hours and thirty-six minutes later, a product
-              was deployed: a signed spec, a backlog, thirty-plus rounds of review between two agents with distinct
-              GitHub identities — and exactly three human decisions along the way. Every step is on the hash-chained
+              One evening in July, a one line product idea went in. Two hours and thirty six minutes later, a product
+              was deployed: a signed spec, a backlog, thirty plus rounds of review between two agents with distinct
+              GitHub identities and exactly three human decisions along the way. Every step is on the hash chained
               record.
             </p>
           </div>
@@ -251,11 +251,11 @@ export default function ManifestoPage() {
             <p>
               A merged pull request from a senior engineer costs the organization five hundred to a thousand dollars
               once salary, review time, and coordination are counted. The same unit of work through tOOrunt AI is
-              twenty to a hundred and fifty dollars of metered compute — on the ledger, per PR, visible. The price is
-              a hundred and fifty dollars flat, per gate-passed, complexity-normalized merged pull request.
+              twenty to a hundred and fifty dollars of metered compute on the ledger, per PR, visible. The price is
+              a hundred and fifty dollars flat, per gate passed, complexity normalized merged pull request.
             </p>
             <p>
-              The unit is the point. Not seats, not usage vibes — a priced, audited unit of shipped work.{" "}
+              The unit is the point. Not seats, not usage vibes: a priced, audited unit of shipped work.{" "}
               <strong>Engineering stops being a cost you estimate and becomes one you read.</strong>
             </p>
           </div>
@@ -270,12 +270,12 @@ export default function ManifestoPage() {
           <div className={PROSE}>
             <p>
               The backlog was never too much work. It was work waiting behind too few people entitled to say yes.
-              When saying yes is structured — three decisions, fourteen gates, a chain of custody — the queue drains,
+              When saying yes is structured, with three decisions, fourteen gates, and a chain of custody, the queue drains,
               and the org chart changes shape.
             </p>
             <p>
               The pyramid of implementers flattens into a wide, governed, autonomous interior. What remains of the
-              human organization is thin, senior, and load-bearing: <strong>the people who decide what should exist,
+              human organization is thin, senior, and load bearing: <strong>the people who decide what should exist,
               and sign for it.</strong>
             </p>
           </div>
@@ -294,7 +294,7 @@ export default function ManifestoPage() {
             {LINES.worstCase}
           </p>
           <p className="mt-12 font-mono text-[12px] uppercase tracking-[0.18em] text-ink-faint">
-            — The tOOrunt AI team · July 2026, on the chain
+            The tOOrunt AI team · July 2026, on the chain
           </p>
         </Container>
       </section>

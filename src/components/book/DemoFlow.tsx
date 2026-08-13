@@ -22,11 +22,11 @@ type Stage = {
 };
 
 const STAGES: Stage[] = [
-  { name: "Ingest & scope", gates: "01–03", note: "the right repo, resolved" },
+  { name: "Ingest & scope", gates: "01 to 03", note: "the right repo, resolved" },
   { name: "Plan approved", gates: "04", human: true, note: "before a line of code" },
-  { name: "Build & prove", gates: "05–10", note: "red → green tests" },
-  { name: "Peer review", gates: "11–12", human: true, note: "you sign the PR" },
-  { name: "Merge & watch", gates: "13–14", human: true, note: "you unlock the merge" },
+  { name: "Build & prove", gates: "05 to 10", note: "red to green tests" },
+  { name: "Peer review", gates: "11 to 12", human: true, note: "you sign the PR" },
+  { name: "Merge & watch", gates: "13 to 14", human: true, note: "you unlock the merge" },
 ];
 
 function Chip({ children, accent = false }: { children: React.ReactNode; accent?: boolean }) {
@@ -73,7 +73,7 @@ export function DemoFlow() {
                   </span>
                 )}
                 <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
-                  gate{s.gates.includes("–") ? "s" : ""} {s.gates}
+                  gates {s.gates}
                 </span>
               </div>
               {s.note && <p className="mt-0.5 text-[12.5px] leading-snug text-ink-dim">{s.note}</p>}

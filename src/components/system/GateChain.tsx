@@ -49,7 +49,7 @@ export function GateChain() {
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="sr-only">
-                {g.name} — {g.actor === "human" ? "human decision" : "automatic"}
+                {g.name}: {g.actor === "human" ? "human decision" : "automatic"}
               </span>
             </li>
           ))}

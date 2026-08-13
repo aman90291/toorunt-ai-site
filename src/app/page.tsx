@@ -46,7 +46,7 @@ export default function Home() {
             The code is already written by AI. <Accent>Nobody owns accountability for it.</Accent>
           </Heading>
           <p>
-            Adoption and impact are moving in opposite directions. The missing layer is not another model —
+            Adoption and impact are moving in opposite directions. The missing layer is not another model.
             it is the system that can prove who decided, who reviewed, and why the work shipped.
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function Home() {
           </Heading>
           <div>
             <p>
-              The Jira board. The reviewers. The QA gates. The on-call rotation. The audit trail — the
+              The Jira board. The reviewers. The QA gates. The on call rotation. The audit trail. The
               accountability structure a real engineering team runs on.
             </p>
             <span>04 surfaces · one accountable record</span>
@@ -78,7 +78,7 @@ export default function Home() {
           </Heading>
           <p>
             Every change clears all fourteen before it can merge. Gate verdicts are deterministic code,
-            not a conversation — a jailbreak can&rsquo;t talk its way past one.
+            not a conversation. A jailbreak can&rsquo;t talk its way past one.
           </p>
         </div>
         <GateWorkflow />
@@ -93,7 +93,7 @@ export default function Home() {
           </Heading>
           <p>
             Three of the fourteen need a signature. Everything between them runs autonomous, on the
-            record — and you choose how much rope as the track record builds.
+            record. You choose how much rope as the track record builds.
           </p>
         </div>
         <DecisionCarousel />
@@ -105,7 +105,7 @@ export default function Home() {
           <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
             Same ticket. <Accent>Three eras of cost.</Accent>
           </Heading>
-          <p>Compare the whole unit of shipped, reviewed work — not the price of a typing assistant.</p>
+          <p>Compare the whole unit of shipped, reviewed work, not the price of a typing assistant.</p>
         </div>
         <CostLedger />
       </SectionFrame>

@@ -6,7 +6,7 @@ import { DemoFlow } from "@/components/book/DemoFlow";
 export const metadata: Metadata = {
   title: "Book a demo",
   description:
-    "A live run on a repo you choose — watch a governed AI engineering team carry a ticket to a reviewed, merged pull request.",
+    "A live run on a repo you choose. Watch a governed AI engineering team carry a ticket to a reviewed, merged pull request.",
 };
 
 /**
@@ -38,7 +38,7 @@ export default function BookPage() {
             A live run on a repo you choose.
           </Heading>
           <p className="mt-4 text-[15px] leading-relaxed text-ink-dim">
-            Thirty minutes on a repo you choose — a real ticket from your backlog
+            Thirty minutes on a repo you choose. A real ticket from your backlog
             carried to a merged PR, every gate and decision on screen. No slides.
           </p>
           <DemoForm className="mt-8" />

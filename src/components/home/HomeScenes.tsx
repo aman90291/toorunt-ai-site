@@ -11,7 +11,7 @@ export function GapConvergence() {
       <article className="gap-reading gap-reading-left">
         <span className="gap-reading-index">01 / adoption</span>
         <strong>75<span>%</span></strong>
-        <p>of Google&rsquo;s new code is AI-generated</p>
+        <p>of Google&rsquo;s new code is AI generated</p>
         <small>Google · Q3 2025 earnings call</small>
       </article>
       <article className="gap-reading gap-reading-right">
@@ -123,9 +123,9 @@ export function GateWorkflow() {
 }
 
 const ERAS = [
-  { n: "01", label: "Manual SDLC", team: "4–6 people", cycle: "1–2 weeks", cost: "$500–1,000", width: 100, winner: false },
-  { n: "02", label: "+ AI copilots", team: "4–6 · faster typing", cycle: "~1 week", cost: "$400–800", width: 78, winner: false },
-  { n: "03", label: "tOOrunt AI", team: "0–1 · approvals only", cycle: "Hours · 2h 36m", cost: `$${ECON.cogsLow}–${ECON.cogsHigh}`, width: 11, winner: true },
+  { n: "01", label: "Manual SDLC", team: "4 to 6 people", cycle: "1 to 2 weeks", cost: "$500 to 1,000", width: 100, winner: false },
+  { n: "02", label: "+ AI copilots", team: "4 to 6 · faster typing", cycle: "~1 week", cost: "$400 to 800", width: 78, winner: false },
+  { n: "03", label: "tOOrunt AI", team: "0 to 1 · approvals only", cycle: "Hours · 2h 36m", cost: `$${ECON.cogsLow} to ${ECON.cogsHigh}`, width: 11, winner: true },
 ] as const;
 
 export function CostLedger() {
@@ -149,7 +149,7 @@ export function CostLedger() {
       <footer className="cost-ledger-result">
         <span>Same ticket</span>
         <strong>~90% lower cost</strong>
-        <span>10–20× cycle-time compression</span>
+        <span>10 to 20× cycle time compression</span>
       </footer>
     </div>
   );

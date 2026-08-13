@@ -21,11 +21,11 @@ const SITE = "https://toorunt.ai";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "tOOrunt AI — The accountable AI engineering team",
-    template: "%s — tOOrunt AI",
+    default: "tOOrunt AI: The accountable AI engineering team",
+    template: "%s: tOOrunt AI",
   },
   description:
-    "A governed AI engineering team — one bot per teammate, each with its own Jira and GitHub identity, 14 hard gates on every change, and an audit trail you can hand to your auditor. Clears your backend backlog overnight, with mandatory human approval or policy-bounded autonomy.",
+    "A governed AI engineering team with one bot per teammate, each with its own Jira and GitHub identity, 14 hard gates on every change, and an audit trail you can hand to your auditor. Clears your backend backlog overnight, with mandatory human approval or policy bounded autonomy.",
   keywords: [
     "AI engineering team", "autonomous software engineer", "AI code review",
     "governed AI agents", "Jira GitHub AI", "AI SDLC", "agentic engineering",
@@ -51,7 +51,7 @@ const jsonLd = {
   applicationCategory: "DeveloperApplication",
   operatingSystem: "Web",
   description:
-    "A governed AI engineering team that works your real Jira and GitHub — one bot per teammate, 14 hard gates per change, a tamper-evident audit trail.",
+    "A governed AI engineering team that works your real Jira and GitHub. One bot per teammate, 14 hard gates per change, and a tamper evident audit trail.",
   offers: { "@type": "Offer", priceCurrency: "USD", price: "150", description: "Per merged pull request" },
 };
 

@@ -56,9 +56,9 @@ export function PricingCalculator({ compact = false }: { compact?: boolean }) {
       <div className="mt-8 space-y-5" role="img" aria-label={`At ${prs} merged PRs a month: tOOrunt AI ${fmtUSD(r.tooruntCost)}, human equivalent ${fmtUSD(r.humanLow)} to ${fmtUSD(r.humanHigh)}.`}>
         <Row
           label="Human equivalent"
-          value={`${fmtUSD(r.humanLow)}–${fmtUSD(r.humanHigh)}`}
+          value={`${fmtUSD(r.humanLow)} to ${fmtUSD(r.humanHigh)}`}
           pct={100}
-          sub={`$${ECON.humanLow}–${ECON.humanHigh} per PR, loaded`}
+          sub={`$${ECON.humanLow} to ${ECON.humanHigh} per PR, loaded`}
         />
         <Row
           label="tOOrunt AI"
@@ -91,7 +91,7 @@ export function PricingCalculator({ compact = false }: { compact?: boolean }) {
 
       {!compact && (
         <p className="mt-5 font-mono text-[11px] leading-relaxed text-ink-faint">
-          Our compute COGS is {fmtUSD(ECON.cogsLow)}–{fmtUSD(ECON.cogsHigh)} per merged PR — you see the
+          Our compute COGS is {fmtUSD(ECON.cogsLow)} to {fmtUSD(ECON.cogsHigh)} per merged PR. You see the
           ledger. A rejected PR costs you nothing.
         </p>
       )}

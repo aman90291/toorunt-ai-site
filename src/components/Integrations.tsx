@@ -64,7 +64,7 @@ export function Integrations() {
             Plugged into your <span className="text-accent">whole stack.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-[54ch] text-[var(--text-lead)] leading-relaxed text-ink-dim">
-            The team starts in Jira, GitHub and Slack — and ships through the clouds, clusters and
+            The team starts in Jira, GitHub and Slack, and ships through the clouds, clusters and
             monitors you already run.
           </p>
         </div>

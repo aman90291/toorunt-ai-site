@@ -10,7 +10,7 @@ import { GateChain } from "@/components/system/GateChain";
 export const metadata: Metadata = {
   title: "Security & governance",
   description:
-    "14 hard gates per change, a hash-chained tamper-evident audit trail, per-bot credential vaulting, an ingress firewall against prompt injection, DB safe-fail, and a kill switch. Worst case is a rejected pull request.",
+    "14 hard gates per change, a hash chained tamper evident audit trail, per bot credential vaulting, an ingress firewall against prompt injection, DB safe fail, and a kill switch. Worst case is a rejected pull request.",
   openGraph: { images: ["/og/security.png"] },
 };
 
@@ -31,32 +31,32 @@ export const metadata: Metadata = {
 const CONTROLS = [
   {
     t: "Secrets can't leak",
-    d: "The vault is the only writer of secret values — 0600 files outside the checkout, shredded on rotation. Tokens never touch Jira, logs, or commits. The secret-scan gate blocks committed credentials; it has refused a reviewer's request to hardcode an API key, live.",
+    d: "The vault is the only writer of secret values: 0600 files outside the checkout, shredded on rotation. Tokens never touch Jira, logs, or commits. The secret scan gate blocks committed credentials; it has refused a reviewer's request to hardcode an API key, live.",
     tag: "vault",
   },
   {
     t: "Prompt injection, neutralized",
-    d: "An ingress firewall screens every inbound human or web reply — pasted secrets are quarantined and injection patterns neutralized before any model sees them. Gate verdicts are deterministic code an injected prompt cannot vote on.",
+    d: "An ingress firewall screens every inbound human or web reply. Pasted secrets are quarantined and injection patterns neutralized before any model sees them. Gate verdicts are deterministic code an injected prompt cannot vote on.",
     tag: "ingress",
   },
   {
     t: "Blast radius = a rejected PR",
-    d: "No direct-to-main, ever. Everything ships through PRs behind branch protection, peer review, and the gate chain. Per-bot least-privilege tokens scope each bot to its repos. One click on the kill switch stops the fleet.",
+    d: "No direct to main, ever. Everything ships through PRs behind branch protection, peer review, and the gate chain. Per bot least privilege tokens scope each bot to its repos. One click on the kill switch stops the fleet.",
     tag: "blast radius",
   },
   {
-    t: "Database safe-fail",
-    d: "Deep-verify blocks irreversible migrations before they ship; risky changes must carry a reversibility plan or they don't merge. In a live run, a seed script containing DROP TABLE was held for human sign-off.",
+    t: "Database safe fail",
+    d: "Deep verify blocks irreversible migrations before they ship; risky changes must carry a reversibility plan or they don't merge. In a live run, a seed script containing DROP TABLE was held for human sign off.",
     tag: "migrations",
   },
   {
     t: "Attributable & replayable",
-    d: "Every action is hash-chained with the actor's identity — which bot, which gate, which approval. Alter one record and every hash after it breaks. Incident forensics and SOC 2 evidence are the same artifact.",
+    d: "Every action is hash chained with the actor's identity: which bot, which gate, which approval. Alter one record and every hash after it breaks. Incident forensics and SOC 2 evidence are the same artifact.",
     tag: "audit",
   },
   {
     t: "Isolation & escalation",
-    d: "Per-tenant state, policy, keys, and kill switch. Control-plane API keys are stored hash-only. Money-moving, irreversible, or cross-team actions hit a hard escalation contract — a human signs, or it doesn't happen.",
+    d: "Per tenant state, policy, keys, and kill switch. Control plane API keys are stored hash only. Money moving, irreversible, or cross team actions hit a hard escalation contract: a human signs, or it doesn't happen.",
     tag: "tenancy",
   },
 ];
@@ -71,7 +71,7 @@ export default function SecurityPage() {
         label="Security & governance"
         title="Worst case is"
         accent="a rejected pull request."
-        lead="Governance isn't a slide here — it's the first thing that was built, and every other subsystem runs inside it. Built for the question a CISO actually asks: what's the worst that can happen?"
+        lead="Governance isn't a slide here. It is the first thing that was built, and every other subsystem runs inside it. Built for the question a CISO actually asks: what's the worst that can happen?"
         readouts={[
           ["gates per change", String(GATES.length)],
           ["human signatures", String(humans)],
@@ -116,8 +116,8 @@ export default function SecurityPage() {
             What every change passes <Accent>before it can merge.</Accent>
           </Heading>
           <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
-            Every ticket carries its own chain — pass, waiting, or skip, each with evidence a
-            non-expert can read. Nothing merges around it.
+            Every ticket carries its own chain: pass, waiting, or skip, each with evidence a
+            non expert can read. Nothing merges around it.
           </p>
           <div className="mt-[var(--space-block)]">
             <GateChain />
@@ -128,15 +128,15 @@ export default function SecurityPage() {
       <SectionFrame index="03" label="The record" motion="hash">
         <div data-fx="rise">
           <Heading className="max-w-[20ch] text-[length:var(--text-h2)] leading-[1.05]">
-            Every action, <Accent>hash-chained.</Accent>
+            Every action, <Accent>hash chained.</Accent>
           </Heading>
           <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
             Each record commits to the one before it. Change any past decision and every subsequent
-            hash breaks — so the log is either intact or provably altered. Optionally HMAC-signed,
+            hash breaks, so the log is either intact or provably altered. Optionally HMAC signed,
             and exportable for SOC 2.
           </p>
           <div className="mt-[var(--space-block)]">
-            <Panel label="audit trail" status="append-only" tone="live" flush>
+            <Panel label="audit trail" status="append only" tone="live" flush>
               <div className="p-5 sm:p-6">
                 <AuditTrailTicker />
               </div>
@@ -149,7 +149,7 @@ export default function SecurityPage() {
         eyebrow="For security teams"
         title="Bring the questions."
         accent="We built for them."
-        sub="SOC 2 Type I on the roadmap, pen test scheduled, zero-retention model terms. Book a security review."
+        sub="SOC 2 Type I on the roadmap, pen test scheduled, zero retention model terms. Book a security review."
       />
     </>
   );

@@ -48,7 +48,7 @@ export function ProblemBeat() {
           {[
             {
               v: 75,
-              d: "of Google's new code is AI-generated — and still approved by engineers.",
+              d: "of Google's new code is AI generated and still approved by engineers.",
               s: "Google · Q3 2025 earnings call",
             },
             {
@@ -87,9 +87,9 @@ export function ProblemBeat() {
    figure is still printed beside every row, so the bar never carries the
    value alone. */
 const ERAS = [
-  { label: "Manual SDLC", people: "4–6 people", time: "1–2 weeks", cost: "$500–1,000", bar: "100%", barColor: "#d8665e", accent: false },
-  { label: "+ AI copilots", people: "4–6 · faster typing", time: "~1 week", cost: "$400–800", bar: "78%", barColor: "#b06a2a", accent: false },
-  { label: "tOOrunt AI · auto", people: "0–1 · approvals only", time: "Hours · 2h 36m", cost: "$20–150", bar: "11%", barColor: "var(--color-pass)", accent: true },
+  { label: "Manual SDLC", people: "4 to 6 people", time: "1 to 2 weeks", cost: "$500 to 1,000", bar: "100%", barColor: "#d8665e", accent: false },
+  { label: "+ AI copilots", people: "4 to 6 · faster typing", time: "~1 week", cost: "$400 to 800", bar: "78%", barColor: "#b06a2a", accent: false },
+  { label: "tOOrunt AI · auto", people: "0 to 1 · approvals only", time: "Hours · 2h 36m", cost: "$20 to 150", bar: "11%", barColor: "var(--color-pass)", accent: true },
 ];
 export function CostErasBeat() {
   return (
@@ -158,7 +158,7 @@ export function CostErasBeat() {
 
       <p data-fx="rise" className="mt-6 text-[15px] text-ink-dim">
         <span className="font-semibold text-ink">~90% lower cost</span> per unit of shipped, reviewed work ·{" "}
-        <span className="font-semibold text-ink">10–20×</span> cycle-time compression — weeks become hours.
+        <span className="font-semibold text-ink">10 to 20×</span> cycle time compression. Weeks become hours.
       </p>
     </SectionFrame>
   );
@@ -177,10 +177,10 @@ const COMPARE = {
   ],
   rows: [
     ["Unit of value", "Suggestions in your editor", "One person’s session", "One task → one PR", "An accountable team"],
-    ["Identity", "The developer’s own", "The user’s own", "One shared org agent", "Per-bot Jira + GitHub identities"],
-    ["Review", "You review your own output", "—", "Your humans review it", "Bot-to-bot adversarial review — gates the merge"],
-    ["Governance", "IDE / org settings", "Folder / tool permissions", "SSO + VPC + logs", "14 gates · hash-chained audit · vault · kill switch"],
-    ["Cost model", "Per-seat subscription", "Subscription", "Usage ACUs, open-ended", "3 LLM layers · capped · $20–150/PR, to the dollar"],
+    ["Identity", "The developer’s own", "The user’s own", "One shared org agent", "Per bot Jira + GitHub identities"],
+    ["Review", "You review your own output", "None", "Your humans review it", "Bot to bot adversarial review, gates the merge"],
+    ["Governance", "IDE / org settings", "Folder / tool permissions", "SSO + VPC + logs", "14 gates · hash chained audit · vault · kill switch"],
+    ["Cost model", "Per seat subscription", "Subscription", "Usage ACUs, open ended", "3 LLM layers · capped · $20 to 150 per PR, to the dollar"],
   ],
 };
 export function WhyUsBeat() {
@@ -247,10 +247,10 @@ export function WhyUsBeat() {
 
 /* ── Act II · Proven fixes (USP) ────────────────────────────────────── */
 const STAGES = [
-  { n: "01", name: "Localize", note: "Read the real files first — no guessing." },
+  { n: "01", name: "Localize", note: "Read the real files first. No guessing." },
   { n: "02", name: "Match", note: "Edits anchored to exact existing lines." },
   { n: "03", name: "Apply", note: "Surgical diffs · completeness sweeps." },
-  { n: "04", name: "Prove", note: "Repro must fail pre-patch, pass post." },
+  { n: "04", name: "Prove", note: "Repro must fail before the patch and pass after it." },
 ];
 export function ProvenFixesBeat() {
   return (
@@ -279,7 +279,7 @@ export function ProvenFixesBeat() {
         <span className="font-display text-[length:var(--text-h2)] font-semibold text-accent-text">
           <CountUp value={76} prefix="~" suffix="%" />
         </span>
-        true resolution on SWE-bench Lite — the defensible half nobody else gates on.
+        true resolution on SWE Bench Lite, the defensible half nobody else gates on.
       </p>
     </SectionFrame>
   );
@@ -288,9 +288,9 @@ export function ProvenFixesBeat() {
 /* ── Act II · Trust is a screen ─────────────────────────────────────── */
 const GUARANTEES = [
   { tag: "chmod 0600", title: "Secret vault", note: "Keys live in a vault the pipeline can’t echo into logs or a model." },
-  { tag: "ingress", title: "Prompt-injection firewall", note: "Untrusted input is neutralized before any model sees it." },
-  { tag: "DROP TABLE", title: "Migration gate", note: "Irreversible DB changes stop for human sign-off." },
-  { tag: "SOC 2", title: "Traces & kill switch", note: "Explainable per-decision traces, exportable audit, instant stop." },
+  { tag: "ingress", title: "Prompt injection firewall", note: "Untrusted input is neutralized before any model sees it." },
+  { tag: "DROP TABLE", title: "Migration gate", note: "Irreversible DB changes stop for human sign off." },
+  { tag: "SOC 2", title: "Traces & kill switch", note: "Explainable decision traces, exportable audit, instant stop." },
 ];
 export function TrustScreenBeat() {
   return (

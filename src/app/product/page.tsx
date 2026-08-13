@@ -12,9 +12,9 @@ import { ControlPlane } from "@/components/system/ControlPlane";
 import { Signatures } from "@/components/system/blocks";
 
 export const metadata: Metadata = {
-  title: "Product — how it works",
+  title: "Product: how it works",
   description:
-    "From a Jira ticket to a merged PR, every step gated: scope, plan, human approval, implement with red→green tests, peer review, gated merge, and post-merge watch.",
+    "From a Jira ticket to a merged PR, every step gated: scope, plan, human approval, implement with red to green tests, peer review, gated merge, and post merge watch.",
   openGraph: { images: ["/og/product.png"] },
 };
 
@@ -35,22 +35,22 @@ export const metadata: Metadata = {
 /* Each phase carries the 1-indexed gates it clears (from lib/gates.ts), so the
    walkthrough shows the chain rather than claiming it. Copy unchanged. */
 const PHASES: { n: string; t: string; d: string; human?: boolean; gates: number[] }[] = [
-  { n: "01", t: "Ingest & scope", d: "It watches your board, picks up the ticket, and resolves the right GitHub repo — from a curated registry or a semantic match. Ambiguous requirements get a clarifying question, never a guess.", gates: [1, 2, 3] },
-  { n: "02", t: "Plan & approval gate", d: "It posts an implementation plan to Jira — files, approach, risks, acceptance criteria — and stops. It never writes code before a human sees the plan.", human: true, gates: [4, 5] },
-  { n: "03", t: "Implement & prove", d: "It implements the change and writes tests until green. For a bug, it writes a reproduction test that is RED before the fix and GREEN after — proof the fix actually fixes the bug.", gates: [6, 7, 8, 9, 10] },
-  { n: "04", t: "Review orchestration", d: "A second agent reviews a seven-point checklist; a peer bot with a distinct identity reviews the PR. Human comments are handled one by one — fixed, politely rebutted, or asked about.", human: true, gates: [11, 12] },
-  { n: "05", t: "Merge & watch", d: "It merges only on verified-green tests, CI, no conflicts, and review approval — then watches CI and production, raising a revert alert if the change regresses.", human: true, gates: [13, 14] },
-  { n: "∞", t: "Continuous learning", d: "Every reviewer correction becomes a lesson and a graduated guardrail. The next ticket starts smarter — and the improvement is on the dashboard.", gates: [] },
+  { n: "01", t: "Ingest & scope", d: "It watches your board, picks up the ticket, and resolves the right GitHub repo from a curated registry or a semantic match. Ambiguous requirements get a clarifying question, never a guess.", gates: [1, 2, 3] },
+  { n: "02", t: "Plan & approval gate", d: "It posts an implementation plan to Jira: files, approach, risks, and acceptance criteria, then stops. It never writes code before a human sees the plan.", human: true, gates: [4, 5] },
+  { n: "03", t: "Implement & prove", d: "It implements the change and writes tests until green. For a bug, it writes a reproduction test that is RED before the fix and GREEN after. This proves the fix actually fixes the bug.", gates: [6, 7, 8, 9, 10] },
+  { n: "04", t: "Review orchestration", d: "A second agent reviews a seven point checklist; a peer bot with a distinct identity reviews the PR. Human comments are handled one by one: fixed, politely rebutted, or asked about.", human: true, gates: [11, 12] },
+  { n: "05", t: "Merge & watch", d: "It merges only on verified green tests, CI, no conflicts, and review approval, then watches CI and production, raising a revert alert if the change regresses.", human: true, gates: [13, 14] },
+  { n: "∞", t: "Continuous learning", d: "Every reviewer correction becomes a lesson and a graduated guardrail. The next ticket starts smarter and the improvement is on the dashboard.", gates: [] },
 ];
 
 /* Short gate names for the chips, keyed by 1-indexed gate number. */
 const GATE_SHORT = ["right repo", "requirements", "dependencies", "plan approved", "novelty", "rework", "tests green", "quality", "coverage", "no secrets", "risk cap", "review signed", "merged", "watched"];
 
 const FLEET = [
-  ["Atomic claims", "A ticket is claimed exactly once — two bots can race for it, one wins, the other moves on."],
-  ["File-claim locks", "Every bot declares the files it will touch before it starts; overlapping claims queue instead of colliding."],
-  ["Park & failover", "Blocked on a dependency, a bot parks the ticket with its state intact — any peer can resume it from the record."],
-  ["Escalation ladder", "Who to contact is deterministic — CODEOWNERS, git blame, Jira roles, on-call — and the ladder is bounded, so it always terminates."],
+  ["Atomic claims", "A ticket is claimed exactly once. Two bots can race for it, one wins, and the other moves on."],
+  ["File claim locks", "Every bot declares the files it will touch before it starts; overlapping claims queue instead of colliding."],
+  ["Park & failover", "Blocked on a dependency, a bot parks the ticket with its state intact. Any peer can resume it from the record."],
+  ["Escalation ladder", "Who to contact is deterministic: CODEOWNERS, git blame, Jira roles, and on call. The ladder is bounded, so it always terminates."],
 ];
 
 export default function ProductPage() {
@@ -59,9 +59,9 @@ export default function ProductPage() {
       <PageHead
         flavor="product"
         label="How it works"
-        title="From ticket to merged PR —"
+        title="From ticket to merged PR"
         accent="every step gated."
-        lead="The same five-phase pipeline runs whether you hand tOOrunt AI a one-line product idea or a ticket off your existing backlog. A human decides three things; everything else runs inside the gates."
+        lead="The same five phase pipeline runs whether you hand tOOrunt AI a one line product idea or a ticket off your existing backlog. A human decides three things; everything else runs inside the gates."
         readouts={[
           ["phases", "5"],
           ["gates cleared", String(GATES.length)],
@@ -159,7 +159,7 @@ export default function ProductPage() {
             It answers review like <Accent>an engineer, not a bot.</Accent>
           </Heading>
           <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
-            Every comment gets one of four honest responses — fix it, disagree with a reason, ask
+            Every comment gets one of four honest responses: fix it, disagree with a reason, ask
             when the intent is unclear, or refuse when it&rsquo;s unsafe. The last one is the point.
           </p>
           <div className="mt-[var(--space-block)]">
@@ -181,7 +181,7 @@ export default function ProductPage() {
           </Heading>
           <p className="mt-5 max-w-[58ch] text-[16.5px] leading-relaxed text-ink-dim">
             Start with a human on every plan and PR. Earn your way to full autonomy as the track
-            record builds — the envelope widens on post-merge evidence and snaps back on a single
+            record builds. The envelope widens on post merge evidence and snaps back on a single
             regression.
           </p>
           <div className="mt-[var(--space-block)]">

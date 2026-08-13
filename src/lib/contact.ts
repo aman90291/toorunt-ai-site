@@ -7,7 +7,7 @@ export const CONTACTS = [
 const TO = CONTACTS.map((c) => c.email).join(",");
 
 /** "Book a demo" — reaches both founders, prefilled subject. */
-export const DEMO_MAILTO = `mailto:${TO}?subject=${encodeURIComponent("tOOrunt AI — demo request")}`;
+export const DEMO_MAILTO = `mailto:${TO}?subject=${encodeURIComponent("tOOrunt AI demo request")}`;
 
 /** Generic "talk to us" — reaches both founders. */
 export const CONTACT_MAILTO = `mailto:${TO}?subject=${encodeURIComponent("tOOrunt AI")}`;

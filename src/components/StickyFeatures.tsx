@@ -163,7 +163,7 @@ export function StickyFeatures() {
             </SplitWords>
           </h2>
           <p className="mx-auto mt-5 max-w-[52ch] text-[var(--text-lead)] leading-relaxed text-ink-dim">
-            One accountable team — each capability its own bot, its own identity, its own gate.
+            One accountable team. Each capability has its own bot, identity, and gate.
           </p>
         </div>
       </Container>

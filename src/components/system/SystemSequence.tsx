@@ -28,14 +28,14 @@ export function SystemSequence() {
                 live change / founding run
               </span>
               <span>accountability plane</span>
-              <span className="hidden sm:inline">append-only</span>
+              <span className="hidden sm:inline">append only</span>
             </div>
 
             <div className="system-screen-grid">
               <article className="system-ticket">
                 <p className="system-kicker">Jira in</p>
-                <p className="system-ticket-id">RUN-0726</p>
-                <h2 id="system-sequence-title">Idea → deployed product</h2>
+                <p className="system-ticket-id">RUN 0726</p>
+                <h2 id="system-sequence-title">Idea to deployed product</h2>
                 <dl>
                   <div><dt>owner</dt><dd>AI engineering team</dd></div>
                   <div><dt>elapsed</dt><dd>2h 36m</dd></div>

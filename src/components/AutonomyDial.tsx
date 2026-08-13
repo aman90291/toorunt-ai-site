@@ -22,7 +22,7 @@ const MODES = [
     key: "manual",
     label: "Manual",
     headline: "Every plan and PR waits for you.",
-    body: "The agent posts a plan to Jira and stops until a human replies /approve. Maximum control — the day-one posture for a new team.",
+    body: "The agent posts a plan to Jira and stops until a human replies /approve. Maximum control, the day one posture for a new team.",
     gates: ["you sign", "you sign", "you sign"],
   },
   {
@@ -36,7 +36,7 @@ const MODES = [
     key: "auto",
     label: "Auto",
     headline: "Ships within policy. Nothing outside it.",
-    body: "Self-approves and self-merges when risk ≤ cap, cost ≤ cap, tests and CI are green, and a peer verdict is in. Anything riskier escalates to a human — automatically.",
+    body: "Self approves and self merges when risk ≤ cap, cost ≤ cap, tests and CI are green, and a peer verdict is in. Anything riskier escalates to a human automatically.",
     gates: ["within policy", "within policy", "within policy"],
   },
 ] as const;

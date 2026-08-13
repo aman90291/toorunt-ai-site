@@ -220,7 +220,7 @@ export function FigBottleneck() {
   return (
     <Figure caption="The constraint moved right." wide>
       <svg viewBox="0 0 900 170" className="w-full" role="img" aria-label="Two pipelines from idea to shipped: before, the narrow point is writing code; now, the narrow point is answering for it.">
-        <Pipe y={45} era="1974–2023" neckAt="write" />
+        <Pipe y={45} era="1974 to 2023" neckAt="write" />
         <Pipe y={130} era="Now" neckAt="answer" />
       </svg>
     </Figure>
@@ -231,7 +231,7 @@ export function FigBottleneck() {
 
 export function FigShareBar() {
   return (
-    <Figure caption="Enterprise AI pilots · measurable bottom-line impact — MIT NANDA, 2025">
+    <Figure caption="Enterprise AI pilots · measurable bottom line impact, MIT NANDA, 2025">
       <svg viewBox="0 0 900 64" className="w-full" role="img" aria-label="A bar split 95 to 5: 95 percent of enterprise AI pilots show no P&L impact.">
         <defs>
           <pattern id="hatch95" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
@@ -241,7 +241,7 @@ export function FigShareBar() {
         <rect x={0} y={14} width={851} height={28} rx={4} fill="url(#hatch95)" stroke="var(--color-line-2)" strokeWidth={1.5} />
         <rect x={857} y={14} width={43} height={28} rx={4} fill="var(--color-accent)" />
         <Label x={14} y={32} anchor="start" tone="ink">
-          No P&amp;L impact — 95%
+          No P&amp;L impact: 95%
         </Label>
         <Label x={878} y={60} tone="accent">
           5%
@@ -275,7 +275,7 @@ function Lane({ y, nodes }: { y: number; nodes: string[] }) {
 export function FigDemoVsOrg() {
   return (
     <Figure caption="The pilot doesn't fail in the repo. It fails in the org chart." wide>
-      <svg viewBox="0 0 900 240" className="w-full" role="img" aria-label="Two lanes: on a clean repo the path from prompt to shipped completes; in a real organization the path stops at a wall of unanswered questions — who approved, who reviewed, who is on the hook.">
+      <svg viewBox="0 0 900 240" className="w-full" role="img" aria-label="Two lanes: on a clean repo the path from prompt to shipped completes; in a real organization the path stops at a wall of unanswered questions: who approved, who reviewed, who is on the hook.">
         <Label x={0} y={40} anchor="start" tone="faint">
           Clean repo
         </Label>
@@ -363,8 +363,8 @@ export function FigConvergence() {
 
 export function FigBoundary() {
   const rings = [
-    { s: 560, label: "Human boundary — 3 decisions · kill switch", tone: "danger" as const },
-    { s: 420, label: "Hash-chained record" },
+    { s: 560, label: "Human boundary: 3 decisions · kill switch", tone: "danger" as const },
+    { s: 420, label: "Hash chained record" },
     { s: 290, label: "14 gates" },
     // one word: the label plate must stay narrower than the ring's straight
     // top edge, or it erases the ring instead of cutting a gap into it
@@ -372,7 +372,7 @@ export function FigBoundary() {
   ];
   return (
     <Figure caption="Accountability is a structure, not a feeling." wide>
-      <svg viewBox="0 0 900 640" className="mx-auto w-full max-w-[640px]" role="img" aria-label="Concentric zones around the model: identity, fourteen gates, a hash-chained record, and an outer human boundary carrying three decision marks and the kill switch.">
+      <svg viewBox="0 0 900 640" className="mx-auto w-full max-w-[640px]" role="img" aria-label="Concentric zones around the model: identity, fourteen gates, a hash chained record, and an outer human boundary carrying three decision marks and the kill switch.">
         {rings.map((r, i) => {
           const x = (900 - r.s) / 2;
           const y = 320 - r.s / 2 + 8;
@@ -473,9 +473,9 @@ function ChainRow({
 export function FigHashChain() {
   return (
     <Figure caption="No third state between intact and tampered." wide>
-      <svg viewBox="0 0 930 230" className="w-full" role="img" aria-label="Two hash chains of five records: one intact, one with record two altered — every downstream link visibly breaks.">
+      <svg viewBox="0 0 930 230" className="w-full" role="img" aria-label="Two hash chains of five records: one intact, one with record two altered and every downstream link visibly breaks.">
         <ChainRow y={58} label="Intact" altered={false} />
-        <ChainRow y={180} label="Altered — provably" altered={true} />
+        <ChainRow y={180} label="Altered, provably" altered={true} />
       </svg>
     </Figure>
   );
@@ -487,12 +487,12 @@ export function FigCostTable() {
   // shared $0–1000 scale mapped to x ∈ [320, 880]
   const X = (v: number) => 320 + (v / 1000) * 560;
   const rows = [
-    { label: "Senior engineer, all-in", lo: ECON.humanLow, hi: ECON.humanHigh, tone: "neutral" as const, text: `$${ECON.humanLow}–${ECON.humanHigh.toLocaleString()}` },
-    { label: "tOOrunt compute", lo: ECON.cogsLow, hi: ECON.cogsHigh, tone: "accent" as const, text: `$${ECON.cogsLow}–${ECON.cogsHigh}` },
+    { label: "Senior engineer, all in", lo: ECON.humanLow, hi: ECON.humanHigh, tone: "neutral" as const, text: `$${ECON.humanLow} to ${ECON.humanHigh.toLocaleString()}` },
+    { label: "tOOrunt compute", lo: ECON.cogsLow, hi: ECON.cogsHigh, tone: "accent" as const, text: `$${ECON.cogsLow} to ${ECON.cogsHigh}` },
     { label: "tOOrunt price", lo: ECON.price, hi: ECON.price, tone: "tick" as const, text: `$${ECON.price} flat` },
   ];
   return (
-    <Figure caption="Per merged, gate-passed pull request — one scale." wide>
+    <Figure caption="Per merged, gate passed pull request. One scale." wide>
       {/* 990 wide, not 900: the top row's "$500–1,000" label starts at
           x≈892 and needs the headroom or it clips to a lone "$". */}
       <svg viewBox="0 0 990 190" className="w-full" role="img" aria-label="Cost ranges on one shared scale from zero to a thousand dollars: senior engineer 500 to 1000, tOOrunt compute 20 to 150, tOOrunt price a single tick at 150.">
@@ -594,7 +594,7 @@ export function FigPyramid() {
         <HumanSquare x={700} y={88} />
         <HumanSquare x={840} y={88} />
         <Label x={700} y={68} tone="danger">
-          Human boundary — decides &amp; signs
+          Human boundary: decides &amp; signs
         </Label>
         <rect
           x={520}

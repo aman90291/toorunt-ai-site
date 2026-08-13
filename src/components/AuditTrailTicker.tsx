@@ -5,13 +5,13 @@
  * list), pauses on hover; static under reduced-motion via the global clamp.
  */
 const ROWS = [
-  { t: "03:05:12", actor: "toorunt-sam", action: "plan_approved", hash: "9f3a1c" },
+  { t: "03:05:12", actor: "toorunt sam", action: "plan_approved", hash: "9f3a1c" },
   { t: "03:05:04", actor: "founder", action: "approve_prd", hash: "1b77e0" },
-  { t: "03:04:51", actor: "toorunt-sam", action: "tests_green", hash: "c40d92" },
-  { t: "03:04:39", actor: "toorunt-tyler", action: "peer_review:approve", hash: "77a5f1" },
-  { t: "03:04:22", actor: "toorunt-sam", action: "secret_scan:clean", hash: "2e9b04" },
-  { t: "03:04:08", actor: "toorunt-sam", action: "merge:verified-green", hash: "b81c6d" },
-  { t: "03:03:55", actor: "toorunt-sam", action: "watchdog:armed", hash: "5d2af8" },
+  { t: "03:04:51", actor: "toorunt sam", action: "tests_green", hash: "c40d92" },
+  { t: "03:04:39", actor: "toorunt tyler", action: "peer_review:approve", hash: "77a5f1" },
+  { t: "03:04:22", actor: "toorunt sam", action: "secret_scan:clean", hash: "2e9b04" },
+  { t: "03:04:08", actor: "toorunt sam", action: "merge:verified green", hash: "b81c6d" },
+  { t: "03:03:55", actor: "toorunt sam", action: "watchdog:armed", hash: "5d2af8" },
   { t: "03:03:40", actor: "founder", action: "kill_switch:off", hash: "0ac913" },
 ];
 

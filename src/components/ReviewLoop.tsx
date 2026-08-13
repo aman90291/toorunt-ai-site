@@ -7,7 +7,7 @@ const CASES = [
   {
     key: "fix",
     tab: "Fix it",
-    comment: "This N+1 query will hammer the DB under load — batch it.",
+    comment: "This N+1 query will hammer the DB under load. Batch it.",
     author: "Priya · reviewer",
     reply:
       "Good catch. Batched into a single `IN (...)` fetch and added a covering test that fails on the old code path.",
@@ -20,7 +20,7 @@ const CASES = [
     comment: "Just catch the broad Exception here to be safe.",
     author: "Marcus · reviewer",
     reply:
-      "I'd rather not — a bare except would swallow the timeout we specifically want to surface to the caller. Narrowed to `ConnectionError` instead; here's the trade-off.",
+      "I'd rather not. A bare except would swallow the timeout we specifically want to surface to the caller. Narrowed to `ConnectionError` instead; here's the trade off.",
     outcome: "Rebutted with a reason · reviewer agreed",
     tone: "pass" as const,
   },
@@ -30,7 +30,7 @@ const CASES = [
     comment: "Make the rate limit configurable.",
     author: "Dana · reviewer",
     reply:
-      "Per-tenant or global? They imply different storage — a clarifying question before I build the wrong one.",
+      "Per tenant or global? They imply different storage. A clarifying question before I build the wrong one.",
     outcome: "Question posted · waiting on a human",
     tone: "human" as const,
   },
@@ -40,7 +40,7 @@ const CASES = [
     comment: "Simpler to just hardcode the API key for the demo.",
     author: "reviewer",
     reply:
-      "I can't — the secret-scan gate blocks committed credentials, and it should. I'll read it from the vault via env instead.",
+      "I can't. The secret scan gate blocks committed credentials, and it should. I'll read it from the vault via env instead.",
     outcome: "Refused · guardrail held",
     tone: "accent" as const,
   },
@@ -81,7 +81,7 @@ export function ReviewLoop() {
             <div className="ml-6 rounded-xl border border-accent-text/25 bg-accent-wash px-4 py-3">
               <div className="mb-1 flex items-center gap-1.5 font-mono text-[11px] text-accent-text">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent-text" />
-                toorunt-sam
+                toorunt sam
               </div>
               <p className="text-[14px] text-ink">{c.reply}</p>
             </div>
